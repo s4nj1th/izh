@@ -1,0 +1,12 @@
+# Bar chart example
+chart: bar
+title: Quarterly Sales
+
+x: quarter
+y: units sold
+
+data:
+Q1, 340
+Q2, 520
+Q3, 480
+Q4, 610

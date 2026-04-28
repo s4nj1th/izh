@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VizLang Playground</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:#0f1117; --bg2:#1a1d27; --bg3:#242837; --bgh:#2e3347;
+      --bdr:#2e3347; --bdrf:#4a90d9; --t1:#e4e6ef; --t2:#8b8fa7; --tm:#5c6078;
+      --accent:#4a90d9; --ag:rgba(74,144,217,.15);
+      --err-bg:rgba(239,68,68,.1); --err-bd:rgba(239,68,68,.3); --err:#f87171;
+      --ok:#34d399; --r:12px; --rs:8px; --tr:.2s cubic-bezier(.4,0,.2,1);
+    }
+    body { font-family:"Inter",sans-serif; background:var(--bg); color:var(--t1); min-height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+    header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid var(--bdr); background:var(--bg2); flex-shrink:0; }
+    .logo { display:flex; align-items:center; gap:10px; }
+    .logo-text { font-size:18px; font-weight:700; letter-spacing:-.3px; }
+    .logo-text span { color:var(--tm); font-weight:400; font-size:13px; margin-left:8px; }
+    .header-actions { display:flex; gap:8px; }
+    .btn { padding:8px 16px; border-radius:var(--rs); border:1px solid var(--bdr); background:var(--bg3); color:var(--t2); font-family:"Inter",sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all var(--tr); display:flex; align-items:center; gap:6px; }
+    .btn:hover { background:var(--bgh); color:var(--t1); border-color:var(--tm); }
+    main { display:flex; flex:1; overflow:hidden; }
+    .panel { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--bg2); border-bottom:1px solid var(--bdr); flex-shrink:0; }
+    .panel-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.8px; color:var(--tm); }
+    .panel-status { font-size:11px; font-family:"JetBrains Mono",monospace; color:var(--tm); display:flex; align-items:center; gap:6px; }
+    .status-dot { width:6px; height:6px; border-radius:50%; background:var(--ok); animation:pulse 2s ease-in-out infinite; }
+    .status-dot.error { background:var(--err); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .divider { width:1px; background:var(--bdr); cursor:col-resize; flex-shrink:0; transition:background var(--tr); }
+    .divider:hover { background:var(--accent); }
+    #editor { flex:1; width:100%; padding:20px; background:var(--bg); color:var(--t1); border:none; outline:none; resize:none; font-family:"JetBrains Mono",monospace; font-size:14px; line-height:1.7; tab-size:2; overflow-y:auto; }
+    #editor::placeholder { color:var(--tm); }
+    #editor:focus { box-shadow:inset 0 0 0 1px var(--bdrf); }
+    .preview-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg); }
+    #preview { flex:1; display:flex; align-items:center; justify-content:center; overflow:auto; padding:24px; }
+    #preview svg { max-width:100%; max-height:100%; filter:drop-shadow(0 4px 24px rgba(0,0,0,.3)); border-radius:var(--rs); }
+    .error-bar { padding:10px 16px; background:var(--err-bg); border-top:1px solid var(--err-bd); color:var(--err); font-family:"JetBrains Mono",monospace; font-size:12px; line-height:1.5; white-space:pre-wrap; max-height:100px; overflow-y:auto; flex-shrink:0; display:none; }
+    .error-bar.visible { display:block; }
+    .examples-dropdown { position:relative; }
+    .examples-menu { position:absolute; top:calc(100% + 4px); right:0; background:var(--bg3); border:1px solid var(--bdr); border-radius:var(--rs); padding:4px; min-width:160px; z-index:100; display:none; box-shadow:0 8px 32px rgba(0,0,0,.4); }
+    .examples-menu.open { display:block; }
+    .examples-menu button { width:100%; text-align:left; padding:8px 12px; background:none; border:none; color:var(--t2); font-family:"Inter",sans-serif; font-size:13px; cursor:pointer; border-radius:6px; transition:all var(--tr); }
+    .examples-menu button:hover { background:var(--bgh); color:var(--t1); }
+    @media(max-width:768px) { main{flex-direction:column} .divider{width:100%;height:1px;cursor:row-resize} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-text">VizLang<span>playground</span></div>
+    </div>
+    <div class="header-actions">
+      <div class="examples-dropdown">
+        <button class="btn" id="examplesBtn" type="button">▾ Examples</button>
+        <div class="examples-menu" id="examplesMenu">
+          <button type="button" data-example="line">Line Chart</button>
+          <button type="button" data-example="bar">Bar Chart</button>
+          <button type="button" data-example="scatter">Scatter Plot</button>
+        </div>
+      </div>
+      <button class="btn" id="copyBtn" type="button">Copy SVG</button>
+    </div>
+  </header>
+  <main>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Editor</span>
+        <span class="panel-status"><span class="status-dot" id="statusDot"></span><span id="statusText">ready</span></span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <textarea id="editor" spellcheck="false" autocomplete="off" placeholder="# Write your VizLang here...&#10;chart: line&#10;title: My Chart&#10;&#10;x: category&#10;y: value&#10;&#10;data:&#10;A, 10&#10;B, 20&#10;C, 15"></textarea>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Preview</span>
+        <span class="panel-status" id="previewStatus"></span>
+      </div>
+      <div class="preview-wrap">
+        <div id="preview"></div>
+        <div class="error-bar" id="errorBar"></div>
+      </div>
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
