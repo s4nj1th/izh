@@ -18,13 +18,13 @@ export default function Navbar() {
         >
           Editor
         </Link>
-        
+
         <ThemeToggle />
 
         <a 
           href="https://github.com/s4nj1th/vizlang" 
           target="_blank" 
-          className="text-text-secondary hover:text-text-primary transition-colors"
+          className="p-2 text-text-secondary hover:text-text-primary transition-colors"
         >
           <FaGithub size={18} />
         </a>
