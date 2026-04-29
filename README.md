@@ -6,7 +6,7 @@ A minimal, deterministic, LLM-friendly chart description language that renders t
 
 ## What is VizLang?
 
-VizLang (`.vizl`) is a line-based DSL for describing charts. Write a few lines of plain text, get a clean SVG back. No dependencies, no build tools, no frameworks.
+VizLang (`.vizl`) is a line-based DSL for describing charts. Write a few lines of plain text, get a clean SVG back. No dependencies, no frameworks. It is written entirely in Rust, setting the foundation for future WebAssembly (Wasm) integration.
 
 ## Quick Example
 
@@ -48,13 +48,12 @@ This produces a complete SVG line chart with axes, labels, title, and gridlines.
 
 ## Usage
 
-### TypeScript API
+### Rust API
 
-```ts
-import { parse } from "./src/parser";
-import { render } from "./src/renderer";
+```rust
+use vizlang::{parser, renderer};
 
-const source = `
+let source = "
 chart: line
 title: Sales
 
@@ -66,22 +65,26 @@ Q1, 100
 Q2, 150
 Q3, 130
 Q4, 200
-`;
+";
 
-const ast = parse(source);
-const svg = render(ast);
-// svg is a complete SVG string
+// Parse the DSL string into an AST
+let ast = parser::parse(source).unwrap();
+
+// Render the AST into an SVG string
+let svg = renderer::render(&ast);
 ```
 
 ### CLI
 
+You can run the CLI tool directly to parse a `.vizl` file and pipe the resulting SVG.
+
 ```bash
-npx tsx src/index.ts examples/line.vizl
+cargo run -- examples/line.vizl > output.svg
 ```
 
 ### Playground
 
-Open `playground/index.html` in a browser for a live editor with instant SVG preview.
+Open `playground/index.html` in a browser for a live editor with instant SVG preview. _(Note: This currently uses a legacy JavaScript implementation.)_
 
 ## Defaults
 
@@ -97,20 +100,22 @@ Open `playground/index.html` in a browser for a live editor with instant SVG pre
 
 ```
 vizlang/
+├── Cargo.toml
 ├── README.md
 ├── SPEC.md
 ├── examples/
-│   ├── line.vizl
 │   ├── bar.vizl
+│   ├── line.vizl
 │   └── scatter.vizl
-├── src/
-│   ├── types.ts
-│   ├── parser.ts
-│   ├── renderer.ts
-│   └── index.ts
-└── playground/
-    ├── index.html
-    └── app.js
+├── playground/
+│   ├── app.js
+│   └── index.html
+└── src/
+    ├── lib.rs
+    ├── main.rs
+    ├── parser.rs
+    ├── renderer.rs
+    └── types.rs
 ```
 
 ## License

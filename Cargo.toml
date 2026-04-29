@@ -1,0 +1,16 @@
+[package]
+name = "vizlang"
+version = "0.0.1"
+edition = "2024"
+description = "A minimal, deterministic, chart description language that renders to SVG."
+authors = ["Sanjith Muralikrishnan <sanjith.develops@gmail.com>"]
+
+[lib]
+name = "vizlang"
+path = "src/lib.rs"
+
+[[bin]]
+name = "vizlang-cli"
+path = "src/main.rs"
+
+[dependencies]

@@ -1,4 +1,14 @@
-node_modules/
-dist/
+debug
+target
+
+**/*.rs.bk
+
+*.pdb
+
 *.svg
-.DS_Store
+
+**/mutants.out*/
+
+rustc-ice-*.txt
+
+.idea/
