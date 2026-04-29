@@ -57,6 +57,7 @@ Keys are always lowercase. Unknown keys are ignored with a warning.
 | `line`    | `<path>`      | Points connected by straight line segments |
 | `bar`     | `<rect>`      | Vertical bars, one per data point          |
 | `scatter` | `<circle>`    | Individual dots at each data point         |
+| `pie`     | `<path>`      | Circular pie slices                        |
 
 ## Data Block
 
@@ -108,7 +109,7 @@ xvalue, yvalue
    - Otherwise → throw a parse error with line number.
 4. After parsing:
    - `chart` key must exist → error if missing.
-   - `chart` value must be one of: `line`, `bar`, `scatter` → error if invalid.
+   - `chart` value must be one of: `line`, `bar`, `scatter`, `pie` → error if invalid.
    - `data` block must contain at least one row → error if empty.
    - All `yvalue` entries must be valid numbers → error if not.
 

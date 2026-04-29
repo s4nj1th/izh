@@ -95,9 +95,10 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
                     "line" => ChartType::Line,
                     "bar" => ChartType::Bar,
                     "scatter" => ChartType::Scatter,
+                    "pie" => ChartType::Pie,
                     _ => return Err(VizLangError {
                         line_number,
-                        message: format!("Unknown chart type \"{}\" — valid options are: line, bar, scatter", value),
+                        message: format!("Unknown chart type \"{}\" — valid options are: line, bar, scatter, pie", value),
                         source_line: raw_line.to_string(),
                     })
                 });

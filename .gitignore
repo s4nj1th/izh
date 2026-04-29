@@ -12,3 +12,5 @@ target
 rustc-ice-*.txt
 
 .idea/
+
+*.DS_Store

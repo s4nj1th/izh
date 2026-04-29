@@ -11,6 +11,10 @@ const BACKGROUND_COLOR: &str = "#ffffff";
 const GRID_LINE_COLOR: &str = "#e0e0e0";
 const AXIS_COLOR: &str = "#333333";
 const DATA_COLOR: &str = "#4a90d9";
+const PIE_COLORS: &[&str] = &[
+    "#4a90d9", "#f06292", "#4db6ac", "#ffb74d", 
+    "#9575cd", "#81c784", "#ff8a65", "#a1887f"
+];
 const LINE_STROKE_WIDTH: f64 = 2.0;
 const LINE_DOT_RADIUS: f64 = 3.0;
 const BAR_GAP_RATIO: f64 = 0.2;
@@ -123,31 +127,33 @@ pub fn render(ast: &VizAST) -> String {
         CANVAS_WIDTH, CANVAS_HEIGHT, BACKGROUND_COLOR
     ));
 
-    for grid_index in 0..=GRID_LINE_COUNT {
-        let ratio = (grid_index as f64) / (GRID_LINE_COUNT as f64);
-        let grid_y = round(PADDING + chart_height - ratio * chart_height);
-        let tick_value = y_data_min + ratio * (y_data_max - y_data_min);
-        let tick_label = format_tick_label(tick_value);
+    if ast.chart_type != ChartType::Pie {
+        for grid_index in 0..=GRID_LINE_COUNT {
+            let ratio = (grid_index as f64) / (GRID_LINE_COUNT as f64);
+            let grid_y = round(PADDING + chart_height - ratio * chart_height);
+            let tick_value = y_data_min + ratio * (y_data_max - y_data_min);
+            let tick_label = format_tick_label(tick_value);
+
+            elements.push(format!(
+                "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"0.5\" />",
+                PADDING, grid_y, PADDING + chart_width, grid_y, GRID_LINE_COLOR
+            ));
+            elements.push(format!(
+                "  <text x=\"{}\" y=\"{}\" text-anchor=\"end\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
+                PADDING - 6.0, grid_y + 4.0, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, tick_label
+            ));
+        }
 
         elements.push(format!(
-            "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"0.5\" />",
-            PADDING, grid_y, PADDING + chart_width, grid_y, GRID_LINE_COLOR
+            "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
+            PADDING, PADDING + chart_height, PADDING + chart_width, PADDING + chart_height, AXIS_COLOR
         ));
+
         elements.push(format!(
-            "  <text x=\"{}\" y=\"{}\" text-anchor=\"end\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
-            PADDING - 6.0, grid_y + 4.0, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, tick_label
+            "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
+            PADDING, PADDING, PADDING, PADDING + chart_height, AXIS_COLOR
         ));
     }
-
-    elements.push(format!(
-        "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
-        PADDING, PADDING + chart_height, PADDING + chart_width, PADDING + chart_height, AXIS_COLOR
-    ));
-
-    elements.push(format!(
-        "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
-        PADDING, PADDING, PADDING, PADDING + chart_height, AXIS_COLOR
-    ));
 
     match ast.chart_type {
         ChartType::Line => {
@@ -198,24 +204,85 @@ pub fn render(ast: &VizAST) -> String {
                 ));
             }
         }
+        ChartType::Pie => {
+            let legend_width = 120.0;
+            let pie_area_width = chart_width - legend_width;
+            let cx = PADDING + pie_area_width / 2.0;
+            let cy = PADDING + chart_height / 2.0;
+            let r = f64::min(pie_area_width, chart_height) / 2.0;
+
+            let total: f64 = ast.data.iter().map(|d| d.y).sum();
+            let mut current_angle: f64 = -std::f64::consts::FRAC_PI_2;
+
+            for (i, point) in ast.data.iter().enumerate() {
+                let color = PIE_COLORS[i % PIE_COLORS.len()];
+
+                if point.y == total {
+                    elements.push(format!(
+                        "  <circle cx=\"{:.2}\" cy=\"{:.2}\" r=\"{:.2}\" fill=\"{}\" />",
+                        cx, cy, r, color
+                    ));
+                    continue;
+                }
+
+                let slice_angle = (point.y / total) * 2.0 * std::f64::consts::PI;
+                let end_angle = current_angle + slice_angle;
+
+                let x1 = cx + r * current_angle.cos();
+                let y1 = cy + r * current_angle.sin();
+                let x2 = cx + r * end_angle.cos();
+                let y2 = cy + r * end_angle.sin();
+
+                let large_arc_flag = if slice_angle > std::f64::consts::PI { 1 } else { 0 };
+
+                elements.push(format!(
+                    "  <path d=\"M {:.2} {:.2} L {:.2} {:.2} A {:.2} {:.2} 0 {} 1 {:.2} {:.2} Z\" fill=\"{}\" stroke=\"#ffffff\" stroke-width=\"1\" />",
+                    cx, cy, x1, y1, r, r, large_arc_flag, x2, y2, color
+                ));
+
+                current_angle = end_angle;
+            }
+
+            let legend_x = PADDING + pie_area_width + 20.0;
+            let mut legend_y = PADDING + 20.0;
+            for (i, point) in ast.data.iter().enumerate() {
+                let color = PIE_COLORS[i % PIE_COLORS.len()];
+                let label = match &point.x {
+                    XValue::String(s) => escape_xml(s),
+                    XValue::Number(n) => escape_xml(&n.to_string()),
+                };
+
+                elements.push(format!(
+                    "  <rect x=\"{:.2}\" y=\"{:.2}\" width=\"12\" height=\"12\" fill=\"{}\" />",
+                    legend_x, legend_y - 10.0, color
+                ));
+                elements.push(format!(
+                    "  <text x=\"{:.2}\" y=\"{:.2}\" text-anchor=\"start\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
+                    legend_x + 20.0, legend_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label
+                ));
+                legend_y += 20.0;
+            }
+        }
     }
 
-    let x_tick_y = PADDING + chart_height + 16.0;
-    for i in 0..ast.data.len() {
-        let tick_x = match ast.chart_type {
-            ChartType::Bar => bar_left_edge(i) + bar_pixel_width() / 2.0,
-            _ => to_pixel_x(i),
-        };
+    if ast.chart_type != ChartType::Pie {
+        let x_tick_y = PADDING + chart_height + 16.0;
+        for i in 0..ast.data.len() {
+            let tick_x = match ast.chart_type {
+                ChartType::Bar => bar_left_edge(i) + bar_pixel_width() / 2.0,
+                _ => to_pixel_x(i),
+            };
 
-        let label = match &ast.data[i].x {
-            XValue::String(s) => escape_xml(s),
-            XValue::Number(n) => escape_xml(&n.to_string()),
-        };
+            let label = match &ast.data[i].x {
+                XValue::String(s) => escape_xml(s),
+                XValue::Number(n) => escape_xml(&n.to_string()),
+            };
 
-        elements.push(format!(
-            "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
-            tick_x, x_tick_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label
-        ));
+            elements.push(format!(
+                "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
+                tick_x, x_tick_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label
+            ));
+        }
     }
 
     if let Some(title) = &ast.title {
@@ -225,20 +292,22 @@ pub fn render(ast: &VizAST) -> String {
         ));
     }
 
-    if let Some(x_label) = &ast.x_label {
-        elements.push(format!(
-            "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
-            PADDING + chart_width / 2.0, CANVAS_HEIGHT - 6.0, FONT_FAMILY, AXIS_LABEL_FONT_SIZE, AXIS_COLOR, escape_xml(x_label)
-        ));
-    }
+    if ast.chart_type != ChartType::Pie {
+        if let Some(x_label) = &ast.x_label {
+            elements.push(format!(
+                "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
+                PADDING + chart_width / 2.0, CANVAS_HEIGHT - 6.0, FONT_FAMILY, AXIS_LABEL_FONT_SIZE, AXIS_COLOR, escape_xml(x_label)
+            ));
+        }
 
-    if let Some(y_label) = &ast.y_label {
-        let y_label_x = 14.0;
-        let y_label_y = PADDING + chart_height / 2.0;
-        elements.push(format!(
-            "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\" transform=\"rotate(-90, {}, {})\">{}</text>",
-            y_label_x, y_label_y, FONT_FAMILY, AXIS_LABEL_FONT_SIZE, AXIS_COLOR, y_label_x, y_label_y, escape_xml(y_label)
-        ));
+        if let Some(y_label) = &ast.y_label {
+            let y_label_x = 14.0;
+            let y_label_y = PADDING + chart_height / 2.0;
+            elements.push(format!(
+                "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\" transform=\"rotate(-90, {}, {})\">{}</text>",
+                y_label_x, y_label_y, FONT_FAMILY, AXIS_LABEL_FONT_SIZE, AXIS_COLOR, y_label_x, y_label_y, escape_xml(y_label)
+            ));
+        }
     }
 
     elements.push("</svg>".to_string());

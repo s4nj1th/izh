@@ -3,6 +3,7 @@ pub enum ChartType {
     Line,
     Bar,
     Scatter,
+    Pie,
 }
 
 #[derive(Debug, Clone, PartialEq)]

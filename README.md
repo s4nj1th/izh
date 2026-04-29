@@ -45,6 +45,7 @@ This produces a complete SVG line chart with axes, labels, title, and gridlines.
 | `line`    | `<path>`    | Connected line chart |
 | `bar`     | `<rect>`    | Vertical bar chart   |
 | `scatter` | `<circle>`  | Scatter plot         |
+| `pie`     | `<path>`    | Pie chart            |
 
 ## Usage
 
@@ -82,10 +83,6 @@ You can run the CLI tool directly to parse a `.vizl` file and pipe the resulting
 cargo run -- examples/line.vizl > output.svg
 ```
 
-### Playground
-
-Open `playground/index.html` in a browser for a live editor with instant SVG preview. _(Note: This currently uses a legacy JavaScript implementation.)_
-
 ## Defaults
 
 | Property   | Value                  |
@@ -107,9 +104,6 @@ vizlang/
 │   ├── bar.vizl
 │   ├── line.vizl
 │   └── scatter.vizl
-├── playground/
-│   ├── app.js
-│   └── index.html
 └── src/
     ├── lib.rs
     ├── main.rs
