@@ -1,20 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-main: #0f1115;
-  --color-panel-bg: rgba(255, 255, 255, 0.03);
-  --color-panel-border: rgba(255, 255, 255, 0.08);
-  --color-text-primary: #f0f0f0;
-  --color-text-secondary: #9aa0a6;
-  --color-accent: #17ab17;
-  --color-accent-hover: #128712;
-  --color-error-bg: rgba(255, 75, 75, 0.1);
-  --color-error-text: #ff6b6b;
+  --color-bg-main: var(--bg-main);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-panel-border: var(--panel-border);
+  --color-panel-bg: var(--panel-bg);
+  --color-accent: #4a90d9;
+  --color-accent-hover: #2e78c5;
+}
+
+:root {
+  --bg-main: #ffffff;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --panel-border: #e5e7eb;
+  --panel-bg: #f9fafb;
+}
+
+.dark {
+  --bg-main: #0f1115;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --panel-border: #1f2937;
+  --panel-bg: #111827;
 }
 
 @layer base {
   body {
-    @apply bg-bg-main text-text-primary h-screen overflow-hidden font-sans;
+    @apply bg-bg-main text-text-primary h-screen overflow-hidden font-sans transition-colors duration-300;
   }
 
   #root {
@@ -23,12 +37,6 @@
 
   a, button {
     @apply cursor-pointer;
-  }
-}
-
-@layer utilities {
-  .glass {
-    @apply bg-white/3 border border-white/8 backdrop-blur-md;
   }
 }
 
@@ -42,10 +50,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(128, 128, 128, 0.3);
 }
