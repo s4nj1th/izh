@@ -1,0 +1,43 @@
+{
+  "name": "frontend2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^1.14.0",
+    "prismjs": "^1.30.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-simple-code-editor": "^0.14.1",
+    "vizlang": "file:../pkg"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/node": "^24.12.2",
+    "@types/prismjs": "^1.26.6",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.5.0",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.5.0",
+    "postcss": "^8.5.12",
+    "rollup": "^4.60.2",
+    "tailwindcss": "^4.2.4",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.58.2",
+    "vite": "^8.0.10",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0"
+  }
+}

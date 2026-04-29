@@ -5,8 +5,6 @@ target
 
 *.pdb
 
-*.svg
-
 **/mutants.out*/
 
 rustc-ice-*.txt
