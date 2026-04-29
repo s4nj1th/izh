@@ -13,7 +13,8 @@ const AXIS_COLOR: &str = "#333333";
 const DATA_COLOR: &str = "#4a90d9";
 const PIE_COLORS: &[&str] = &[
     "#4a90d9", "#f06292", "#4db6ac", "#ffb74d", 
-    "#9575cd", "#81c784", "#ff8a65", "#a1887f"
+    "#9575cd", "#81c784", "#ff8a65", "#a1887f",
+    "#ee9cb6", "#4fc3f7", "#4db6ac", "#80cbc4",
 ];
 const LINE_STROKE_WIDTH: f64 = 2.0;
 const LINE_DOT_RADIUS: f64 = 3.0;
@@ -222,6 +223,10 @@ pub fn render(ast: &VizAST) -> String {
                         "  <circle cx=\"{:.2}\" cy=\"{:.2}\" r=\"{:.2}\" fill=\"{}\" />",
                         cx, cy, r, color
                     ));
+                    elements.push(format!(
+                        "  <text x=\"{:.2}\" y=\"{:.2}\" fill=\"#ffffff\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\" alignment-baseline=\"middle\">{}</text>",
+                        cx, cy, point.y
+                    ));
                     continue;
                 }
 
@@ -238,6 +243,15 @@ pub fn render(ast: &VizAST) -> String {
                 elements.push(format!(
                     "  <path d=\"M {:.2} {:.2} L {:.2} {:.2} A {:.2} {:.2} 0 {} 1 {:.2} {:.2} Z\" fill=\"{}\" stroke=\"#ffffff\" stroke-width=\"1\" />",
                     cx, cy, x1, y1, r, r, large_arc_flag, x2, y2, color
+                ));
+
+                // Add amount label
+                let label_angle = current_angle + slice_angle / 2.0;
+                let lx = cx + r * 0.65 * label_angle.cos();
+                let ly = cy + r * 0.65 * label_angle.sin();
+                elements.push(format!(
+                    "  <text x=\"{:.2}\" y=\"{:.2}\" fill=\"#ffffff\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\" alignment-baseline=\"middle\">{}</text>",
+                    lx, ly, point.y
                 ));
 
                 current_angle = end_angle;

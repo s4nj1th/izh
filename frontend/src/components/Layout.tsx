@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
+import Background from './Background';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,8 +9,9 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   return (
     <div className="flex flex-col min-h-screen bg-bg-main text-text-primary">
+      <Background />
       <Navbar />
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col relative overflow-hidden">
         {children}
       </main>
     </div>

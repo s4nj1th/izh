@@ -6,11 +6,7 @@ import Editor from './components/Editor';
 function Home() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-4xl mx-auto text-center space-y-12 py-20">
-      <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-bold uppercase tracking-widest border border-accent/20">
-          <FaBolt size={12} />
-          Rust Powered WebAssembly
-        </div>
+      <div className="space-y-4"> 
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-text-primary">
           Simple charts. <br />
           <span className="text-text-secondary">Zero friction.</span>
