@@ -7,6 +7,7 @@
     "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
     "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --release --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
     "build": "npm run build:wasm:release && next build",
+    "build:ci": "next build",
     "start": "next start",
     "lint": "next lint"
   },
