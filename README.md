@@ -1,8 +1,12 @@
 <div align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="frontend/public/favicon-dark.svg">
+        <source media="(prefers-color-scheme: light)" srcset="frontend/public/favicon-light.svg">
+        <img src="frontend/public/favicon-light.svg" width="384" alt="VizLang" />
+    </picture>
     <h1>VizLang</h1>
+    <p>A minimal, deterministic, LLM-friendly chart description language that renders to SVG.</p>
 </div>
-
-A minimal, deterministic, LLM-friendly chart description language that renders to SVG.
 
 ## What is VizLang?
 
