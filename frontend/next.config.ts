@@ -1,16 +1,16 @@
 import type { NextConfig } from "next";
-import createMDX from '@next/mdx'
-import remarkGfm from 'remark-gfm'
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkGfm],
+    // Do not pass function plugins here; Turbopack requires loader options to be serializable.
+    remarkPlugins: [],
     rehypePlugins: [],
   },
-})
+});
 
 export default withMDX(nextConfig);
