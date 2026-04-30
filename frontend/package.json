@@ -1,12 +1,14 @@
 {
-  "name": "frontend2",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "prebuild": "node ./scripts/copy-pkg.js",
-    "build": "npm run prebuild && tsc -b && vite build",
+    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
+    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --release --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
+    "build": "npm run build:wasm:release && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -223,10 +223,6 @@ pub fn render(ast: &VizAST) -> String {
                         "  <circle cx=\"{:.2}\" cy=\"{:.2}\" r=\"{:.2}\" fill=\"{}\" />",
                         cx, cy, r, color
                     ));
-                    elements.push(format!(
-                        "  <text x=\"{:.2}\" y=\"{:.2}\" fill=\"#ffffff\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\" alignment-baseline=\"middle\">{}</text>",
-                        cx, cy, point.y
-                    ));
                     continue;
                 }
 
@@ -245,14 +241,7 @@ pub fn render(ast: &VizAST) -> String {
                     cx, cy, x1, y1, r, r, large_arc_flag, x2, y2, color
                 ));
 
-                // Add amount label
-                let label_angle = current_angle + slice_angle / 2.0;
-                let lx = cx + r * 0.65 * label_angle.cos();
-                let ly = cy + r * 0.65 * label_angle.sin();
-                elements.push(format!(
-                    "  <text x=\"{:.2}\" y=\"{:.2}\" fill=\"#ffffff\" font-size=\"10\" font-weight=\"bold\" text-anchor=\"middle\" alignment-baseline=\"middle\">{}</text>",
-                    lx, ly, point.y
-                ));
+
 
                 current_angle = end_angle;
             }
@@ -271,8 +260,8 @@ pub fn render(ast: &VizAST) -> String {
                     legend_x, legend_y - 10.0, color
                 ));
                 elements.push(format!(
-                    "  <text x=\"{:.2}\" y=\"{:.2}\" text-anchor=\"start\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",
-                    legend_x + 20.0, legend_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label
+                    "  <text x=\"{:.2}\" y=\"{:.2}\" text-anchor=\"start\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}: {} ({:.2}%)</text>",
+                    legend_x + 20.0, legend_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label, point.y, (point.y / total) * 100.0
                 ));
                 legend_y += 20.0;
             }

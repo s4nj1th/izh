@@ -20,6 +20,12 @@ async function copyPkg() {
 
     await cp(src, dest, { recursive: true, force: true });
     console.log(`Copied ${src} -> ${dest}`);
+    
+    // Also copy the .wasm file to public directory for the browser to find
+    const wasmSrc = path.join(dest, "vizlang_bg.wasm");
+    const wasmDest = path.join(process.cwd(), "public", "vizlang_bg.wasm");
+    await cp(wasmSrc, wasmDest, { force: true });
+    console.log(`Copied ${wasmSrc} -> ${wasmDest}`);
   } catch (err) {
     console.error(`Failed to copy pkg: ${err}`);
     process.exit(1);

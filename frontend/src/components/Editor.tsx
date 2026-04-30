@@ -50,10 +50,11 @@ data:
 chart: pie
 title: Server Operating Systems
 data:
-Linux, 75
-Windows, 15
-MacOS, 5
-Other, 5`,
+Linux, 72
+Windows, 10
+MacOS, 2
+Other, 6
+`,
 };
 
 export default function Editor() {
