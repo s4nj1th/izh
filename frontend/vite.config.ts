@@ -11,7 +11,7 @@ export default defineConfig({
   plugins: [react(), wasm(), tailwindcss()],
   resolve: {
     alias: {
-      vizlang: path.resolve(__dirname, "../pkg/vizlang.js"),
+      vizlang: path.resolve(__dirname, "./pkg/vizlang.js"),
     },
   },
   server: {
