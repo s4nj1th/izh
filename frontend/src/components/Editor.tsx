@@ -8,7 +8,7 @@ import {
   FaCircleNotch,
   FaDownload,
 } from "react-icons/fa";
-import init, { parse_and_render } from "../../../pkg/vizlang.js";
+import init, { parse_and_render } from "../../pkg/vizlang.js";
 
 const EXAMPLES = {
   line: `# Monthly Revenue
