@@ -1,6 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { FaClipboard, FaCheck, FaTerminal, FaPlay, FaExclamationCircle, FaCircleNotch, FaDownload } from 'react-icons/fa';
-import init, { parse_and_render } from 'vizlang';
+import { useState, useEffect, useRef } from "react";
+import {
+  FaClipboard,
+  FaCheck,
+  FaTerminal,
+  FaPlay,
+  FaExclamationCircle,
+  FaCircleNotch,
+  FaDownload,
+} from "react-icons/fa";
+import init, { parse_and_render } from "vizlang";
 
 const EXAMPLES = {
   line: `# Monthly Revenue
@@ -50,39 +58,43 @@ Other, 5`,
 
 export default function Editor() {
   const [code, setCode] = useState(EXAMPLES.line);
-  const [svgOutput, setSvgOutput] = useState('');
+  const [svgOutput, setSvgOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isWasmLoaded, setIsWasmLoaded] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [fileName, setFileName] = useState('line-chart');
+  const [fileName, setFileName] = useState("line-chart");
   const previewRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    init({ module_or_path: '/vizlang_bg.wasm' })
+    init({ module_or_path: "/vizlang_bg.wasm" })
       .then(() => setIsWasmLoaded(true))
-      .catch((err) => {
-        console.error('Failed to load Wasm:', err);
-        setError('Failed to load WebAssembly engine.');
+      .catch((err: unknown) => {
+        console.error("Failed to load Wasm:", err);
+        setError("Failed to load WebAssembly engine.");
       });
   }, []);
 
   useEffect(() => {
     if (!isWasmLoaded) return;
-    
-    if (code.trim() === '') {
-      setSvgOutput('');
-      setError(null);
+
+    if (code.trim() === "") {
+      setTimeout(() => {
+        setSvgOutput("");
+        setError(null);
+      }, 0);
       return;
     }
 
     try {
       const result = parse_and_render(code);
-      setSvgOutput(result);
-      setError(null);
-    } catch (e: any) {
-      setError(e.toString());
+      setTimeout(() => {
+        setSvgOutput(result);
+        setError(null);
+      }, 0);
+    } catch (e: unknown) {
+      setTimeout(() => setError(String(e)), 0);
     }
   }, [code, isWasmLoaded]);
 
@@ -95,9 +107,9 @@ export default function Editor() {
   };
 
   const handleDownload = () => {
-    const blob = new Blob([code], { type: 'text/plain' });
+    const blob = new Blob([code], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `${fileName}.vizl`;
     a.click();
@@ -106,9 +118,9 @@ export default function Editor() {
 
   const handleDownloadSvg = () => {
     if (svgOutput) {
-      const blob = new Blob([svgOutput], { type: 'image/svg+xml' });
+      const blob = new Blob([svgOutput], { type: "image/svg+xml" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `${fileName}.svg`;
       a.click();
@@ -122,7 +134,7 @@ export default function Editor() {
     }
   };
 
-  const lineCount = code.split('\n').length;
+  const lineCount = code.split("\n").length;
 
   return (
     <div className="flex flex-col h-full bg-bg-main text-text-primary overflow-hidden">
@@ -132,10 +144,12 @@ export default function Editor() {
             <div className="flex items-center gap-4 text-[10px] font-bold text-text-secondary uppercase tracking-widest">
               <FaTerminal size={12} />
               <div className="flex items-center gap-1">
-                <input 
+                <input
                   type="text"
                   value={fileName}
-                  onChange={(e) => setFileName(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ''))}
+                  onChange={(e) =>
+                    setFileName(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))
+                  }
                   className="bg-transparent border-b border-panel-border/50 hover:border-panel-border focus:border-accent text-[12px] font-mono text-text-secondary focus:text-text-primary px-1 transition-all outline-none w-36 text-right"
                   placeholder="filename"
                 />
@@ -143,7 +157,7 @@ export default function Editor() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <select 
+              <select
                 className="bg-bg-main border border-panel-border rounded px-2 py-0.5 text-[10px] outline-none hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
                 onChange={(e) => {
                   const val = e.target.value as keyof typeof EXAMPLES;
@@ -156,7 +170,7 @@ export default function Editor() {
                 <option value="scatter">Scatter Plot</option>
                 <option value="pie">Pie Chart</option>
               </select>
-              <button 
+              <button
                 onClick={handleDownload}
                 className="text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all"
                 title="Download .vizl"
@@ -165,9 +179,9 @@ export default function Editor() {
               </button>
             </div>
           </div>
-          
+
           <div className="flex-1 relative flex overflow-hidden">
-            <div 
+            <div
               ref={lineNumbersRef}
               className="w-10 bg-black/5 dark:bg-black/30 text-right pr-3 py-4 font-mono text-xs leading-relaxed text-text-secondary select-none overflow-hidden opacity-50"
             >
@@ -192,9 +206,9 @@ export default function Editor() {
               <FaPlay size={12} />
               Preview
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <button 
+              <button
                 onClick={handleDownloadSvg}
                 disabled={!svgOutput}
                 className="flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold transition-all uppercase tracking-wider border border-panel-border hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-30"
@@ -202,18 +216,18 @@ export default function Editor() {
                 <FaDownload size={10} />
                 SVG
               </button>
-              
-              <button 
+
+              <button
                 onClick={handleCopy}
                 disabled={!svgOutput}
                 className={`flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold transition-all uppercase tracking-wider border ${
-                  copied 
-                    ? 'text-green-500 border-green-500' 
-                    : 'text-accent border-accent/30 hover:bg-accent/5'
+                  copied
+                    ? "text-green-500 border-green-500"
+                    : "text-accent border-accent/30 hover:bg-accent/5"
                 } disabled:opacity-30`}
               >
                 {copied ? <FaCheck size={10} /> : <FaClipboard size={10} />}
-                {copied ? 'Copied' : 'Copy SVG'}
+                {copied ? "Copied" : "Copy SVG"}
               </button>
             </div>
           </div>
@@ -222,10 +236,12 @@ export default function Editor() {
             {!isWasmLoaded ? (
               <div className="flex flex-col items-center gap-4 text-text-secondary">
                 <FaCircleNotch className="animate-spin" size={24} />
-                <p className="text-xs uppercase tracking-widest">Initializing...</p>
+                <p className="text-xs uppercase tracking-widest">
+                  Initializing...
+                </p>
               </div>
             ) : svgOutput ? (
-              <div 
+              <div
                 ref={previewRef}
                 className="w-full h-full flex items-center justify-center animate-in fade-in duration-300"
                 dangerouslySetInnerHTML={{ __html: svgOutput }}
@@ -242,8 +258,12 @@ export default function Editor() {
               <div className="flex items-start gap-2">
                 <FaExclamationCircle size={14} className="mt-0.5" />
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="text-[10px] font-bold uppercase tracking-tight mb-1">Error</h3>
-                  <p className="text-[10px] font-mono leading-tight break-words">{error}</p>
+                  <h3 className="text-[10px] font-bold uppercase tracking-tight mb-1">
+                    Error
+                  </h3>
+                  <p className="text-[10px] font-mono leading-tight wrap-break-word">
+                    {error}
+                  </p>
                 </div>
               </div>
             </div>
