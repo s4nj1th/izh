@@ -2,7 +2,7 @@ chart: pie
 title: Server Operating Systems
 
 data:
-Linux, 72
-Windows, 10
-MacOS, 2
-Other, 6
+"Linux", 72
+"Windows", 10
+"MacOS", 2
+"Other", 6

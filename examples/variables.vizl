@@ -1,0 +1,21 @@
+# Example with Variables and Math
+chart: bar
+title: Budget Analysis
+
+# Variable definitions
+total_budget = 1000
+marketing_pct = 0.3
+dev_pct = 0.5
+ops_pct = 0.2
+
+# Math in definitions
+marketing_amt = total_budget * marketing_pct
+dev_amt = total_budget * dev_pct
+ops_amt = total_budget * ops_pct
+
+# Data rows with expressions
+data:
+"Marketing", marketing_amt
+"Development", dev_amt
+"Operations", ops_amt
+"Contingency", total_budget - (marketing_amt + dev_amt + ops_amt) + 50

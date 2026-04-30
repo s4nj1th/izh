@@ -1,0 +1,36 @@
+# Basic Syntax
+
+VizLang uses a key-value structure for properties and a comma-separated format for data.
+
+## Properties
+
+Properties are defined at the top of your file using the `key: value` format.
+
+```vizl
+chart: bar
+title: "My Awesome Chart"
+x: "Category"
+y: "Value"
+```
+
+### Key Properties
+
+| Key     | Description                                          |
+| ------- | ---------------------------------------------------- |
+| `chart` | The type of chart (`line`, `bar`, `scatter`, `pie`). |
+| `title` | The main heading of the chart.                       |
+| `x`     | Label for the horizontal axis.                       |
+| `y`     | Label for the vertical axis.                         |
+
+## Data Block
+
+The `data:` keyword marks the beginning of your data points. Each row below it should follow the `x, y` format.
+
+```vizl
+data:
+"Jan", 100
+"Feb", 150
+"Mar", 125
+```
+
+> **Note**: Labels in the data block should be wrapped in double quotes (e.g., `"January"`) to distinguish them from variables.

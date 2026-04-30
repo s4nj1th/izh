@@ -1,0 +1,35 @@
+# Variables & Math
+
+VizLang supports dynamic calculations using variables and basic arithmetic.
+
+## Defining Variables
+
+You can define variables using the `NAME = EXPRESSION` syntax. Optional type keywords (`int`, `float`, `string`) can be used for clarity.
+
+```vizl
+int base = 100
+float multiplier = 1.25
+string label_prefix = "Year "
+```
+
+## Mathematical Operations
+
+Supports standard operators and parentheses for grouping:
+
+- `+` (Addition / String Concatenation)
+- `-` (Subtraction)
+- `*` (Multiplication)
+- `/` (Division)
+
+### Example
+
+```vizl
+chart: line
+int start_val = 500
+float growth = 1.1
+
+data:
+"Base", start_val
+"Growth 1", start_val * growth
+"Growth 2", start_val * growth * growth
+```
