@@ -1,4 +1,4 @@
-# Block-style data (no inline arrays)
+// Block-style data (no inline arrays)
 chart: bar
 title: Quarterly Revenue (block-style)
 

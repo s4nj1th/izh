@@ -1,15 +1,15 @@
-# Typed Variables and Arrays example
+// Typed Variables and Arrays example
 chart: line
 
-# Typed variable definitions
+// Typed variable definitions
 string my_title = "Revenue " + "Forecast"
 title: my_title
 
-# Typed fixed-size arrays
+// Typed fixed-size arrays
 string[] months = ["Jan", "Feb", "Mar"]
 int[] sales = [500, 625, 781]
 
-# Build data as an inline array-of-pairs using the arrays above (expanded manually here)
+// Build data as an inline array-of-pairs using the arrays above (expanded manually here)
 myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
 
 data: myData

@@ -1,4 +1,4 @@
-# Nulls filled with next value
+// Nulls filled with next value
 chart: line
 title: Nulls filled with next (forward)
 

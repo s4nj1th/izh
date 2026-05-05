@@ -84,6 +84,64 @@ impl Value {
     }
 }
 
+fn strip_comments_preserve_lines(src: &str) -> String {
+    let mut out = String::with_capacity(src.len());
+    let mut chars = src.chars().peekable();
+    let mut in_string = false;
+    while let Some(c) = chars.next() {
+        if in_string {
+            out.push(c);
+            if c == '"' {
+                in_string = false;
+            }
+            continue;
+        }
+
+        if c == '"' {
+            in_string = true;
+            out.push(c);
+            continue;
+        }
+
+        if c == '/' {
+            if let Some(&n) = chars.peek() {
+                if n == '/' {
+                    chars.next();
+                    while let Some(nc) = chars.next() {
+                        if nc == '\n' {
+                            out.push('\n');
+                            break;
+                        }
+                    }
+                    continue;
+                } else if n == '*' {
+                    chars.next();
+                    let mut nl_count = 0usize;
+                    while let Some(nc) = chars.next() {
+                        if nc == '*' {
+                            if let Some(&p) = chars.peek() {
+                                if p == '/' {
+                                    chars.next();
+                                    break;
+                                }
+                            }
+                        }
+                        if nc == '\n' {
+                            nl_count += 1;
+                        }
+                    }
+                    for _ in 0..nl_count {
+                        out.push('\n');
+                    }
+                    continue;
+                }
+            }
+        }
+        out.push(c);
+    }
+    out
+}
+
 struct Tokenizer<'a> {
     input: std::iter::Peekable<std::str::Chars<'a>>,
 }
@@ -648,6 +706,8 @@ fn parse_array_literal(
 }
 
 pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
+    let source = strip_comments_preserve_lines(source);
+
     let mut chart_type = None;
     let mut title = None;
     let mut x_label = None;
@@ -661,7 +721,7 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
         let line_number = line_index + 1;
         let trimmed_line = raw_line.trim();
 
-        if trimmed_line.is_empty() || trimmed_line.starts_with('#') {
+        if trimmed_line.is_empty() {
             continue;
         }
 

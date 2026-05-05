@@ -1,102 +1,102 @@
 export const EXAMPLES = {
-  line: `# Line chart example
+  line: `// Line chart example
 chart: line
 title: Monthly Revenue
 
 x: month
 y: revenue ($k)
 
-# Inline array-of-pairs (fixed-size)
+// Inline array-of-pairs (fixed-size)
 myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22], ["May", 28], ["Jun", 25], ["Jul", 30], ["Aug", 34], ["Sep", 31], ["Oct", 38], ["Nov", 42], ["Dec", 48]]
 
 data: myData`,
 
-  bar: `# Bar chart example
+  bar: `// Bar chart example
 chart: bar
 title: Quarterly Sales
 
 x: quarter
 y: units sold
 
-# Use an inline fixed-size array-of-pairs
+// Use an inline fixed-size array-of-pairs
 myData = [["Q1", 340], ["Q2", 520], ["Q3", 480], ["Q4", 610]]
 
 data: myData`,
 
-  scatter: `# Scatter plot example
+  scatter: `// Scatter plot example
 chart: scatter
 title: Height vs Weight
 
 x: height (cm)
 y: weight (kg)
 
-# Fixed-size array of (x,y) pairs
+// Fixed-size array of (x,y) pairs
 myPoints = [[155, 52], [160, 58], [165, 62], [168, 65], [170, 68], [172, 70], [175, 74], [178, 78], [180, 80], [183, 85], [185, 88], [190, 92]]
 
  data: myPoints`,
 
-  pie: `# Pie chart example
+  pie: `// Pie chart example
 chart: pie
 title: Server Operating Systems
 
-# Inline array-of-pairs for pie segments
+// Inline array-of-pairs for pie segments
 osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
 
  data: osShares`,
 
-  variables: `# Variables, Arrays and Nulls example
+  variables: `// Variables, Arrays and Nulls example
 chart: bar
 title: Budget Analysis
 
-# Variable definitions
+// Variable definitions
 total_budget = 1000
 marketing_pct = 0.3
 dev_pct = 0.5
 ops_pct = 0.2
 
-# Calculated amounts
+// Calculated amounts
 marketing_amt = total_budget * marketing_pct
 dev_amt = total_budget * dev_pct
 ops_amt = total_budget * ops_pct
 
-# Example array-of-pairs with a null contingency value
+// Example array-of-pairs with a null contingency value
 myData = [["Marketing", marketing_amt], ["Development", dev_amt], ["Operations", ops_amt], ["Contingency", null]]
 
-# Fill nulls with zero (could be mean, prev, next, skip)
+// Fill nulls with zero (could be mean, prev, next, skip)
 null_fill: zero
 
  data: myData`,
 
-  types: `# Typed Variables and Arrays example
+  types: `// Typed Variables and Arrays example
 chart: line
 
-# Typed variable definitions
+// Typed variable definitions
 string my_title = "Revenue " + "Forecast"
 title: my_title
 
-# Typed fixed-size arrays
+// Typed fixed-size arrays
 string[] months = ["Jan", "Feb", "Mar"]
 int[] sales = [500, 625, 781]
 
-# Build data as an inline array-of-pairs using the arrays above (expanded manually here)
+// Build data as an inline array-of-pairs using the arrays above (expanded manually here)
 myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
 
  data: myData`,
 
-  null_zero: `# Nulls filled with zero
+  null_zero: `// Nulls filled with zero
 chart: line
 title: Nulls filled with zero
 
 x: month
 y: value
 
-# array-of-pairs with a null entry
+// array-of-pairs with a null entry
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
 null_fill: zero
 
  data: myData`,
 
-  null_mean: `# Nulls filled with mean
+  null_mean: `// Nulls filled with mean
 chart: line
 title: Nulls filled with mean
 
@@ -108,7 +108,7 @@ null_fill: mean
 
  data: myData`,
 
-  null_prev: `# Nulls filled with previous value
+  null_prev: `// Nulls filled with previous value
 chart: line
 title: Nulls filled with previous (prev)
 
@@ -120,7 +120,7 @@ null_fill: prev
 
  data: myData`,
 
-  null_next: `# Nulls filled with next value
+  null_next: `// Nulls filled with next value
 chart: line
 title: Nulls filled with next (forward)
 
@@ -132,7 +132,7 @@ null_fill: next
 
  data: myData`,
 
-  null_skip: `# Nulls skipped (dropped)
+  null_skip: `// Nulls skipped (dropped)
 chart: line
 title: Nulls skipped (skip)
 
@@ -144,7 +144,7 @@ null_fill: skip
 
  data: myData`,
 
-  block_style: `# Block-style data (no inline arrays)
+  block_style: `// Block-style data (no inline arrays)
 chart: bar
 title: Quarterly Revenue (block-style)
 
@@ -157,15 +157,15 @@ data:
 "Q3", 170
 "Q4", 200`,
 
-  range_example: `# Range and typed arrays
+  range_example: `// Range and typed arrays
 chart: bar
 title: Yearly Counts from Range
 
-# Generate an integer range (inclusive)
+// Generate an integer range (inclusive)
 years = [2018..2022]
 int[] counts = [10, 20, 30, 25, 35]
 
-# Build pairs manually (fixed-size array-of-pairs)
+// Build pairs manually (fixed-size array-of-pairs)
 myData = [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
 
 data: myData`,

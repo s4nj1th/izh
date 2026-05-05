@@ -1,22 +1,22 @@
-# Variables, Arrays and Nulls example
+// Variables, Arrays and Nulls example
 chart: bar
 title: Budget Analysis
 
-# Variable definitions
+// Variable definitions
 total_budget = 1000
 marketing_pct = 0.3
 dev_pct = 0.5
 ops_pct = 0.2
 
-# Calculated amounts
+// Calculated amounts
 marketing_amt = total_budget * marketing_pct
 dev_amt = total_budget * dev_pct
 ops_amt = total_budget * ops_pct
 
-# Example array-of-pairs with a null contingency value
+// Example array-of-pairs with a null contingency value
 myData = [["Marketing", marketing_amt], ["Development", dev_amt], ["Operations", ops_amt], ["Contingency", null]]
 
-# Fill nulls with zero (could be mean, prev, next, skip)
+// Fill nulls with zero (could be mean, prev, next, skip)
 null_fill: zero
 
 data: myData
