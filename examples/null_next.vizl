@@ -1,0 +1,11 @@
+# Nulls filled with next value
+chart: line
+title: Nulls filled with next (forward)
+
+x: month
+y: value
+
+myData = [["Jan", null], ["Feb", 8], ["Mar", null], ["Apr", 20]]
+null_fill: next
+
+data: myData

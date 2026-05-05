@@ -24,7 +24,7 @@ impl std::fmt::Display for XValue {
 #[derive(Debug, Clone, PartialEq)]
 pub struct DataPoint {
     pub x: XValue,
-    pub y: f64,
+    pub y: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -34,4 +34,5 @@ pub struct VizAST {
     pub x_label: Option<String>,
     pub y_label: Option<String>,
     pub data: Vec<DataPoint>,
+    pub null_fill: Option<String>,
 }

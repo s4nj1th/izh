@@ -1,0 +1,11 @@
+# Nulls filled with mean
+chart: line
+title: Nulls filled with mean
+
+x: month
+y: value
+
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 40]]
+null_fill: mean
+
+data: myData

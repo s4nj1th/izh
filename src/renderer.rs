@@ -12,8 +12,7 @@ const GRID_LINE_COLOR: &str = "#e0e0e0";
 const AXIS_COLOR: &str = "#333333";
 const DATA_COLOR: &str = "#4a90d9";
 const PIE_COLORS: &[&str] = &[
-    "#4a90d9", "#f06292", "#4db6ac", "#ffb74d", 
-    "#9575cd", "#81c784", "#ff8a65", "#a1887f",
+    "#4a90d9", "#f06292", "#4db6ac", "#ffb74d", "#9575cd", "#81c784", "#ff8a65", "#a1887f",
     "#ee9cb6", "#4fc3f7", "#4db6ac", "#80cbc4",
 ];
 const LINE_STROKE_WIDTH: f64 = 2.0;
@@ -60,27 +59,89 @@ fn round(value: f64) -> f64 {
 
 fn escape_xml(raw: &str) -> String {
     raw.replace("&", "&amp;")
-       .replace("<", "&lt;")
-       .replace(">", "&gt;")
-       .replace("\"", "&quot;")
-       .replace("'", "&apos;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&apos;")
 }
 
 pub fn render(ast: &VizAST) -> String {
     let chart_width = CANVAS_WIDTH - PADDING * 2.0;
     let chart_height = CANVAS_HEIGHT - PADDING * 2.0;
 
+    let null_fill = ast.null_fill.as_deref().unwrap_or("zero");
+    let non_null_vals: Vec<f64> = ast.data.iter().filter_map(|d| d.y).collect();
+    let mean_value = if non_null_vals.is_empty() {
+        0.0
+    } else {
+        non_null_vals.iter().copied().sum::<f64>() / (non_null_vals.len() as f64)
+    };
+
+    let mut filled_data: Vec<(XValue, f64)> = Vec::new();
+    for (i, d) in ast.data.iter().enumerate() {
+        match d.y {
+            Some(v) => filled_data.push((d.x.clone(), v)),
+            None => match null_fill {
+                "zero" => filled_data.push((d.x.clone(), 0.0)),
+                "mean" | "average" => filled_data.push((d.x.clone(), mean_value)),
+                "prev" | "previous" => {
+                    if let Some((_, prev_v)) = filled_data.last() {
+                        filled_data.push((d.x.clone(), *prev_v));
+                    } else {
+                        filled_data.push((d.x.clone(), 0.0));
+                    }
+                }
+                "next" | "forward" => {
+                    let mut found = None;
+                    for j in (i + 1)..ast.data.len() {
+                        if let Some(nv) = ast.data[j].y {
+                            found = Some(nv);
+                            break;
+                        }
+                    }
+                    if let Some(nv) = found {
+                        filled_data.push((d.x.clone(), nv));
+                    } else {
+                        filled_data.push((d.x.clone(), 0.0));
+                    }
+                }
+                "skip" => {}
+                _ => {
+                    filled_data.push((d.x.clone(), 0.0));
+                }
+            },
+        }
+    }
+
+    if filled_data.is_empty() {
+        return format!(
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{}\" height=\"{}\" viewBox=\"0 0 {} {}\"></svg>",
+            CANVAS_WIDTH, CANVAS_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT
+        );
+    }
+
     let y_data_min = 0.0;
-    let max_y = ast.data.iter().map(|d| d.y).fold(f64::NEG_INFINITY, f64::max);
+    let max_y = filled_data
+        .iter()
+        .map(|(_, y)| *y)
+        .fold(f64::NEG_INFINITY, f64::max);
     let y_data_max = compute_nice_max(if max_y.is_finite() { max_y } else { 0.0 });
 
-    let all_x_numeric = ast.data.iter().all(|d| matches!(d.x, XValue::Number(_)));
-    
+    let all_x_numeric = filled_data
+        .iter()
+        .all(|(x, _)| matches!(x, XValue::Number(_)));
+
     let mut x_data_min = 0.0;
     let mut x_data_max = 0.0;
     if all_x_numeric {
-        x_data_min = ast.data.iter().map(|d| if let XValue::Number(n) = &d.x { *n } else { 0.0 }).fold(f64::INFINITY, f64::min);
-        x_data_max = ast.data.iter().map(|d| if let XValue::Number(n) = &d.x { *n } else { 0.0 }).fold(f64::NEG_INFINITY, f64::max);
+        x_data_min = filled_data
+            .iter()
+            .map(|(x, _)| if let XValue::Number(n) = x { *n } else { 0.0 })
+            .fold(f64::INFINITY, f64::min);
+        x_data_max = filled_data
+            .iter()
+            .map(|(x, _)| if let XValue::Number(n) = x { *n } else { 0.0 })
+            .fold(f64::NEG_INFINITY, f64::max);
     }
 
     let to_pixel_x = |data_index: usize| -> f64 {
@@ -88,14 +149,18 @@ pub fn render(ast: &VizAST) -> String {
             if x_data_max == x_data_min {
                 return PADDING + chart_width / 2.0;
             }
-            let val = if let XValue::Number(n) = &ast.data[data_index].x { *n } else { 0.0 };
+            let val = if let XValue::Number(n) = &filled_data[data_index].0 {
+                *n
+            } else {
+                0.0
+            };
             let ratio = (val - x_data_min) / (x_data_max - x_data_min);
             round(PADDING + ratio * chart_width)
         } else {
-            if ast.data.len() <= 1 {
+            if filled_data.len() <= 1 {
                 return PADDING + chart_width / 2.0;
             }
-            round(PADDING + (data_index as f64 / (ast.data.len() - 1) as f64) * chart_width)
+            round(PADDING + (data_index as f64 / (filled_data.len() - 1) as f64) * chart_width)
         }
     };
 
@@ -108,13 +173,12 @@ pub fn render(ast: &VizAST) -> String {
     };
 
     let bar_left_edge = |data_index: usize| -> f64 {
-        let slot_width = chart_width / (ast.data.len() as f64);
+        let slot_width = chart_width / (filled_data.len() as f64);
         round(PADDING + (data_index as f64) * slot_width + (slot_width * BAR_GAP_RATIO) / 2.0)
     };
 
-    let bar_pixel_width = || -> f64 {
-        round((chart_width / (ast.data.len() as f64)) * (1.0 - BAR_GAP_RATIO))
-    };
+    let bar_pixel_width =
+        || -> f64 { round((chart_width / (filled_data.len() as f64)) * (1.0 - BAR_GAP_RATIO)) };
 
     let mut elements = Vec::new();
 
@@ -147,37 +211,52 @@ pub fn render(ast: &VizAST) -> String {
 
         elements.push(format!(
             "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
-            PADDING, PADDING + chart_height, PADDING + chart_width, PADDING + chart_height, AXIS_COLOR
+            PADDING,
+            PADDING + chart_height,
+            PADDING + chart_width,
+            PADDING + chart_height,
+            AXIS_COLOR
         ));
 
         elements.push(format!(
             "  <line x1=\"{}\" y1=\"{}\" x2=\"{}\" y2=\"{}\" stroke=\"{}\" stroke-width=\"1\" />",
-            PADDING, PADDING, PADDING, PADDING + chart_height, AXIS_COLOR
+            PADDING,
+            PADDING,
+            PADDING,
+            PADDING + chart_height,
+            AXIS_COLOR
         ));
     }
 
     match ast.chart_type {
         ChartType::Line => {
-            if !ast.data.is_empty() {
-                let path_commands: Vec<String> = ast.data.iter().enumerate().map(|(i, point)| {
-                    let px = to_pixel_x(i);
-                    let py = to_pixel_y(point.y);
-                    if i == 0 {
-                        format!("M {} {}", px, py)
-                    } else {
-                        format!("L {} {}", px, py)
-                    }
-                }).collect();
+            if !filled_data.is_empty() {
+                let path_commands: Vec<String> = filled_data
+                    .iter()
+                    .enumerate()
+                    .map(|(i, (_x, y))| {
+                        let px = to_pixel_x(i);
+                        let py = to_pixel_y(*y);
+                        if i == 0 {
+                            format!("M {} {}", px, py)
+                        } else {
+                            format!("L {} {}", px, py)
+                        }
+                    })
+                    .collect();
 
                 elements.push(format!(
                     "  <path d=\"{}\" fill=\"none\" stroke=\"{}\" stroke-width=\"{}\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />",
                     path_commands.join(" "), DATA_COLOR, LINE_STROKE_WIDTH
                 ));
 
-                for i in 0..ast.data.len() {
+                for i in 0..filled_data.len() {
                     elements.push(format!(
                         "  <circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\" />",
-                        to_pixel_x(i), to_pixel_y(ast.data[i].y), LINE_DOT_RADIUS, DATA_COLOR
+                        to_pixel_x(i),
+                        to_pixel_y(filled_data[i].1),
+                        LINE_DOT_RADIUS,
+                        DATA_COLOR
                     ));
                 }
             }
@@ -186,9 +265,9 @@ pub fn render(ast: &VizAST) -> String {
             let bar_width = bar_pixel_width();
             let baseline_y = to_pixel_y(0.0);
 
-            for i in 0..ast.data.len() {
+            for i in 0..filled_data.len() {
                 let bar_x = bar_left_edge(i);
-                let bar_top = to_pixel_y(ast.data[i].y);
+                let bar_top = to_pixel_y(filled_data[i].1);
                 let bar_height = baseline_y - bar_top;
 
                 elements.push(format!(
@@ -198,10 +277,13 @@ pub fn render(ast: &VizAST) -> String {
             }
         }
         ChartType::Scatter => {
-            for i in 0..ast.data.len() {
+            for i in 0..filled_data.len() {
                 elements.push(format!(
                     "  <circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\" opacity=\"0.8\" />",
-                    to_pixel_x(i), to_pixel_y(ast.data[i].y), SCATTER_DOT_RADIUS, DATA_COLOR
+                    to_pixel_x(i),
+                    to_pixel_y(filled_data[i].1),
+                    SCATTER_DOT_RADIUS,
+                    DATA_COLOR
                 ));
             }
         }
@@ -212,13 +294,13 @@ pub fn render(ast: &VizAST) -> String {
             let cy = PADDING + chart_height / 2.0;
             let r = f64::min(pie_area_width, chart_height) / 2.0;
 
-            let total: f64 = ast.data.iter().map(|d| d.y).sum();
+            let total: f64 = filled_data.iter().map(|(_, y)| *y).sum();
             let mut current_angle: f64 = -std::f64::consts::FRAC_PI_2;
 
-            for (i, point) in ast.data.iter().enumerate() {
+            for (i, (_x, y)) in filled_data.iter().enumerate() {
                 let color = PIE_COLORS[i % PIE_COLORS.len()];
 
-                if point.y == total {
+                if *y == total {
                     elements.push(format!(
                         "  <circle cx=\"{:.2}\" cy=\"{:.2}\" r=\"{:.2}\" fill=\"{}\" />",
                         cx, cy, r, color
@@ -226,7 +308,7 @@ pub fn render(ast: &VizAST) -> String {
                     continue;
                 }
 
-                let slice_angle = (point.y / total) * 2.0 * std::f64::consts::PI;
+                let slice_angle = (*y / total) * 2.0 * std::f64::consts::PI;
                 let end_angle = current_angle + slice_angle;
 
                 let x1 = cx + r * current_angle.cos();
@@ -234,34 +316,38 @@ pub fn render(ast: &VizAST) -> String {
                 let x2 = cx + r * end_angle.cos();
                 let y2 = cy + r * end_angle.sin();
 
-                let large_arc_flag = if slice_angle > std::f64::consts::PI { 1 } else { 0 };
+                let large_arc_flag = if slice_angle > std::f64::consts::PI {
+                    1
+                } else {
+                    0
+                };
 
                 elements.push(format!(
                     "  <path d=\"M {:.2} {:.2} L {:.2} {:.2} A {:.2} {:.2} 0 {} 1 {:.2} {:.2} Z\" fill=\"{}\" stroke=\"#ffffff\" stroke-width=\"1\" />",
                     cx, cy, x1, y1, r, r, large_arc_flag, x2, y2, color
                 ));
 
-
-
                 current_angle = end_angle;
             }
 
             let legend_x = PADDING + pie_area_width + 20.0;
             let mut legend_y = PADDING + 20.0;
-            for (i, point) in ast.data.iter().enumerate() {
+            for (i, (x, y)) in filled_data.iter().enumerate() {
                 let color = PIE_COLORS[i % PIE_COLORS.len()];
-                let label = match &point.x {
+                let label = match x {
                     XValue::String(s) => escape_xml(s),
                     XValue::Number(n) => escape_xml(&n.to_string()),
                 };
 
                 elements.push(format!(
                     "  <rect x=\"{:.2}\" y=\"{:.2}\" width=\"12\" height=\"12\" fill=\"{}\" />",
-                    legend_x, legend_y - 10.0, color
+                    legend_x,
+                    legend_y - 10.0,
+                    color
                 ));
                 elements.push(format!(
                     "  <text x=\"{:.2}\" y=\"{:.2}\" text-anchor=\"start\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}: {} ({:.2}%)</text>",
-                    legend_x + 20.0, legend_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label, point.y, (point.y / total) * 100.0
+                    legend_x + 20.0, legend_y, FONT_FAMILY, TICK_LABEL_FONT_SIZE, AXIS_COLOR, label, y, (y / total) * 100.0
                 ));
                 legend_y += 20.0;
             }
@@ -270,13 +356,13 @@ pub fn render(ast: &VizAST) -> String {
 
     if ast.chart_type != ChartType::Pie {
         let x_tick_y = PADDING + chart_height + 16.0;
-        for i in 0..ast.data.len() {
+        for i in 0..filled_data.len() {
             let tick_x = match ast.chart_type {
                 ChartType::Bar => bar_left_edge(i) + bar_pixel_width() / 2.0,
                 _ => to_pixel_x(i),
             };
 
-            let label = match &ast.data[i].x {
+            let label = match &filled_data[i].0 {
                 XValue::String(s) => escape_xml(s),
                 XValue::Number(n) => escape_xml(&n.to_string()),
             };

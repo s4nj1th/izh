@@ -1,0 +1,11 @@
+# Nulls filled with previous value
+chart: line
+title: Nulls filled with previous (prev)
+
+x: month
+y: value
+
+myData = [["Jan", 5], ["Feb", null], ["Mar", 15], ["Apr", null], ["May", 25]]
+null_fill: prev
+
+data: myData

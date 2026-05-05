@@ -1,0 +1,12 @@
+# Block-style data (no inline arrays)
+chart: bar
+title: Quarterly Revenue (block-style)
+
+x: quarter
+y: revenue
+
+data:
+"Q1", 120
+"Q2", 150
+"Q3", 170
+"Q4", 200

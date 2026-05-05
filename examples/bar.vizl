@@ -5,8 +5,7 @@ title: Quarterly Sales
 x: quarter
 y: units sold
 
-data:
-"Q1", 340
-"Q2", 520
-"Q3", 480
-"Q4", 610
+# Use an inline fixed-size array-of-pairs
+myData = [["Q1", 340], ["Q2", 520], ["Q3", 480], ["Q4", 610]]
+
+data: myData

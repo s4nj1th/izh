@@ -5,16 +5,7 @@ title: Monthly Revenue
 x: month
 y: revenue ($k)
 
-data:
-"Jan", 12
-"Feb", 19
-"Mar", 15
-"Apr", 22
-"May", 28
-"Jun", 25
-"Jul", 30
-"Aug", 34
-"Sep", 31
-"Oct", 38
-"Nov", 42
-"Dec", 48
+# Inline array-of-pairs (fixed-size)
+myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22], ["May", 28], ["Jun", 25], ["Jul", 30], ["Aug", 34], ["Sep", 31], ["Oct", 38], ["Nov", 42], ["Dec", 48]]
+
+data: myData

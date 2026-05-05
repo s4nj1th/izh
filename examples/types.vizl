@@ -1,18 +1,15 @@
-# Example with Typed Variables and Quotes
+# Typed Variables and Arrays example
 chart: line
 
 # Typed variable definitions
 string my_title = "Revenue " + "Forecast"
 title: my_title
 
-int base_revenue = 500
-float growth_multiplier = 1.25
+# Typed fixed-size arrays
+string[] months = ["Jan", "Feb", "Mar"]
+int[] sales = [500, 625, 781]
 
-# Variable used in labels
-string jan_label = "January"
+# Build data as an inline array-of-pairs using the arrays above (expanded manually here)
+myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
 
-data:
-jan_label, base_revenue
-"February", base_revenue * growth_multiplier
-"March", base_revenue * growth_multiplier * growth_multiplier
-"Final", base_revenue * 2
+data: myData

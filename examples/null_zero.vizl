@@ -1,0 +1,12 @@
+# Nulls filled with zero
+chart: line
+title: Nulls filled with zero
+
+x: month
+y: value
+
+# array-of-pairs with a null entry
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
+null_fill: zero
+
+data: myData

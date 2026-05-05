@@ -1,4 +1,4 @@
-# Example with Variables and Math
+# Variables, Arrays and Nulls example
 chart: bar
 title: Budget Analysis
 
@@ -8,14 +8,15 @@ marketing_pct = 0.3
 dev_pct = 0.5
 ops_pct = 0.2
 
-# Math in definitions
+# Calculated amounts
 marketing_amt = total_budget * marketing_pct
 dev_amt = total_budget * dev_pct
 ops_amt = total_budget * ops_pct
 
-# Data rows with expressions
-data:
-"Marketing", marketing_amt
-"Development", dev_amt
-"Operations", ops_amt
-"Contingency", total_budget - (marketing_amt + dev_amt + ops_amt) + 50
+# Example array-of-pairs with a null contingency value
+myData = [["Marketing", marketing_amt], ["Development", dev_amt], ["Operations", ops_amt], ["Contingency", null]]
+
+# Fill nulls with zero (could be mean, prev, next, skip)
+null_fill: zero
+
+data: myData

@@ -1,0 +1,11 @@
+# Nulls skipped (dropped)
+chart: line
+title: Nulls skipped (skip)
+
+x: month
+y: value
+
+myData = [["Jan", 100], ["Feb", null], ["Mar", 120], ["Apr", null], ["May", 130]]
+null_fill: skip
+
+data: myData
