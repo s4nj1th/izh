@@ -10,94 +10,113 @@
 
 ## What is VizLang?
 
-VizLang (`.vizl`) is a line-based DSL for describing charts. Write a few lines of plain text, get a clean SVG back. No dependencies, no frameworks. It is written entirely in Rust, setting the foundation for future WebAssembly (Wasm) integration.
+VizLang (`.vizl`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
 
-## Quick Example
+## Quick Example (array style)
 
 ```vizl
 chart: line
 title: Monthly Revenue
 
 x: month
+y: revenue ($k)
+
+myData = [["Jan", 12], ["Feb", 19], ["Mar", 15]]
+
+data: myData
+```
+
+You can still use the original block-style data form:
+
+```vizl
+chart: bar
+x: quarter
 y: revenue
 
 data:
-Jan, 10
-Feb, 20
-Mar, 15
-Apr, 25
+"Q1", 120
+"Q2", 150
+"Q3", 170
+"Q4", 200
 ```
 
-This produces a complete SVG line chart with axes, labels, title, and gridlines.
+## Notable language features (summary)
 
-## Syntax Rules
+- Comments: `// single-line`, `/* block */`, and `#` (legacy). Block comments preserve newlines so diagnostics keep correct line numbers.
+- Arrays: fixed-size arrays created at parse time. Forms: explicit lists (`[a, b, c]`), ranges (`[1..5]`), comprehensions (`[expr for i in start..end]`).
+- Typed arrays: `int[]`, `float[]`, `string[]` — elements coerced at parse time.
+- Nulls: `null` or `None` allowed in array literals and data; use `null_fill` to control handling.
+- Data: `data:` accepts block-style rows or an array-of-pairs variable / inline array.
 
-| Rule        | Detail                             |
-| ----------- | ---------------------------------- |
-| Keys        | Always lowercase                   |
-| Separator   | Colon (`:`) for key-value pairs    |
-| Data        | Comma-separated (`x, y`)           |
-| Comments    | Lines starting with `#`            |
-| Blank lines | Ignored                            |
-| Nesting     | One level max (only `data:` block) |
-| File scope  | One chart per `.vizl` file         |
+## Null fill strategies
 
-## Supported Charts
+Set `null_fill:` to one of:
+- `zero` — replace nulls with 0 (default)
+- `mean` / `average` — replace with mean of non-null values
+- `prev` / `previous` — replace with previous non-null value (or 0 if none)
+- `next` / `forward` — replace with next non-null value (or 0 if none)
+- `skip` — drop points with null y (affects indexing and axes)
 
-| Type      | SVG Element | Description          |
-| --------- | ----------- | -------------------- |
-| `line`    | `<path>`    | Connected line chart |
-| `bar`     | `<rect>`    | Vertical bar chart   |
-| `scatter` | `<circle>`  | Scatter plot         |
-| `pie`     | `<path>`    | Pie chart            |
+Example:
 
-## Usage
+```vizl
+null_fill: mean
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+data: myData
+```
 
-### Rust API
+## Usage (Rust API)
 
 ```rust
 use vizlang::{parser, renderer};
-
-let source = "
+let source = r#"
 chart: line
-title: Sales
-
-x: quarter
-y: units
-
-data:
-Q1, 100
-Q2, 150
-Q3, 130
-Q4, 200
-";
-
-// Parse the DSL string into an AST
+x: month
+y: value
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+null_fill: mean
+data: myData
+"#;
 let ast = parser::parse(source).unwrap();
-
-// Render the AST into an SVG string
 let svg = renderer::render(&ast);
 ```
 
-### CLI
+## CLI
 
-You can run the CLI tool directly to parse a `.vizl` file and pipe the resulting SVG.
+Build the wasm or CLI and run the parser/renderer locally. Example (CLI):
 
 ```bash
-cargo run -- examples/line.vizl > output.svg
+cargo run -- examples/line.vizl > out.svg
 ```
 
-## Defaults
+## Running the frontend (dev)
 
-| Property   | Value                  |
-| ---------- | ---------------------- |
-| Width      | 640px                  |
-| Height     | 400px                  |
-| Padding    | 40px                   |
-| Grid       | Light gray (`#e0e0e0`) |
-| Background | White                  |
+If you want to run the Next.js frontend locally and use the Wasm bindings:
 
-## Project Structure
+1. Build the wasm package from the Rust crate (requires `wasm-pack`):
+
+```bash
+cd /path/to/vizlang/frontend
+npm run build:wasm:release
+```
+
+2. Start the frontend:
+
+```bash
+npm ci
+npm run dev
+```
+
+(There are helper npm scripts in `frontend/package.json` to build wasm and run the app, but running `wasm-pack` manually is explicit and predictable.)
+
+## Examples
+
+See the `examples/` directory for many examples:
+- array-of-pairs, block-style data
+- null-handling (zero/mean/prev/next/skip)
+- typed arrays and ranges
+
+## Project structure
 
 ```
 vizlang/
@@ -105,15 +124,7 @@ vizlang/
 ├── README.md
 ├── SPEC.md
 ├── examples/
-│   ├── bar.vizl
-│   ├── line.vizl
-│   └── scatter.vizl
 └── src/
-    ├── lib.rs
-    ├── main.rs
-    ├── parser.rs
-    ├── renderer.rs
-    └── types.rs
 ```
 
 ## License
