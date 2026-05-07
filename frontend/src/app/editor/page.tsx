@@ -8,8 +8,9 @@ import {
   FaExclamationCircle,
   FaCircleNotch,
   FaDownload,
-  FaEye,
   FaFileCode,
+  FaExternalLinkAlt,
+  FaEye,
 } from "react-icons/fa";
 import init, { parse_and_render } from "vizlang";
 import { EXAMPLES } from "@/data/examples";
@@ -223,6 +224,22 @@ export default function Editor() {
                 <FaClipboard size={14} />
               )}
             </button>
+
+            <button
+              onClick={() => {
+                if (!svgOutput) return;
+                const blob = new Blob([svgOutput], { type: "image/svg+xml" });
+                const url = URL.createObjectURL(blob);
+                window.open(url, "_blank");
+                setTimeout(() => URL.revokeObjectURL(url), 2000);
+              }}
+              disabled={!svgOutput}
+              className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all disabled:opacity-30"
+              title="Open SVG in new tab"
+            >
+              <FaExternalLinkAlt size={14} />
+            </button>
+
             <button
               onClick={() => download(svgOutput, "svg")}
               disabled={!svgOutput}
