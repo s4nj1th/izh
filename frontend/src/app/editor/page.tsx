@@ -13,6 +13,11 @@ import {
 } from "react-icons/fa";
 import init, { parse_and_render } from "vizlang";
 import { EXAMPLES } from "@/data/examples";
+import EditorInput from "react-simple-code-editor";
+import Prism from "prismjs";
+import "prismjs/themes/prism.css";
+import "prismjs/components/prism-clike";
+import "@/lib/prism-vizlang";
 
 export default function Editor() {
   const [code, setCode] = useState(EXAMPLES.line);
@@ -79,6 +84,21 @@ export default function Editor() {
     };
   }, [resize, stopResizing]);
 
+  useEffect(() => {
+    const ta = document.getElementById(
+      "vizlang-editor",
+    ) as HTMLTextAreaElement | null;
+    if (!ta) return;
+    textareaRef.current = ta;
+    const handler = () => {
+      if (textareaRef.current && lineNumbersRef.current) {
+        lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
+      }
+    };
+    ta.addEventListener("scroll", handler);
+    return () => ta.removeEventListener("scroll", handler);
+  }, []);
+
   const download = (content: string, ext: string) => {
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -143,21 +163,21 @@ export default function Editor() {
             ))}
           </div>
 
-          {/* textarea with wrapping turned off so visual lines match logical lines */}
-          <textarea
-            ref={textareaRef}
+          <EditorInput
             value={code}
-            onChange={(e) => setCode(e.target.value)}
-            onScroll={() => {
-              if (textareaRef.current && lineNumbersRef.current) {
-                lineNumbersRef.current.scrollTop =
-                  textareaRef.current.scrollTop;
-              }
+            onValueChange={(val) => setCode(val)}
+            highlight={(code) =>
+              Prism.highlight(code, Prism.languages.vizlang, "vizlang")
+            }
+            padding={16}
+            textareaId="vizlang-editor"
+            style={{
+              fontFamily:
+                'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace',
+              fontSize: 12,
+              whiteSpace: "pre",
             }}
-            wrap="off"
-            spellCheck={false}
             className="flex-1 bg-transparent p-4 font-mono text-xs leading-5 outline-none resize-none overflow-auto selection:bg-accent/20 whitespace-pre"
-            aria-label="Editor"
           />
 
           <button
@@ -174,7 +194,7 @@ export default function Editor() {
         onMouseDown={startResizing}
         className={`w-1 cursor-col-resize hover:bg-accent active:bg-accent transition-colors flex items-center justify-center z-10 ${isResizing ? "bg-accent" : "bg-transparent"}`}
       >
-        <div className="w-[1px] h-8 bg-panel-border" />
+        <div className="w-1 h-8 bg-panel-border" />
       </div>
 
       <div

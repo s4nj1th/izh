@@ -33,7 +33,7 @@ y: weight (kg)
 // Fixed-size array of (x,y) pairs
 myPoints = [[155, 52], [160, 58], [165, 62], [168, 65], [170, 68], [172, 70], [175, 74], [178, 78], [180, 80], [183, 85], [185, 88], [190, 92]]
 
- data: myPoints`,
+data: myPoints`,
 
   pie: `// Pie chart example
 chart: pie
@@ -42,7 +42,7 @@ title: Server Operating Systems
 // Inline array-of-pairs for pie segments
 osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
 
- data: osShares`,
+data: osShares`,
 
   variables: `// Variables, Arrays and Nulls example
 chart: bar
@@ -65,7 +65,7 @@ myData = [["Marketing", marketing_amt], ["Development", dev_amt], ["Operations",
 // Fill nulls with zero (could be mean, prev, next, skip)
 null_fill: zero
 
- data: myData`,
+data: myData`,
 
   types: `// Typed Variables and Arrays example
 chart: line
@@ -81,7 +81,7 @@ int[] sales = [500, 625, 781]
 // Build data as an inline array-of-pairs using the arrays above (expanded manually here)
 myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
 
- data: myData`,
+data: myData`,
 
   null_zero: `// Nulls filled with zero
 chart: line
@@ -94,7 +94,7 @@ y: value
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
 null_fill: zero
 
- data: myData`,
+data: myData`,
 
   null_mean: `// Nulls filled with mean
 chart: line
@@ -106,7 +106,7 @@ y: value
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 40]]
 null_fill: mean
 
- data: myData`,
+data: myData`,
 
   null_prev: `// Nulls filled with previous value
 chart: line
@@ -118,7 +118,7 @@ y: value
 myData = [["Jan", 5], ["Feb", null], ["Mar", 15], ["Apr", null], ["May", 25]]
 null_fill: prev
 
- data: myData`,
+data: myData`,
 
   null_next: `// Nulls filled with next value
 chart: line
@@ -130,7 +130,7 @@ y: value
 myData = [["Jan", null], ["Feb", 8], ["Mar", null], ["Apr", 20]]
 null_fill: next
 
- data: myData`,
+data: myData`,
 
   null_skip: `// Nulls skipped (dropped)
 chart: line
@@ -142,7 +142,7 @@ y: value
 myData = [["Jan", 100], ["Feb", null], ["Mar", 120], ["Apr", null], ["May", 130]]
 null_fill: skip
 
- data: myData`,
+data: myData`,
 
   block_style: `// Block-style data (no inline arrays)
 chart: bar
