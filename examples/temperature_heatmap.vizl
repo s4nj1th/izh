@@ -1,0 +1,20 @@
+// Heatmap: Temperature by region
+chart: heatmap
+title: Regional Temperature Heatmap (Celsius)
+
+x: region
+y: temperature
+
+// Temperature readings from different geographic regions
+temperatureData = [
+  ["Tropical Region", 28],
+  ["Subtropical Region", 22],
+  ["Temperate Region", 15],
+  ["Arctic Region", -5],
+  ["Desert Region", 35],
+  ["Mountain Region", 8],
+  ["Coastal Region", 18],
+  ["Urban Area", 20]
+]
+
+data: temperatureData

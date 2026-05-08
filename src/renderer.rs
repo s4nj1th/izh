@@ -198,7 +198,7 @@ pub fn render(ast: &VizAST) -> String {
         CANVAS_WIDTH, CANVAS_HEIGHT, BACKGROUND_COLOR
     ));
 
-    if ast.chart_type != ChartType::Pie {
+    if ast.chart_type != ChartType::Pie && ast.chart_type != ChartType::Heatmap {
         for grid_index in 0..=GRID_LINE_COUNT {
             let ratio = (grid_index as f64) / (GRID_LINE_COUNT as f64);
             let grid_y = round(PADDING + chart_height - ratio * chart_height);
@@ -376,9 +376,106 @@ pub fn render(ast: &VizAST) -> String {
                 legend_y += 20.0;
             }
         }
+        ChartType::Histogram => {
+            // Extract y-values for histogramming
+            let values: Vec<f64> = filled_data.iter().map(|(_, y)| *y).collect();
+            if values.is_empty() {
+                // No data to histogram
+            } else {
+                let min_val = values.iter().cloned().fold(f64::INFINITY, f64::min);
+                let max_val = values.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+                
+                let num_bins = ast.histogram_bins.unwrap_or(10);
+                let bin_width = if max_val > min_val {
+                    (max_val - min_val) / (num_bins as f64)
+                } else {
+                    1.0
+                };
+                
+                // Create bins
+                let mut bins: Vec<usize> = vec![0; num_bins];
+                for &val in &values {
+                    if max_val > min_val {
+                        let bin_idx = ((val - min_val) / bin_width) as usize;
+                        let bin_idx = if bin_idx >= num_bins { num_bins - 1 } else { bin_idx };
+                        bins[bin_idx] += 1;
+                    }
+                }
+                
+                let max_freq = bins.iter().cloned().fold(0, usize::max) as f64;
+                let nice_max_freq = compute_nice_max(max_freq);
+                
+                // Draw histogram bars
+                let bar_width = CANVAS_WIDTH - PADDING * 2.0;
+                let bar_width_unit = bar_width / (num_bins as f64);
+                let baseline_y = to_pixel_y(0.0);
+                
+                for (i, &freq) in bins.iter().enumerate() {
+                    let bar_x = PADDING + (i as f64) * bar_width_unit;
+                    let bar_height_data = (freq as f64) / nice_max_freq * (y_data_max - y_data_min);
+                    let bar_top = to_pixel_y(bar_height_data);
+                    let bar_h = baseline_y - bar_top;
+                    
+                    elements.push(format!(
+                        "  <rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{}\" rx=\"1\" />",
+                        bar_x, bar_top, bar_width_unit * 0.9, bar_h, DATA_COLOR
+                    ));
+                }
+            }
+        }
+        ChartType::Heatmap => {
+            // Treat data as intensity map: x-axis categories, y-values as intensity
+            // Create a gradient-based visualization
+            let max_val = filled_data
+                .iter()
+                .map(|(_, y)| *y)
+                .fold(f64::NEG_INFINITY, f64::max);
+            let min_val = filled_data
+                .iter()
+                .map(|(_, y)| *y)
+                .fold(f64::INFINITY, f64::min);
+            
+            let bar_width = chart_width / (filled_data.len() as f64);
+            let cell_height = chart_height / 5.0; // Create multiple rows
+            
+            for (i, (_x, y)) in filled_data.iter().enumerate() {
+                // Normalize value to 0-1 range for color intensity
+                let intensity = if max_val > min_val {
+                    (y - min_val) / (max_val - min_val)
+                } else {
+                    0.5
+                };
+                
+                // Create color gradient (blue to red)
+                let (r, g, b) = if intensity < 0.5 {
+                    let t = intensity * 2.0; // 0 to 1
+                    let blue = (1.0 - t) * 255.0;
+                    let green = t * 255.0;
+                    (0, green as u8, blue as u8)
+                } else {
+                    let t = (intensity - 0.5) * 2.0; // 0 to 1
+                    let green = (1.0 - t) * 255.0;
+                    let red = 255;
+                    (red, green as u8, 0)
+                };
+                
+                let color = format!("#{:02x}{:02x}{:02x}", r, g, b);
+                
+                // Draw cells for this data point
+                for row in 0..5 {
+                    let cell_x = PADDING + (i as f64) * bar_width;
+                    let cell_y = PADDING + (row as f64) * cell_height;
+                    
+                    elements.push(format!(
+                        "  <rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{}\" stroke=\"#cccccc\" stroke-width=\"0.5\" />",
+                        cell_x, cell_y, bar_width * 0.95, cell_height, color
+                    ));
+                }
+            }
+        }
     }
 
-    if ast.chart_type != ChartType::Pie {
+    if ast.chart_type != ChartType::Pie && ast.chart_type != ChartType::Heatmap {
         let x_tick_y = PADDING + chart_height + 16.0;
         for i in 0..filled_data.len() {
             let tick_x = match ast.chart_type {
@@ -405,7 +502,7 @@ pub fn render(ast: &VizAST) -> String {
         ));
     }
 
-    if ast.chart_type != ChartType::Pie {
+    if ast.chart_type != ChartType::Pie && ast.chart_type != ChartType::Heatmap {
         if let Some(x_label) = &ast.x_label {
             elements.push(format!(
                 "  <text x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-family=\"{}\" font-size=\"{}\" fill=\"{}\">{}</text>",

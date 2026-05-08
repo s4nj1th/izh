@@ -4,6 +4,8 @@ pub enum ChartType {
     Bar,
     Scatter,
     Pie,
+    Histogram,
+    Heatmap,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -36,4 +38,5 @@ pub struct VizAST {
     pub data: Vec<DataPoint>,
     pub null_fill: Option<String>,
     pub colors: Option<Vec<String>>,
+    pub histogram_bins: Option<usize>,
 }
