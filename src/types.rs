@@ -35,4 +35,5 @@ pub struct VizAST {
     pub y_label: Option<String>,
     pub data: Vec<DataPoint>,
     pub null_fill: Option<String>,
+    pub colors: Option<Vec<String>>,
 }

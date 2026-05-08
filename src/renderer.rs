@@ -77,6 +77,12 @@ pub fn render(ast: &VizAST) -> String {
         non_null_vals.iter().copied().sum::<f64>() / (non_null_vals.len() as f64)
     };
 
+    let default_palette: Vec<String> = PIE_COLORS.iter().map(|s| s.to_string()).collect();
+    let palette: Vec<String> = match &ast.colors {
+        Some(v) if !v.is_empty() => v.clone(),
+        _ => default_palette,
+    };
+
     let mut filled_data: Vec<(XValue, f64)> = Vec::new();
     for (i, d) in ast.data.iter().enumerate() {
         match d.y {
@@ -245,18 +251,26 @@ pub fn render(ast: &VizAST) -> String {
                     })
                     .collect();
 
+                let stroke_color = palette
+                    .get(0)
+                    .cloned()
+                    .unwrap_or_else(|| DATA_COLOR.to_string());
                 elements.push(format!(
                     "  <path d=\"{}\" fill=\"none\" stroke=\"{}\" stroke-width=\"{}\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />",
-                    path_commands.join(" "), DATA_COLOR, LINE_STROKE_WIDTH
+                    path_commands.join(" "), stroke_color, LINE_STROKE_WIDTH
                 ));
 
                 for i in 0..filled_data.len() {
+                    let dot_color = palette
+                        .get(i % palette.len())
+                        .cloned()
+                        .unwrap_or_else(|| DATA_COLOR.to_string());
                     elements.push(format!(
                         "  <circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\" />",
                         to_pixel_x(i),
                         to_pixel_y(filled_data[i].1),
                         LINE_DOT_RADIUS,
-                        DATA_COLOR
+                        dot_color
                     ));
                 }
             }
@@ -269,10 +283,14 @@ pub fn render(ast: &VizAST) -> String {
                 let bar_x = bar_left_edge(i);
                 let bar_top = to_pixel_y(filled_data[i].1);
                 let bar_height = baseline_y - bar_top;
+                let bar_color = palette
+                    .get(i % palette.len())
+                    .cloned()
+                    .unwrap_or_else(|| DATA_COLOR.to_string());
 
                 elements.push(format!(
                     "  <rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{}\" rx=\"2\" />",
-                    bar_x, bar_top, bar_width, bar_height, DATA_COLOR
+                    bar_x, bar_top, bar_width, bar_height, bar_color
                 ));
             }
         }
@@ -298,7 +316,10 @@ pub fn render(ast: &VizAST) -> String {
             let mut current_angle: f64 = -std::f64::consts::FRAC_PI_2;
 
             for (i, (_x, y)) in filled_data.iter().enumerate() {
-                let color = PIE_COLORS[i % PIE_COLORS.len()];
+                let color = palette
+                    .get(i % palette.len())
+                    .cloned()
+                    .unwrap_or_else(|| PIE_COLORS[i % PIE_COLORS.len()].to_string());
 
                 if *y == total {
                     elements.push(format!(
@@ -333,7 +354,10 @@ pub fn render(ast: &VizAST) -> String {
             let legend_x = PADDING + pie_area_width + 20.0;
             let mut legend_y = PADDING + 20.0;
             for (i, (x, y)) in filled_data.iter().enumerate() {
-                let color = PIE_COLORS[i % PIE_COLORS.len()];
+                let color = palette
+                    .get(i % palette.len())
+                    .cloned()
+                    .unwrap_or_else(|| PIE_COLORS[i % PIE_COLORS.len()].to_string());
                 let label = match x {
                     XValue::String(s) => escape_xml(s),
                     XValue::Number(n) => escape_xml(&n.to_string()),

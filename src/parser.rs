@@ -716,6 +716,7 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
     let mut in_data_block = false;
     let mut vars: HashMap<String, Value> = HashMap::new();
     let mut null_fill: Option<String> = None;
+    let mut colors: Option<Vec<String>> = None;
 
     for (line_index, raw_line) in source.lines().enumerate() {
         let line_number = line_index + 1;
@@ -927,6 +928,44 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
             "null" | "null_fill" => {
                 null_fill = Some(value.to_lowercase());
             }
+            "colors" | "color" => {
+                let mut palette: Option<Vec<String>> = None;
+                if value.trim_start().starts_with('[') {
+                    match parse_general_array(&value, &vars, line_number, raw_line) {
+                        Ok(Value::Array(items)) => {
+                            let mut colors = Vec::new();
+                            for it in items {
+                                match it {
+                                    Value::String(s) => colors.push(s),
+                                    Value::Int(i) => colors.push(i.to_string()),
+                                    Value::Float(f) => colors.push(f.to_string()),
+                                    Value::Null => colors.push("null".to_string()),
+                                    Value::Array(_) => colors.push("[array]".to_string()),
+                                }
+                            }
+                            palette = Some(colors);
+                        }
+                        Ok(_) => {}
+                        Err(e) => return Err(e),
+                    }
+                } else if let Some(v) = vars.get(&value) {
+                    if let Value::Array(items) = v {
+                        let mut colors = Vec::new();
+                        for it in items {
+                            match it {
+                                Value::String(s) => colors.push(s.clone()),
+                                Value::Int(i) => colors.push(i.to_string()),
+                                Value::Float(f) => colors.push(f.to_string()),
+                                _ => {}
+                            }
+                        }
+                        palette = Some(colors);
+                    }
+                }
+                if let Some(p) = palette {
+                    colors = Some(p);
+                }
+            }
             "data" => {
                 if value.trim_start().starts_with('[') {
                     match parse_array_literal(&value, &vars, line_number, raw_line) {
@@ -1006,5 +1045,6 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
         y_label,
         data: data_points,
         null_fill,
+        colors,
     })
 }
