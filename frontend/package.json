@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && cp frontend/pkg/vizlang_bg.wasm frontend/public/vizlang_bg.wasm",
-    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && cp frontend/pkg/vizlang_bg.wasm frontend/public/vizlang_bg.wasm",
-    "build": "npm run build:wasm:release && next build --webpack",
-    "build:ci": "next build --webpack",
+    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
+    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --release --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
+    "build": "npm run build:wasm:release && next build",
+    "build:ci": "next build",
     "vercel-build": "npm run build:ci",
     "start": "next start",
     "lint": "next lint"
