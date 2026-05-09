@@ -967,6 +967,8 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
                 }
                 if let Some(p) = palette {
                     colors = Some(p);
+                }
+            }
             "histogram_bins" | "bins" => {
                 if let Ok(n) = value.parse::<usize>() {
                     histogram_bins = Some(n);
