@@ -716,11 +716,8 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
     let mut in_data_block = false;
     let mut vars: HashMap<String, Value> = HashMap::new();
     let mut null_fill: Option<String> = None;
-<<<<<<< HEAD
     let mut colors: Option<Vec<String>> = None;
-=======
     let mut histogram_bins: Option<usize> = None;
->>>>>>> d19f07e (Added two new Examples - Heat map , Histogram with an eg for each)
 
     for (line_index, raw_line) in source.lines().enumerate() {
         let line_number = line_index + 1;
@@ -934,7 +931,6 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
             "null" | "null_fill" => {
                 null_fill = Some(value.to_lowercase());
             }
-<<<<<<< HEAD
             "colors" | "color" => {
                 let mut palette: Option<Vec<String>> = None;
                 if value.trim_start().starts_with('[') {
@@ -971,11 +967,9 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
                 }
                 if let Some(p) = palette {
                     colors = Some(p);
-=======
             "histogram_bins" | "bins" => {
                 if let Ok(n) = value.parse::<usize>() {
                     histogram_bins = Some(n);
->>>>>>> d19f07e (Added two new Examples - Heat map , Histogram with an eg for each)
                 }
             }
             "data" => {
@@ -1057,10 +1051,7 @@ pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
         y_label,
         data: data_points,
         null_fill,
-<<<<<<< HEAD
         colors,
-=======
         histogram_bins,
->>>>>>> d19f07e (Added two new Examples - Heat map , Histogram with an eg for each)
     })
 }
