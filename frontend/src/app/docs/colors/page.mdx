@@ -1,0 +1,52 @@
+# Colors & Palettes
+
+VizLang supports color palettes to control the visual appearance of charts. Palettes are simple arrays of CSS color strings (named colors, hex, `rgb()`, etc.).
+
+## Syntax
+
+Inline palette:
+
+```vizl
+colors: ["red", "#ff0000", "rgb(0,128,255)"]
+```
+
+Named palette variable:
+
+```vizl
+palette = ["#111111", "#222222", "#333333"]
+colors: palette
+```
+
+## How the renderer uses palettes
+
+- `line`: `palette[0]` is used for the line stroke; markers cycle through palette entries.
+- `bar`: bars cycle through palette entries (useful for categorical coloring).
+- `scatter`: points cycle through palette entries.
+- `pie`: slices and legend entries use palette entries; if the palette is shorter than the data, renderer falls back to default slice colors for remaining entries.
+
+## Examples
+
+Single color for a simple line:
+
+```vizl
+chart: line
+colors: ["#4a90d9"]
+myData = [["A", 10], ["B", 20], ["C", 15]]
+data: myData
+```
+
+Palette for pie chart:
+
+```vizl
+chart: pie
+colors: ["#4a90d9", "#f06292", "grey", "#a1887f"]
+myData = [["Linux", 72], ["Windows", 15], ["MacOS", 8], ["Other", 5]]
+
+data: myData
+```
+
+## Tips
+
+- You can mix named colors and hex values in the same palette.
+- If you want predictable coloring per category, provide at least as many colors as categories.
+- The renderer passes color strings directly to the SVG `fill`/`stroke` attributes — the browser will handle parsing.

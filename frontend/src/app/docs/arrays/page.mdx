@@ -1,0 +1,57 @@
+# Arrays, Ranges & Comprehensions
+
+VizLang now supports fixed-size arrays evaluated at parse time. These are useful for compactly representing sequences, ranges, and data tables.
+
+## Explicit lists
+
+```vizl
+values = [1, 2, 3, 4]
+labels = ["Jan", "Feb", "Mar"]
+```
+
+## Inclusive ranges
+
+Create a sequence of integers:
+
+```vizl
+years = [2018..2022]  # => [2018, 2019, 2020, 2021, 2022]
+```
+
+Ranges are inclusive and work with integer bounds.
+
+## Simple comprehensions
+
+You can create arrays by evaluating an expression for each value in a range:
+
+```vizl
+evens = [i * 2 for i in 1..5]  # => [2,4,6,8,10]
+```
+
+Comprehensions are evaluated at parse time and produce a fixed-size array.
+
+## Nested arrays (array-of-pairs)
+
+Arrays can contain arrays. This is commonly used to represent `data:` directly:
+
+```vizl
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+data: myData
+```
+
+## Typed arrays
+
+Declare typed arrays where elements are coerced at parse time:
+
+```vizl
+int[] years = [2018..2022]
+float[] measurements = [1.0, 2.5, 3.75]
+string[] names = ["A", "B", "C"]
+```
+
+The parser will coerce elements to the declared type. If you want stricter behavior (error on incompatible elements) we can enable that later.
+
+## Notes
+
+- Arrays are fixed-size and deterministic — they are fully materialized at parse time.
+- For long lists you can use ranges or comprehensions to keep the source compact.
+- If you need multiline array literals (spanning many lines) tell me and I can extend the parser to accumulate bracketed arrays across lines.

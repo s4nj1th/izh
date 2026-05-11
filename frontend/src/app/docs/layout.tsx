@@ -1,10 +1,12 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const sidebarItems = [
-  { title: 'Introduction', href: '/docs/introduction' },
-  { title: 'Basic Syntax', href: '/docs/syntax' },
-  { title: 'Variables & Math', href: '/docs/variables' },
-  { title: 'Chart Types', href: '/docs/charts' },
+  { title: "Introduction", href: "/docs/introduction" },
+  { title: "Basic Syntax", href: "/docs/syntax" },
+  { title: "Variables & Math", href: "/docs/variables" },
+  { title: "Chart Types", href: "/docs/charts" },
+  { title: "Arrays", href: "/docs/arrays" },
+  { title: "Colors", href: "/docs/colors" },
 ];
 
 export default function DocsLayout({
@@ -36,9 +38,7 @@ export default function DocsLayout({
 
       {/* Content */}
       <main className="flex-1 overflow-auto bg-bg-main">
-        <div className="max-w-3xl mx-auto px-6 py-12 md:py-20">
-          {children}
-        </div>
+        <div className="max-w-3xl mx-auto px-6 py-12 md:py-20">{children}</div>
       </main>
     </div>
   );

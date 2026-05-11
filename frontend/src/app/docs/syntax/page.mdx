@@ -34,3 +34,29 @@ data:
 ```
 
 > **Note**: Labels in the data block should be wrapped in double quotes (e.g., `"January"`) to distinguish them from variables.
+
+## Arrays, Nulls & Colors (summary)
+
+VizLang supports inline arrays and array-of-pairs which can be used as `data:` values. You can also set a `null_fill` policy and provide a color palette.
+
+- Inline array-of-pairs:
+
+```vizl
+myData = [["Q1", 340], ["Q2", 520]]
+data: myData
+```
+
+- `null_fill:` strategies: `zero`, `mean`, `prev`, `next`, `skip`.
+
+```vizl
+null_fill: mean
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+```
+
+- Colors palette:
+
+```vizl
+colors: ["red", "#00f", "rgb(0,128,255)"]
+```
+
+These features are documented in more detail in the Arrays and Colors pages in the Docs section.
