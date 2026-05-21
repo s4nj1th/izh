@@ -18,7 +18,7 @@ export default function Navbar() {
           <Image src="/favicon-light.svg" alt="Logo" width={24} height={24} className="dark:hidden" priority />
           <Image src="/favicon-dark.svg" alt="Logo" width={24} height={24} className="hidden dark:block" priority />
         </div>
-        VizLang
+        varaiX
       </Link>
 
       <div className="flex items-center gap-2 text-sm font-medium text-text-secondary">
@@ -28,7 +28,7 @@ export default function Navbar() {
         <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="p-2 hover:text-text-primary transition-all">
           {mounted && (theme === "dark" ? <FaSun size={16} /> : <FaMoon size={16} />)}
         </button>
-        <a href="https://github.com/s4nj1th/vizlang" target="_blank" rel="noreferrer" className="p-2 hover:text-text-primary transition-all"><FaGithub size={18} /></a>
+        <a href="https://github.com/s4nj1th/varaix" target="_blank" rel="noreferrer" className="p-2 hover:text-text-primary transition-all"><FaGithub size={18} /></a>
       </div>
     </nav>
   );

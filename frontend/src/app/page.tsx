@@ -12,7 +12,7 @@ export default function Home() {
     <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-4xl mx-auto text-center space-y-12 py-20">
       <div className="space-y-4">
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight">Simple charts. <br /><span className="text-text-secondary">Zero friction.</span></h1>
-        <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">VizLang is a minimal chart description language that renders clean SVGs instantly. Deterministic, LLM-friendly, and blazing fast.</p>
+        <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">varaiX is a minimal chart description language that renders clean SVGs instantly. Deterministic, LLM-friendly, and blazing fast.</p>
       </div>
 
       <div className="flex gap-4">

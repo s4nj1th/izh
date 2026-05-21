@@ -12,13 +12,13 @@ import {
   FaExternalLinkAlt,
   FaEye,
 } from "react-icons/fa";
-import init, { parse_and_render } from "vizlang";
+import init, { parse_and_render } from "varaix";
 import { EXAMPLES } from "@/data/examples";
 import EditorInput from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
 import "prismjs/components/prism-clike";
-import "@/lib/prism-vizlang";
+import "@/lib/prism-varaix";
 
 export default function Editor() {
   const [code, setCode] = useState(EXAMPLES.line);
@@ -35,7 +35,7 @@ export default function Editor() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    init({ module_or_path: "/vizlang_bg.wasm" })
+    init({ module_or_path: "/varaix_bg.wasm" })
       .then(() => setIsWasmLoaded(true))
       .catch((err) => {
         console.error(err);
@@ -87,7 +87,7 @@ export default function Editor() {
 
   useEffect(() => {
     const ta = document.getElementById(
-      "vizlang-editor",
+      "varaix-editor",
     ) as HTMLTextAreaElement | null;
     if (!ta) return;
     textareaRef.current = ta;
@@ -168,10 +168,10 @@ export default function Editor() {
             value={code}
             onValueChange={(val) => setCode(val)}
             highlight={(code) =>
-              Prism.highlight(code, Prism.languages.vizlang, "vizlang")
+              Prism.highlight(code, Prism.languages.varaix, "varaix")
             }
             padding={16}
-            textareaId="vizlang-editor"
+            textareaId="varaix-editor"
             style={{
               fontFamily:
                 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace',

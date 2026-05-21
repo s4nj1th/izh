@@ -4,8 +4,8 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "VizLang",
-  description: "VizLang is a minimal chart description language that renders to clean SVGs instantly. Deterministic, LLM-friendly, and blazing fast.",
+  title: "varaiX",
+  description: "varaiX is a minimal chart description language that renders to clean SVGs instantly. Deterministic, LLM-friendly, and blazing fast.",
   icons: {
     icon: [
       { url: "/favicon-light.svg", media: "(prefers-color-scheme: light)" },

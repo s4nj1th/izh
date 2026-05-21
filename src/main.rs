@@ -1,7 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
-use vizlang::{parser, renderer};
+use varaix::{parser, renderer};
 
 fn print_usage() {
     eprintln!("Usage:   cargo run -- <file.vizl>");

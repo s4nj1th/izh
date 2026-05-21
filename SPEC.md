@@ -1,8 +1,8 @@
-# VizLang Specification (v0.2)
+# varaiX Specification (v0.2)
 
 ## Overview
 
-VizLang is a minimal, line-based, deterministic chart description language. A single `.vizl` file describes exactly one chart and compiles to an SVG string. The language favors simplicity and predictability and is suitable for both human authors and programmatic generation. Version 0.2 adds arrays, typed arrays, ranges, comprehensions, richer comment syntax, null handling, fill strategies, and palette controls.
+varaiX is a minimal, line-based, deterministic chart description language. A single `.vizl` file describes exactly one chart and compiles to an SVG string. The language favors simplicity and predictability and is suitable for both human authors and programmatic generation. Version 0.2 adds arrays, typed arrays, ranges, comprehensions, richer comment syntax, null handling, fill strategies, and palette controls.
 
 ## File extension
 
@@ -96,7 +96,7 @@ If coercion is not possible some conversions fall back to numeric `to_f64()` or 
 
 ## Nulls and null_fill strategies
 
-VizLang accepts `null` and `None` as missing values. For chart data, missing `y` values are represented in the AST and handled by the renderer according to `null_fill`.
+varaiX accepts `null` and `None` as missing values. For chart data, missing `y` values are represented in the AST and handled by the renderer according to `null_fill`.
 
 Supported strategies (set with `null_fill:`):
 - `zero` — replace nulls with `0` (default)
@@ -199,7 +199,7 @@ Unknown keys are ignored.
 Errors include line number, message and offending source line. Example:
 
 ```
-VizLang Error [line 5]: Invalid y-value "abc" — expected a number.
+varaiX Error [line 5]: Invalid y-value "abc" — expected a number.
   → Feb, abc
 ```
 

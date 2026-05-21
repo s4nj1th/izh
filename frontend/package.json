@@ -1,11 +1,11 @@
 {
-  "name": "vizlang",
+  "name": "varaix",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
-    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && wasm-pack build --release --target web --out-dir frontend/pkg && cp pkg/vizlang_bg.wasm public/vizlang_bg.wasm",
+    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
+    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
     "build": "npm run build:wasm:release && next build",
     "build:ci": "next build",
     "vercel-build": "npm run build:ci",
@@ -26,7 +26,7 @@
     "react-icons": "^5.4.0",
     "react-simple-code-editor": "^0.14.1",
     "remark-gfm": "^4.0.1",
-    "vizlang": "file:./pkg"
+    "varaix": "file:./pkg"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
