@@ -18,6 +18,22 @@
     --text-secondary: #4b5563;
     --panel-border: #e5e7eb;
     --panel-bg: #f9fafb;
+
+    --prism-code-fg: #1f1f1f;
+    --prism-selection-bg: #add6ff;
+    --prism-comment: #008000;
+    --prism-punctuation: #000000;
+    --prism-operator: #000000;
+    --prism-keyword: #0000ff;
+    --prism-string: #a31515;
+    --prism-number: #098658;
+    --prism-constant: #811f3f;
+    --prism-function: #795e26;
+    --prism-builtin: #795e26;
+    --prism-class-name: #267f99;
+    --prism-selector: #800000;
+    --prism-attr-name: #ff0000;
+    --prism-variable: #001080;
 }
 
 .dark {
@@ -26,6 +42,22 @@
     --text-secondary: #9ca3af;
     --panel-border: #1f2937;
     --panel-bg: #111827;
+
+    --prism-code-fg: #d4d4d4;
+    --prism-selection-bg: #264f78;
+    --prism-comment: #6a9955;
+    --prism-punctuation: #d4d4d4;
+    --prism-operator: #d4d4d4;
+    --prism-keyword: #569cd6;
+    --prism-string: #ce9178;
+    --prism-number: #b5cea8;
+    --prism-constant: #b5cea8;
+    --prism-function: #dcdcaa;
+    --prism-builtin: #dcdcaa;
+    --prism-class-name: #4ec9b0;
+    --prism-selector: #d7ba7d;
+    --prism-attr-name: #9cdcfe;
+    --prism-variable: #9cdcfe;
 }
 
 @layer base {
@@ -46,7 +78,7 @@
 /* Prism theme inspired by VS Code Dark+ */
 code[class*="language-"],
 pre[class*="language-"] {
-    color: var(--text-primary);
+    color: var(--prism-code-fg);
     background: transparent;
     text-shadow: none;
     font-family: monospace;
@@ -75,7 +107,7 @@ pre[class*="language-"] ::-moz-selection,
 code[class*="language-"]::-moz-selection,
 code[class*="language-"] ::-moz-selection {
     text-shadow: none;
-    background: #264f78;
+    background: var(--prism-selection-bg);
 }
 
 pre[class*="language-"]::selection,
@@ -83,18 +115,18 @@ pre[class*="language-"] ::selection,
 code[class*="language-"]::selection,
 code[class*="language-"] ::selection {
     text-shadow: none;
-    background: #264f78;
+    background: var(--prism-selection-bg);
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-    color: #6a9955;
+    color: var(--prism-comment);
 }
 
 .token.punctuation {
-    color: #d4d4d4;
+    color: var(--prism-punctuation);
 }
 
 .token.operator,
@@ -102,39 +134,39 @@ code[class*="language-"] ::selection {
 .token.url,
 .language-css .token.string,
 .style .token.string {
-    color: #d4d4d4;
+    color: var(--prism-operator);
 }
 
 .token.keyword {
-    color: #569cd6;
+    color: var(--prism-keyword);
 }
 
 .token.string,
 .token.char {
-    color: #ce9178;
+    color: var(--prism-string);
 }
 
 .token.number,
 .token.boolean,
 .token.constant,
 .token.symbol {
-    color: #b5cea8;
+    color: var(--prism-number);
 }
 
 .token.function,
 .token.builtin {
-    color: #dcdcaa;
+    color: var(--prism-function);
 }
 
 .token.class-name,
 .token.selector,
 .token.attr-name {
-    color: #4ec9b0;
+    color: var(--prism-class-name);
 }
 
 .token.variable,
 .token.property {
-    color: #9cdcfe;
+    color: var(--prism-variable);
 }
 
 .token.important,
@@ -148,6 +180,22 @@ code[class*="language-"] ::selection {
 
 .token.namespace {
     opacity: 0.7;
+}
+
+/* VizLang editor with line wrapping enabled. Line numbers count only actual newlines. */
+.vizlang-code-editor-layer {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+textarea.vizlang-code-editor-layer {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+pre.vizlang-code-editor-layer {
+    overflow: hidden !important;
 }
 
 /* Custom Scrollbar */

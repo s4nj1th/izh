@@ -158,7 +158,7 @@ export default function Editor() {
                 </div>
 
                 <div className="flex-1 flex overflow-hidden relative group">
-                    <div
+                    {/* <div
                         ref={lineNumbersRef}
                         className="w-12 bg-black/5 text-right pr-3 py-4 font-mono text-xs text-text-secondary opacity-50 select-none overflow-y-auto overflow-x-hidden"
                     >
@@ -171,7 +171,7 @@ export default function Editor() {
                             </div>
                         ))}
                         <div aria-hidden="true" className="h-[18px]" />
-                    </div>
+                    </div> */}
 
                     <EditorInput
                         value={code}
@@ -192,8 +192,8 @@ export default function Editor() {
                             lineHeight: "18px",
                             whiteSpace: "pre",
                         }}
-                        preClassName="font-mono text-xs leading-[18px]"
-                        textareaClassName="font-mono text-xs leading-[18px] outline-none resize-none overflow-auto selection:bg-accent/20 whitespace-pre"
+                        preClassName="vizlang-code-editor-layer font-mono text-xs leading-[18px]"
+                        textareaClassName="vizlang-code-editor-layer font-mono text-xs leading-[18px] outline-none resize-none selection:bg-accent/20"
                         className="flex-1 bg-transparent"
                     />
 
