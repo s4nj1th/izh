@@ -8,7 +8,7 @@
         "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
         "build": "npm run build:wasm:release && next build",
         "build:ci": "next build",
-        "vercel-build": "npm run build:ci",
+        "vercel-build": "if [ -n \"$VERCEL\" ]; then next build; else npm run build:wasm:release && next build; fi",
         "start": "next start",
         "lint": "next lint"
     },
