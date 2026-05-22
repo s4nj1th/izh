@@ -1,0 +1,19 @@
+{
+  "name": "varaix",
+  "type": "module",
+  "collaborators": [
+    "Sanjith Muralikrishnan <sanjith.develops@gmail.com>"
+  ],
+  "description": "A minimal, deterministic, chart description language that renders to SVG.",
+  "version": "0.0.1",
+  "files": [
+    "varaix_bg.wasm",
+    "varaix.js",
+    "varaix.d.ts"
+  ],
+  "main": "varaix.js",
+  "types": "varaix.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
