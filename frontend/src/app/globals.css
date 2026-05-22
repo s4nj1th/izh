@@ -392,8 +392,28 @@ pre[class*="language-"] {
         @apply bg-panel-border/30 px-1.5 py-0.5 rounded-md text-text-primary font-mono text-[0.9em];
     }
 
+    .mdx-code-block-wrapper {
+        @apply relative mb-6;
+    }
+
+    .mdx-code-block-wrapper:hover .mdx-code-copy-btn {
+        @apply opacity-100;
+    }
+
     .mdx-code-block {
-        @apply text-text-primary bg-panel-bg border border-panel-border p-4 rounded-xl mb-6 overflow-x-auto font-mono text-sm shadow-sm;
+        @apply bg-black/5 dark:bg-black/40 border border-black/10 dark:border-white/10 p-4 rounded-xl overflow-x-auto font-mono text-sm shadow-sm;
+    }
+
+    .mdx-code-copy-btn {
+        @apply absolute top-3 right-3 p-2 rounded-lg bg-bg-main/50 hover:bg-bg-main/70 text-text-secondary hover:text-text-primary transition-all opacity-0 focus:opacity-100 outline-none;
+    }
+
+    .mdx-code-copied {
+        @apply text-accent;
+    }
+
+    .mdx-code-copy-content {
+        @apply flex gap-1 items-center text-xs items-center;
     }
 
     .mdx-table-wrapper {
@@ -446,11 +466,104 @@ pre[class*="language-"] {
     }
 
     .docs-main {
-        @apply flex-1 overflow-auto bg-bg-main;
+        @apply flex-1 overflow-auto bg-bg-main relative;
     }
 
     .docs-content {
         @apply max-w-3xl mx-auto px-6 py-12 md:py-20;
+    }
+
+    /* Mobile Sidebar Styles */
+    .docs-mobile-menu-btn {
+        @apply absolute top-4 left-4 z-40 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-primary transition-colors md:hidden;
+    }
+
+    .docs-mobile-overlay {
+        @apply fixed inset-0 bg-black/50 z-30 md:hidden;
+    }
+
+    .docs-mobile-sidebar {
+        @apply fixed left-0 top-0 h-screen w-64 bg-panel-bg border-r border-panel-border transform -translate-x-full transition-transform duration-300 ease-out z-40 md:hidden overflow-y-auto;
+    }
+
+    .docs-mobile-sidebar-open {
+        @apply translate-x-0;
+    }
+
+    .docs-mobile-sidebar-content {
+        @apply flex flex-col h-full;
+    }
+
+    .docs-mobile-sidebar-header {
+        @apply flex items-center justify-between p-6 border-b border-panel-border;
+    }
+
+    .docs-mobile-sidebar-title {
+        @apply text-[10px] font-bold text-text-secondary uppercase tracking-widest;
+    }
+
+    .docs-mobile-close-btn {
+        @apply p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-text-primary transition-colors;
+    }
+
+    .docs-mobile-sidebar-nav {
+        @apply flex-1 space-y-1 p-4;
+    }
+
+    .docs-mobile-sidebar-link {
+        @apply block px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors;
+    }
+
+    /* Docs Navigation (Previous/Next) */
+    .docs-navigation {
+        @apply grid grid-cols-2 gap-4 mt-12 pt-8 border-t border-panel-border;
+    }
+
+    .docs-nav-button {
+        @apply flex items-center gap-3 px-4 py-3 rounded-lg border border-panel-border hover:border-accent hover:bg-black/5 dark:hover:bg-white/5 transition-all text-sm font-medium text-text-secondary hover:text-text-primary;
+    }
+
+    .docs-nav-prev {
+        @apply justify-start;
+    }
+
+    .docs-nav-next {
+        @apply justify-end;
+    }
+
+    .docs-nav-button-content {
+        @apply flex flex-col;
+    }
+
+    .docs-nav-button-label {
+        @apply text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-1;
+    }
+
+    .docs-nav-button-title {
+        @apply text-sm font-medium text-text-primary;
+    }
+
+    /* Mobile adjustments for docs */
+    @media (max-width: 768px) {
+        .docs-content {
+            @apply px-4 py-8 mt-12;
+        }
+
+        .docs-navigation {
+            @apply grid-cols-1 gap-2;
+        }
+
+        .docs-nav-button {
+            @apply justify-between;
+        }
+
+        .docs-nav-prev {
+            @apply justify-between;
+        }
+
+        .docs-nav-next {
+            @apply justify-between;
+        }
     }
 }
 

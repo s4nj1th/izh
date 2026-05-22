@@ -1,4 +1,6 @@
 import Link from "next/link";
+import MobileSidebar from "@/components/MobileSidebar";
+import DocsNavigation from "@/components/DocsNavigation";
 
 const sidebarItems = [
     { title: "Introduction", href: "/docs/introduction" },
@@ -18,7 +20,7 @@ export default function DocsLayout({
 }) {
     return (
         <div className="docs-layout">
-            {/* Sidebar */}
+            {/* Desktop Sidebar */}
             <aside className="docs-sidebar">
                 <div className="docs-sidebar-header">
                     <div className="docs-sidebar-title">Documentation</div>
@@ -38,7 +40,13 @@ export default function DocsLayout({
 
             {/* Content */}
             <main className="docs-main">
-                <div className="docs-content">{children}</div>
+                {/* Mobile Sidebar */}
+                <MobileSidebar items={sidebarItems} />
+
+                <div className="docs-content">
+                    {children}
+                    <DocsNavigation items={sidebarItems} />
+                </div>
             </main>
         </div>
     );

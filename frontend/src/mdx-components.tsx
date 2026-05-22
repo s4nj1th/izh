@@ -1,4 +1,5 @@
 import type { MDXComponents } from "mdx/types";
+import CodeBlock from "@/components/CodeBlock";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
     return {
@@ -21,7 +22,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
                     {children}
                 </code>
             ),
-        pre: ({ children }) => <pre className="mdx-code-block">{children}</pre>,
+        pre: ({ children, className }) => (
+            <CodeBlock className={className}>{children}</CodeBlock>
+        ),
         table: ({ children }) => (
             <div className="mdx-table-wrapper">
                 <table className="mdx-table">{children}</table>

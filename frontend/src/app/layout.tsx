@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Script from "next/script";
 
 export const metadata: Metadata = {
     title: "VaraiX",
@@ -25,6 +26,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <head>
+                <Script id="theme-init" strategy="beforeInteractive">
+                    {`(function(){try{var key='theme';var stored=localStorage.getItem(key);var preferDark=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;var theme=stored|| (preferDark? 'dark':'light');if(theme==='dark'){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')} }catch(e){} })()`}
+                </Script>
+            </head>
             <body className="bg-bg-main text-text-primary min-h-screen flex flex-col">
                 <ThemeProvider
                     attribute="class"
