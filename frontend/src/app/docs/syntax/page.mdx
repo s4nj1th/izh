@@ -1,38 +1,48 @@
 # Basic Syntax
 
-VizLang is line oriented. Most files are a short mix of properties, variable definitions, and a data section.
+VizLang is a concise, line-oriented chart description language. Files are typically a short sequence of property lines, optional variable/array assignments, and a `data:` section (either inline or block style).
 
-## File shape
+## File shape (concrete)
 
-Most documents follow this pattern:
-
-1. Declare the chart type and optional labels.
-2. Define any variables or arrays you need.
-3. Provide data with either a block or an inline array.
+A common, minimal file looks like this:
 
 ```vizl
 chart: bar
-title: "My Awesome Chart"
-x: "Category"
-y: "Value"
+title: My Awesome Chart
+x: Category
+y: Value
+
+data:
+"A", 10
+"B", 20
 ```
+
+Rules to keep in mind:
+
+- Order is flexible: properties/assignments may appear before or after one another, but `data:` indicates the start of a row-based block when present.
+- Blank lines are ignored.
+- Whitespace around separators (`:`, `=`, `,`) is allowed and trimmed.
 
 ## Properties
 
-Properties use the `key: value` format.
+Properties are `key: value` pairs. Common keys:
 
-| Key         | Description                                                           |
-| ----------- | --------------------------------------------------------------------- |
-| `chart`     | Required. Chooses the chart type: `line`, `bar`, `scatter`, or `pie`. |
-| `title`     | Optional chart title.                                                 |
-| `x`         | Optional horizontal axis label.                                       |
-| `y`         | Optional vertical axis label.                                         |
-| `null_fill` | Optional missing-value strategy.                                      |
-| `colors`    | Optional palette for chart colors.                                    |
+| Key         | Purpose                                                          |
+| ----------- | ---------------------------------------------------------------- |
+| `chart`     | Required. One of: `line`, `bar`, `scatter`, `pie`.               |
+| `title`     | Optional display title (string or variable).                     |
+| `x`         | Optional X-axis label (string).                                  |
+| `y`         | Optional Y-axis label (string).                                  |
+| `null_fill` | Missing-value strategy (`zero`, `mean`, `prev`, `next`, `skip`). |
+| `colors`    | Optional palette (array of CSS color strings)                    |
 
-## Data Block
+Unknown property keys are ignored by the renderer but may be used by tooling.
 
-The `data:` keyword starts a row-based data block. Each row is read as one data point.
+## Data shapes and formats
+
+VizLang accepts two styles for data:
+
+- Block-style rows (preferred for multi-line human-edited data):
 
 ```vizl
 data:
@@ -41,94 +51,75 @@ data:
 "Mar", 125
 ```
 
-Use a data block when the rows are easier to read than a nested array.
-
-Examples that work well with block data:
-
-```vizl
-chart: bar
-title: Weekly Orders
-
-data:
-"Mon", 12
-"Tue", 18
-"Wed", 15
-"Thu", 21
-"Fri", 25
-```
-
-```vizl
-chart: line
-title: Sensor Readings
-
-data:
-"08:00", 18.2
-"09:00", 18.6
-"10:00", 19.1
-"11:00", 20.0
-```
-
-## Inline data
-
-You can also provide data directly as an inline array or a variable that contains one.
-
-```vizl
-myData = [["Q1", 340], ["Q2", 520]]
-data: myData
-```
+- Inline array-of-pairs (compact, copy/paste friendly):
 
 ```vizl
 data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
 ```
 
-Inline data is useful for short examples, generated output, and charts that need to stay compact.
+Notes:
 
-It is also the best option when you want the entire chart definition to fit in a small code sample or documentation snippet.
+- Rows are parsed as `x, y` pairs. `x` can be string or number; `y` should be numeric or `null`.
+- When using inline arrays, nested arrays are allowed (e.g., array-of-pairs or matrix shapes).
+- Strings containing commas or leading/trailing whitespace should be quoted with double quotes.
 
-## Comments
+## Strings, quoting, and escaping
 
-VizLang supports three comment styles:
+- Strings must use double quotes (`"`); unquoted identifiers beginning with a letter are treated as variable names or identifiers.
+- To include a double quote inside a string, escape it using `\"`.
+
+Example with quotes and commas:
+
+```vizl
+data:
+"New York, NY", 120
+"Los Angeles", 95
+```
+
+## Comments and block comments
+
+Supported comment styles:
 
 ```vizl
 // single-line comment
-/* block comment */
-# legacy comment
+/* multi-line block comment */
+# legacy single-line
 ```
 
-Comments are ignored by the renderer and can be used freely for notes or section breaks.
+Block comments preserve line counts so that error messages keep correct line numbers.
 
-Good comment uses include:
+## Assignments and variables in expressions
+
+- Assignment syntax: `NAME = EXPRESSION`.
+- Optional typed assignments: `int name = ...`, `float name = ...`, `string name = ...`, or typed arrays like `int[] arr = [...]`.
+- Variables can be used in later expressions, chart properties, and data rows.
+
+Expression examples (see `variables` page for more):
 
 ```vizl
-// data arrives from an external API
-// this section uses a fallback for null values
+base = 100
+growth = 1.2
+title: "Revenue " + 2026
+myData = [["A", base], ["B", base * growth]]
 ```
+
+## Function calls and helpers
+
+VizLang provides small helper functions evaluated at parse time. One example is `combine(arr1, arr2)` which pairs two arrays into an array-of-pairs. See the Arrays docs for details.
+
+## Parsing edge cases and tips
+
+- If a value is neither a quoted string nor a recognized literal (number/null) and it matches a variable name, the variable's value is used.
+- When `data:` is present as a block, the parser reads subsequent lines as data rows until a non-data line appears.
+- Use `null` (or `None`) to represent missing values; choose a `null_fill` strategy to control how missing `y` values are handled.
+
+## Quick checklist (copyable)
 
 ```vizl
-/*
-Multi-line notes are useful when you want
-to explain a longer example.
-*/
+chart: line
+title: My Chart
+myVar = 10
+data: [["A", myVar], ["B", 20]]
 ```
 
-## Example
-
-```vizl
-chart: bar
-title: Quarterly Revenue
-
-x: quarter
-y: revenue
-
-// Inline array-of-pairs keeps the file short.
-data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
-```
-
-## Reference checklist
-
-- `chart:` picks the chart type.
-- `title:` adds a heading.
-- `x:` and `y:` label the axes.
-- `data:` begins a row block or accepts an inline array.
-- `colors:` sets the palette.
-- `null_fill:` controls missing-value handling.
+Read the `Arrays`, `Variables`, and `Nulls` pages for deeper examples.

@@ -1,97 +1,95 @@
-# Variables & Math
+# Variables, Expressions & Types
 
-VizLang lets you define variables before the data section so you can build values once and reuse them in the rest of the file.
+Variables are evaluated at parse time and can be used in chart properties and data rows. They keep files DRY and make formulas explicit.
 
-## Defining Variables
+## Assignment syntax
 
-Use `NAME = EXPRESSION` for assignments. You can add an optional type prefix when the value should be treated as a specific scalar type.
+Basic assignment:
 
 ```vizl
-int base = 100
-float multiplier = 1.25
-string label_prefix = "Year "
+name = EXPRESSION
 ```
 
-Typed values are useful when you want the file to communicate intent clearly, especially in generated documents.
+Optional typed forms (coerce/declare intent):
 
-You do not need type prefixes for every value. Use them when the extra clarity helps, not as noise.
+```vizl
+int count = 10
+float ratio = 1.25
+string label = "Q1"
+int[] values = [10, 20, 30]
+```
 
-## Mathematical Operations
+Typed scalar and array declarations coerce elements at parse time and produce clearer error messages when types mismatch.
 
-VizLang supports standard arithmetic and string concatenation:
+## Supported operators and precedence
 
-- `+` (Addition / String Concatenation)
-- `-` (Subtraction)
-- `*` (Multiplication)
-- `/` (Division)
+- Multiplication and division (`*`, `/`) have higher precedence than addition and subtraction (`+`, `-`).
+- Parentheses override precedence.
+- `+` is overloaded for numbers and strings (string concatenation).
 
-Parentheses work as expected and can be used to keep longer expressions readable.
+Examples:
 
 ```vizl
 revenue = (base + bonus) * 1.1
-```
-
-```vizl
 title = "Revenue " + year
 ```
 
-## Example
+## Using variables in data rows and properties
+
+Variables may be referenced directly in `data:` rows and in property values. The parser substitutes their evaluated value.
 
 ```vizl
-chart: line
-int start_val = 500
-float growth = 1.1
-string label = "Revenue"
-
-title: label
-
+base = 100
+increment = 25
 data:
-"Base", start_val
-"Growth 1", start_val * growth
-"Growth 2", start_val * growth * growth
+"Q1", base
+"Q2", base + increment
 ```
 
-## Another example
+## Arrays and combining arrays
+
+Arrays can be assigned to variables and used to build inline data. Use `combine()` to pair two arrays into an array-of-pairs:
 
 ```vizl
-chart: pie
-year = 2026
-title: "Budget " + year
-
-marketing = 300
-dev = 500
-ops = 200
-
-data:
-"Marketing", marketing
-"Development", dev
-"Operations", ops
+xs = [1, 2, 3]
+ys = [10, 20, 30]
+data: combine(xs, ys)  # => [[1, 10], [2, 20], [3, 30]]
 ```
 
-## Practical use
+If arrays differ in length, `combine()` will produce pairs up to the longer array, leaving single-element arrays for missing counterparts (see Arrays docs for behavior details).
 
-Variables are especially useful when:
+## Common pitfalls and error messages
 
-- several rows share the same base value
-- chart titles or labels are generated from parts
-- you want to keep repeated math out of the data block
-- you are converting the same formula into multiple rows
+- Undefined variable: referenced a name that has not been assigned. Define variables before use.
+- Type mismatch: when assigning to a typed declaration, the parser will coerce where possible or raise an error for incompatible types.
+- Division by zero will not be caught at parse-time if it depends on runtime data, but numeric expressions are evaluated at parse time for literals/variables.
+
+## Practical examples
+
+1. Generate labels and values programmatically:
 
 ```vizl
 chart: bar
-year = 2026
-offset = 4
-title: "Targets for " + year
+months = ["Jan", "Feb", "Mar"]
+values = [10, 20, 30]
+data: combine(months, values)
+```
 
-data:
-"Q1", 100 + offset
-"Q2", 125 + offset
-"Q3", 140 + offset
-"Q4", 160 + offset
+2. Build a title from parts:
+
+```vizl
+year = 2026
+title: "Forecast " + year
+```
+
+3. Typed arrays for clear intent:
+
+```vizl
+int[] years = [2018..2022]
+float[] readings = [1.2, 1.5, 2.0]
 ```
 
 ## Tips
 
-- keep the assignment section near the top of the file
-- name intermediate values clearly when the math gets longer
-- reuse variables in chart titles, labels, and data rows to keep the file compact
+- Keep variable assignments grouped near the top so readers can quickly find configurable values.
+- Use descriptive names for intermediate variables to make formulas self-documenting.

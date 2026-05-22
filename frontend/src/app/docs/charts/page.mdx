@@ -1,16 +1,10 @@
-# Chart Types
+# Chart Types and Data Shapes
 
-VizLang currently supports four core chart types. Each one uses the same file format, but the data shape and visual emphasis are different.
+VizLang currently supports the following core chart types. The same top-level file shape is used for all charts; what changes is the expected data shape and how the renderer interprets values.
 
-## Bar Chart
+### 1) Bar chart
 
-Use a bar chart when you want to compare categories.
-
-```vizl
-chart: bar
-```
-
-Example:
+Purpose: compare categorical values. Each data row should be `[category, value]` where `category` is a string and `value` is numeric.
 
 ```vizl
 chart: bar
@@ -18,15 +12,17 @@ title: Quarterly Sales
 data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
 ```
 
-## Line Chart
-
-Use a line chart to show change over time or a continuous trend.
+When using block data, the same shape applies:
 
 ```vizl
-chart: line
+data:
+"Q1", 120
+"Q2", 150
 ```
 
-Example:
+### 2) Line chart
+
+Purpose: show trends over an ordered X axis (time or numeric). `x` can be a string label or numeric value; `y` must be numeric. Line charts connect points in X-order.
 
 ```vizl
 chart: line
@@ -34,31 +30,23 @@ title: Monthly Revenue
 data: [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22]]
 ```
 
-## Scatter Plot
+If your X values are numeric (dates converted to numbers, epoch seconds, etc.), the line will be positioned proportionally.
 
-Use scatter plots to compare paired values and look for relationships or clusters.
+### 3) Scatter plot
 
-```vizl
-chart: scatter
-```
-
-Example:
+Purpose: compare two numeric variables. For scatter plots, both elements of each pair should be numeric: `[x, y]`.
 
 ```vizl
 chart: scatter
 title: Height vs Weight
-data: [[155, 52], [160, 58], [165, 62], [170, 68], [175, 74]]
+data: [[155, 52], [160, 58], [165, 62], [170, 68]]
 ```
 
-## Pie Chart
+Tip: Use `int[]`/`float[]` arrays and `combine()` for pairing two separate numeric arrays into scatter points.
 
-Use a pie chart when you want to show how a whole is divided into parts.
+### 4) Pie chart
 
-```vizl
-chart: pie
-```
-
-Example:
+Purpose: show parts of a whole. Each pair is `[label, value]` where `label` is a string and `value` is numeric and non-negative.
 
 ```vizl
 chart: pie
@@ -66,9 +54,33 @@ title: Server Operating Systems
 data: [["Linux", 72], ["Windows", 10], ["macOS", 8], ["Other", 6]]
 ```
 
-## Choosing a chart
+Notes on pie charts:
 
-- Use `bar` for comparisons.
-- Use `line` for trends.
-- Use `scatter` for relationships.
-- Use `pie` for parts of a whole, but keep the number of slices small.
+- Keep slices to a reasonable number (6–8) for legibility.
+- Values must sum to any positive total; renderer uses relative proportions.
+
+## Shared rendering behaviors
+
+- `colors:` accepts an array of CSS color strings. For `bar`/`scatter`/`pie`, the palette is applied per category/point/slice. For `line`, the first color is used for the line stroke.
+- `null` values in the Y position are handled according to `null_fill` (see Nulls page).
+- The renderer treats array-of-pairs uniformly; ensure your data format matches the chart semantics above.
+
+## Advanced examples
+
+1. Using `combine()` to prepare scatter data from two arrays:
+
+```vizl
+int[] xs = [1, 2, 3, 4]
+int[] ys = [10, 20, 30, 40]
+data: combine(xs, ys)
+```
+
+2. Typing arrays to document intent and coerce values:
+
+```vizl
+string[] months = ["Jan", "Feb"]
+int[] values = [10, 20]
+data: combine(months, values)
+```
+
+Choose the chart type based on the semantic shape of your data and the question you want the visualization to answer.

@@ -1,5 +1,5 @@
 export const EXAMPLES = {
-  line: `// Line chart example
+    line: `// Line chart example
 chart: line
 title: Monthly Revenue
 
@@ -11,7 +11,7 @@ myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22], ["May", 28], ["Jun
 
 data: myData`,
 
-  bar: `// Bar chart example
+    bar: `// Bar chart example
 chart: bar
 title: Quarterly Sales
 
@@ -23,7 +23,7 @@ myData = [["Q1", 340], ["Q2", 520], ["Q3", 480], ["Q4", 610]]
 
 data: myData`,
 
-  scatter: `// Scatter plot example
+    scatter: `// Scatter plot example
 chart: scatter
 title: Height vs Weight
 
@@ -35,7 +35,7 @@ myPoints = [[155, 52], [160, 58], [165, 62], [168, 65], [170, 68], [172, 70], [1
 
 data: myPoints`,
 
-  pie: `// Pie chart example
+    pie: `// Pie chart example
 chart: pie
 title: Server Operating Systems
 
@@ -44,7 +44,7 @@ osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
 
 data: osShares`,
 
-  variables: `// Variables, Arrays and Nulls example
+    variables: `// Variables, Arrays and Nulls example
 chart: bar
 title: Budget Analysis
 
@@ -67,7 +67,7 @@ null_fill: zero
 
 data: myData`,
 
-  types: `// Typed Variables and Arrays example
+    types: `// Typed Variables and Arrays example
 chart: line
 
 // Typed variable definitions
@@ -83,7 +83,7 @@ myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
 
 data: myData`,
 
-  null_zero: `// Nulls filled with zero
+    null_zero: `// Nulls filled with zero
 chart: line
 title: Nulls filled with zero
 
@@ -96,7 +96,7 @@ null_fill: zero
 
 data: myData`,
 
-  null_mean: `// Nulls filled with mean
+    null_mean: `// Nulls filled with mean
 chart: line
 title: Nulls filled with mean
 
@@ -108,7 +108,7 @@ null_fill: mean
 
 data: myData`,
 
-  null_prev: `// Nulls filled with previous value
+    null_prev: `// Nulls filled with previous value
 chart: line
 title: Nulls filled with previous (prev)
 
@@ -120,7 +120,7 @@ null_fill: prev
 
 data: myData`,
 
-  null_next: `// Nulls filled with next value
+    null_next: `// Nulls filled with next value
 chart: line
 title: Nulls filled with next (forward)
 
@@ -132,7 +132,7 @@ null_fill: next
 
 data: myData`,
 
-  null_skip: `// Nulls skipped (dropped)
+    null_skip: `// Nulls skipped (dropped)
 chart: line
 title: Nulls skipped (skip)
 
@@ -144,7 +144,7 @@ null_fill: skip
 
 data: myData`,
 
-  block_style: `// Block-style data (no inline arrays)
+    block_style: `// Block-style data (no inline arrays)
 chart: bar
 title: Quarterly Revenue (block-style)
 
@@ -157,7 +157,7 @@ data:
 "Q3", 170
 "Q4", 200`,
 
-  range_example: `// Range and typed arrays
+    range_example: `// Range and typed arrays
 chart: bar
 title: Yearly Counts from Range
 
@@ -169,4 +169,20 @@ int[] counts = [10, 20, 30, 25, 35]
 myData = [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
 
 data: myData`,
+
+    combine: `// Combine two arrays into paired data
+chart: scatter
+title: Temperature vs Humidity
+
+x: temperature (°C)
+y: humidity (%)
+
+// Two separate arrays combined into pairs
+temps = [15, 18, 20, 22, 25, 28, 30, 32]
+humidity = [45, 52, 58, 65, 72, 78, 82, 88]
+
+// Use combine() to pair them: [[15, 45], [18, 52], ..., [32, 88]]
+paired_data = combine(temps, humidity)
+
+data: paired_data`,
 };

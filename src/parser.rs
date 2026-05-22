@@ -42,6 +42,7 @@ enum Token {
     Minus,
     Star,
     Slash,
+    Comma,
     LParen,
     RParen,
     IntKeyword,
@@ -172,6 +173,7 @@ impl<'a> Tokenizer<'a> {
             '-' => Ok(Token::Minus),
             '*' => Ok(Token::Star),
             '/' => Ok(Token::Slash),
+            ',' => Ok(Token::Comma),
             '(' => Ok(Token::LParen),
             ')' => Ok(Token::RParen),
             '"' => {
@@ -343,7 +345,57 @@ impl<'a> ExprParser<'a> {
             }
             Token::StringLiteral(s) => Ok(Value::String(s)),
             Token::Ident(s) => {
-                if s.to_lowercase() == "null" || s == "None" {
+                // Check for function call
+                if self.peek() == &Token::LParen {
+                    self.consume(); // consume the '('
+                    let mut args = Vec::new();
+                    
+                    // Parse arguments separated by commas
+                    if self.peek() != &Token::RParen {
+                        loop {
+                            args.push(self.parse_expression()?);
+                            match self.peek() {
+                                Token::Comma => {
+                                    self.consume();
+                                }
+                                Token::RParen => break,
+                                _ => return Err("Expected ',' or ')' in function call".to_string()),
+                            }
+                        }
+                    }
+                    
+                    if self.consume() != &Token::RParen {
+                        return Err("Expected ')' after function arguments".to_string());
+                    }
+                    
+                    // Handle function calls
+                    match s.to_lowercase().as_str() {
+                        "combine" => {
+                            if args.len() != 2 {
+                                return Err(format!("combine expects 2 arguments, got {}", args.len()));
+                            }
+                            match (&args[0], &args[1]) {
+                                (Value::Array(arr1), Value::Array(arr2)) => {
+                                    let max_len = arr1.len().max(arr2.len());
+                                    let mut result = Vec::new();
+                                    for i in 0..max_len {
+                                        let mut pair = Vec::new();
+                                        if i < arr1.len() {
+                                            pair.push(arr1[i].clone());
+                                        }
+                                        if i < arr2.len() {
+                                            pair.push(arr2[i].clone());
+                                        }
+                                        result.push(Value::Array(pair));
+                                    }
+                                    Ok(Value::Array(result))
+                                }
+                                _ => Err("combine expects two array arguments".to_string()),
+                            }
+                        }
+                        _ => Err(format!("Unknown function: {}", s)),
+                    }
+                } else if s.to_lowercase() == "null" || s == "None" {
                     Ok(Value::Null)
                 } else {
                     self.vars
