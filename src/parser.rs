@@ -3,18 +3,18 @@ use std::collections::HashMap;
 use std::fmt;
 
 #[derive(Debug, Clone)]
-pub struct VaraiXError {
+pub struct VizLangError {
     pub line_number: usize,
     pub message: String,
     pub source_line: String,
 }
 
-impl fmt::Display for VaraiXError {
+impl fmt::Display for VizLangError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let prefix = if self.line_number > 0 {
-            format!("varaiX Error [line {}]", self.line_number)
+            format!("VizLang Error [line {}]", self.line_number)
         } else {
-            "varaiX Error".to_string()
+            "VizLang Error".to_string()
         };
 
         if self.source_line.trim().is_empty() {
@@ -31,7 +31,7 @@ impl fmt::Display for VaraiXError {
     }
 }
 
-impl std::error::Error for VaraiXError {}
+impl std::error::Error for VizLangError {}
 
 #[derive(Debug, PartialEq, Clone)]
 enum Token {
@@ -379,10 +379,10 @@ fn parse_general_array(
     vars: &HashMap<String, Value>,
     line_number: usize,
     source_line: &str,
-) -> Result<Value, VaraiXError> {
+) -> Result<Value, VizLangError> {
     let s = raw.trim();
     if !s.starts_with('[') {
-        return Err(VaraiXError {
+        return Err(VizLangError {
             line_number,
             message: "Array must start with '['".to_string(),
             source_line: source_line.to_string(),
@@ -406,12 +406,12 @@ fn parse_general_array(
                 if let Some(dd) = range_part.find("..") {
                     let start_s = range_part[..dd].trim();
                     let end_s = range_part[dd + 2..].trim();
-                    let start_val = evaluate(start_s, vars).map_err(|e| VaraiXError {
+                    let start_val = evaluate(start_s, vars).map_err(|e| VizLangError {
                         line_number,
                         message: format!("Invalid start expression in range: {}", e),
                         source_line: source_line.to_string(),
                     })?;
-                    let end_val = evaluate(end_s, vars).map_err(|e| VaraiXError {
+                    let end_val = evaluate(end_s, vars).map_err(|e| VizLangError {
                         line_number,
                         message: format!("Invalid end expression in range: {}", e),
                         source_line: source_line.to_string(),
@@ -420,7 +420,7 @@ fn parse_general_array(
                         Value::Int(i) => i,
                         Value::Float(f) => f as i64,
                         _ => {
-                            return Err(VaraiXError {
+                            return Err(VizLangError {
                                 line_number,
                                 message: "Range bounds must be numeric".to_string(),
                                 source_line: source_line.to_string(),
@@ -431,7 +431,7 @@ fn parse_general_array(
                         Value::Int(i) => i,
                         Value::Float(f) => f as i64,
                         _ => {
-                            return Err(VaraiXError {
+                            return Err(VizLangError {
                                 line_number,
                                 message: "Range bounds must be numeric".to_string(),
                                 source_line: source_line.to_string(),
@@ -445,7 +445,7 @@ fn parse_general_array(
                         match evaluate(expr_part, &local_vars) {
                             Ok(v) => results.push(v),
                             Err(e) => {
-                                return Err(VaraiXError {
+                                return Err(VizLangError {
                                     line_number,
                                     message: format!("Invalid expression in comprehension: {}", e),
                                     source_line: source_line.to_string(),
@@ -463,12 +463,12 @@ fn parse_general_array(
         if let Some(dd) = inner.find("..") {
             let start_s = inner[..dd].trim();
             let end_s = inner[dd + 2..].trim();
-            let start_val = evaluate(start_s, vars).map_err(|e| VaraiXError {
+            let start_val = evaluate(start_s, vars).map_err(|e| VizLangError {
                 line_number,
                 message: format!("Invalid start expression in range: {}", e),
                 source_line: source_line.to_string(),
             })?;
-            let end_val = evaluate(end_s, vars).map_err(|e| VaraiXError {
+            let end_val = evaluate(end_s, vars).map_err(|e| VizLangError {
                 line_number,
                 message: format!("Invalid end expression in range: {}", e),
                 source_line: source_line.to_string(),
@@ -477,7 +477,7 @@ fn parse_general_array(
                 Value::Int(i) => i,
                 Value::Float(f) => f as i64,
                 _ => {
-                    return Err(VaraiXError {
+                    return Err(VizLangError {
                         line_number,
                         message: "Range bounds must be numeric".to_string(),
                         source_line: source_line.to_string(),
@@ -488,7 +488,7 @@ fn parse_general_array(
                 Value::Int(i) => i,
                 Value::Float(f) => f as i64,
                 _ => {
-                    return Err(VaraiXError {
+                    return Err(VizLangError {
                         line_number,
                         message: "Range bounds must be numeric".to_string(),
                         source_line: source_line.to_string(),
@@ -591,10 +591,10 @@ fn parse_array_literal(
     vars: &HashMap<String, Value>,
     line_number: usize,
     source_line: &str,
-) -> Result<Vec<DataPoint>, VaraiXError> {
+) -> Result<Vec<DataPoint>, VizLangError> {
     let s = raw.trim();
     if !s.starts_with('[') {
-        return Err(VaraiXError {
+        return Err(VizLangError {
             line_number,
             message: "Array literal must start with '['".to_string(),
             source_line: source_line.to_string(),
@@ -631,7 +631,7 @@ fn parse_array_literal(
                 }
                 let parts: Vec<&str> = item.split(',').map(|p| p.trim()).collect();
                 if parts.len() < 2 {
-                    return Err(VaraiXError {
+                    return Err(VizLangError {
                         line_number,
                         message: "Array item must have two elements [x, y]".to_string(),
                         source_line: source_line.to_string(),
@@ -705,7 +705,7 @@ fn parse_array_literal(
     Ok(items)
 }
 
-pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
+pub fn parse(source: &str) -> Result<VizAST, VizLangError> {
     let source = strip_comments_preserve_lines(source);
 
     let mut chart_type = None;
@@ -734,7 +734,7 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
         }
 
         if in_data_block {
-            let comma_index = trimmed_line.find(',').ok_or_else(|| VaraiXError {
+            let comma_index = trimmed_line.find(',').ok_or_else(|| VizLangError {
                 line_number,
                 message: "Expected a data row in the format \"x, y\" but found no comma"
                     .to_string(),
@@ -745,14 +745,14 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
             let raw_y = trimmed_line[comma_index + 1..].trim();
 
             if raw_x.is_empty() {
-                return Err(VaraiXError {
+                return Err(VizLangError {
                     line_number,
                     message: "x-value is empty in data row".to_string(),
                     source_line: raw_line.to_string(),
                 });
             }
 
-            let val_y = evaluate(raw_y, &vars).map_err(|e| VaraiXError {
+            let val_y = evaluate(raw_y, &vars).map_err(|e| VizLangError {
                 line_number,
                 message: format!("Invalid y-value expression \"{}\": {}", raw_y, e),
                 source_line: raw_line.to_string(),
@@ -847,7 +847,7 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
                     match evaluate(raw_expr, &vars) {
                         Ok(v) => v,
                         Err(e) => {
-                            return Err(VaraiXError {
+                            return Err(VizLangError {
                                 line_number,
                                 message: format!(
                                     "Invalid variable assignment \"{} = {}\": {}",
@@ -889,7 +889,7 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
             }
         }
 
-        let colon_index = trimmed_line.find(':').ok_or_else(|| VaraiXError {
+        let colon_index = trimmed_line.find(':').ok_or_else(|| VizLangError {
             line_number,
             message: "Expected a \"key: value\" pair, an assignment \"[type] var = val\", or found no separator".to_string(),
             source_line: raw_line.to_string(),
@@ -914,7 +914,7 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
                     "histogram" => ChartType::Histogram,
                     "heatmap" => ChartType::Heatmap,
                     _ => {
-                        return Err(VaraiXError {
+                        return Err(VizLangError {
                             line_number,
                             message: format!(
                                 "Unknown chart type \"{}\" — valid options are: line, bar, scatter, pie, histogram, heatmap",
@@ -1031,14 +1031,14 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
         }
     }
 
-    let chart_type = chart_type.ok_or_else(|| VaraiXError {
+    let chart_type = chart_type.ok_or_else(|| VizLangError {
         line_number: 0,
         message: "Missing required \"chart:\" declaration".to_string(),
         source_line: "".to_string(),
     })?;
 
     if data_points.is_empty() {
-        return Err(VaraiXError {
+        return Err(VizLangError {
             line_number: 0,
             message: "No data rows found — add a \"data:\" section with at least one row"
                 .to_string(),

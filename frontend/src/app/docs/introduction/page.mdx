@@ -1,15 +1,34 @@
 # Introduction
 
-varaiX is a minimal chart description language designed for speed, clarity, and ease of use. It renders clean, professional SVGs instantly in your browser.
+VizLang is a small chart description language for people who want to describe a chart without building a full charting app. A `.vizl` file is readable by humans, predictable for tools, and compact enough to generate from an LLM or a script.
 
-## Why varaiX?
+The language is designed around a simple idea: write a few lines of text, render one chart, and get the same SVG every time.
 
-Most charting libraries are either too complex or too rigid. varaiX strikes a balance by providing:
+## Why VizLang?
 
-- **Deterministic Rendering**: The same code always produces the same SVG.
-- **LLM-Friendly**: Simple syntax that AI models can easily generate and understand.
-- **No Friction**: Write code, see chart. No configuration files or complex APIs.
+VizLang is useful when you want:
 
-## Getting Started
+- **Deterministic output** so a chart definition always renders the same way.
+- **Low ceremony** so the file stays short and easy to read.
+- **LLM-friendly syntax** so generated chart specs are easy to validate and edit.
+- **SVG output** that works in browsers, docs, slides, and static sites.
 
-To create your first chart, head over to the [Editor](/editor) and choose an example from the dropdown menu.
+## Quick Start
+
+```vizl
+chart: line
+title: Monthly Revenue
+
+myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22]]
+data: myData
+```
+
+That file defines one chart, gives it a title, and passes an inline array of pairs as the dataset.
+
+## What to read next
+
+- [Basic Syntax](/docs/syntax) for the line-based structure of a `.vizl` file.
+- [Variables & Math](/docs/variables) for calculations and typed values.
+- [Arrays](/docs/arrays) for ranges, comprehensions, and typed arrays.
+- [Nulls](/docs/nulls) for missing-value handling.
+- [Colors](/docs/colors) for palettes and series coloring.

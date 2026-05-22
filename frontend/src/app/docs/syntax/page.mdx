@@ -1,10 +1,14 @@
 # Basic Syntax
 
-varaiX uses a key-value structure for properties and a comma-separated format for data.
+VizLang is line oriented. Most files are a short mix of properties, variable definitions, and a data section.
 
-## Properties
+## File shape
 
-Properties are defined at the top of your file using the `key: value` format.
+Most documents follow this pattern:
+
+1. Declare the chart type and optional labels.
+2. Define any variables or arrays you need.
+3. Provide data with either a block or an inline array.
 
 ```vizl
 chart: bar
@@ -13,18 +17,22 @@ x: "Category"
 y: "Value"
 ```
 
-### Key Properties
+## Properties
 
-| Key     | Description                                          |
-| ------- | ---------------------------------------------------- |
-| `chart` | The type of chart (`line`, `bar`, `scatter`, `pie`). |
-| `title` | The main heading of the chart.                       |
-| `x`     | Label for the horizontal axis.                       |
-| `y`     | Label for the vertical axis.                         |
+Properties use the `key: value` format.
+
+| Key         | Description                                                           |
+| ----------- | --------------------------------------------------------------------- |
+| `chart`     | Required. Chooses the chart type: `line`, `bar`, `scatter`, or `pie`. |
+| `title`     | Optional chart title.                                                 |
+| `x`         | Optional horizontal axis label.                                       |
+| `y`         | Optional vertical axis label.                                         |
+| `null_fill` | Optional missing-value strategy.                                      |
+| `colors`    | Optional palette for chart colors.                                    |
 
 ## Data Block
 
-The `data:` keyword marks the beginning of your data points. Each row below it should follow the `x, y` format.
+The `data:` keyword starts a row-based data block. Each row is read as one data point.
 
 ```vizl
 data:
@@ -33,30 +41,44 @@ data:
 "Mar", 125
 ```
 
-> **Note**: Labels in the data block should be wrapped in double quotes (e.g., `"January"`) to distinguish them from variables.
+Use a data block when the rows are easier to read than a nested array.
 
-## Arrays, Nulls & Colors (summary)
+## Inline data
 
-varaiX supports inline arrays and array-of-pairs which can be used as `data:` values. You can also set a `null_fill` policy and provide a color palette.
-
-- Inline array-of-pairs:
+You can also provide data directly as an inline array or a variable that contains one.
 
 ```vizl
 myData = [["Q1", 340], ["Q2", 520]]
 data: myData
 ```
 
-- `null_fill:` strategies: `zero`, `mean`, `prev`, `next`, `skip`.
-
 ```vizl
-null_fill: mean
-myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
 ```
 
-- Colors palette:
+Inline data is useful for short examples, generated output, and charts that need to stay compact.
+
+## Comments
+
+VizLang supports three comment styles:
 
 ```vizl
-colors: ["red", "#00f", "rgb(0,128,255)"]
+// single-line comment
+/* block comment */
+# legacy comment
 ```
 
-These features are documented in more detail in the Arrays and Colors pages in the Docs section.
+Comments are ignored by the renderer and can be used freely for notes or section breaks.
+
+## Example
+
+```vizl
+chart: bar
+title: Quarterly Revenue
+
+x: quarter
+y: revenue
+
+// Inline array-of-pairs keeps the file short.
+data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
+```

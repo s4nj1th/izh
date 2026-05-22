@@ -1,8 +1,10 @@
 # Arrays, Ranges & Comprehensions
 
-varaiX now supports fixed-size arrays evaluated at parse time. These are useful for compactly representing sequences, ranges, and data tables.
+VizLang supports fixed-size arrays that are evaluated at parse time. They are useful when you want to generate data cleanly without repeating every row by hand.
 
 ## Explicit lists
+
+Use explicit lists when the values are short and already known.
 
 ```vizl
 values = [1, 2, 3, 4]
@@ -11,27 +13,27 @@ labels = ["Jan", "Feb", "Mar"]
 
 ## Inclusive ranges
 
-Create a sequence of integers:
+Ranges create inclusive integer sequences.
 
 ```vizl
 years = [2018..2022]  # => [2018, 2019, 2020, 2021, 2022]
 ```
 
-Ranges are inclusive and work with integer bounds.
+Use ranges to generate labels, counts, or year spans without writing each element manually.
 
 ## Simple comprehensions
 
-You can create arrays by evaluating an expression for each value in a range:
+Comprehensions evaluate an expression for each value in a range.
 
 ```vizl
 evens = [i * 2 for i in 1..5]  # => [2,4,6,8,10]
 ```
 
-Comprehensions are evaluated at parse time and produce a fixed-size array.
+This is a good fit for synthetic data, derived values, and compact examples.
 
 ## Nested arrays (array-of-pairs)
 
-Arrays can contain arrays. This is commonly used to represent `data:` directly:
+Arrays can contain arrays. The most common use is a table of x/y pairs.
 
 ```vizl
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
@@ -40,7 +42,7 @@ data: myData
 
 ## Typed arrays
 
-Declare typed arrays where elements are coerced at parse time:
+You can declare typed arrays when you want the element type to be explicit.
 
 ```vizl
 int[] years = [2018..2022]
@@ -48,10 +50,22 @@ float[] measurements = [1.0, 2.5, 3.75]
 string[] names = ["A", "B", "C"]
 ```
 
-The parser will coerce elements to the declared type. If you want stricter behavior (error on incompatible elements) we can enable that later.
+The parser coerces elements at parse time, which keeps the result deterministic and easy to reason about.
 
-## Notes
+## Example
 
-- Arrays are fixed-size and deterministic — they are fully materialized at parse time.
-- For long lists you can use ranges or comprehensions to keep the source compact.
-- If you need multiline array literals (spanning many lines) tell me and I can extend the parser to accumulate bracketed arrays across lines.
+```vizl
+chart: bar
+title: Yearly Counts
+
+years = [2018..2022]
+counts = [10, 20, 30, 25, 35]
+data: [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
+```
+
+## When to use arrays
+
+- use lists for short fixed values
+- use ranges for inclusive sequences
+- use comprehensions for generated values
+- use nested arrays for chart data

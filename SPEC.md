@@ -1,8 +1,8 @@
-# varaiX Specification (v0.2)
+# VizLang Specification (v0.2)
 
 ## Overview
 
-varaiX is a minimal, line-based, deterministic chart description language. A single `.vizl` file describes exactly one chart and compiles to an SVG string. The language favors simplicity and predictability and is suitable for both human authors and programmatic generation. Version 0.2 adds arrays, typed arrays, ranges, comprehensions, richer comment syntax, null handling, fill strategies, and palette controls.
+VizLang is a minimal, line-based, deterministic chart description language. A single `.vizl` file describes exactly one chart and compiles to an SVG string. The language favors simplicity and predictability and is suitable for both human authors and programmatic generation. Version 0.2 adds arrays, typed arrays, ranges, comprehensions, richer comment syntax, null handling, fill strategies, and palette controls.
 
 ## File extension
 
@@ -21,8 +21,8 @@ varaiX is a minimal, line-based, deterministic chart description language. A sin
 
 - Strings are double-quoted: `"some text"`.
 - Line comments:
-  - `// this is a comment`
-  - `# legacy comment` (still supported)
+    - `// this is a comment`
+    - `# legacy comment` (still supported)
 - Block comments: `/* multi-line\n comment */` — internal newlines are preserved for accurate diagnostic line numbers.
 
 Comments are stripped in a preprocessing step before parsing while preserving line count.
@@ -30,6 +30,7 @@ Comments are stripped in a preprocessing step before parsing while preserving li
 ## Primary line forms
 
 A line may be one of:
+
 - Blank line — ignored
 - Key-value pair — `key: value`
 - Variable assignment — `[type] NAME = EXPRESSION` or `NAME = EXPRESSION`
@@ -44,21 +45,21 @@ Arrays are concrete, fixed-size sequences constructed at parse time. They are no
 
 Forms:
 
-1) Explicit list
+1. Explicit list
 
 ```
 arr = [1, 2, 3]
 labels = ["A", "B", "C"]
 ```
 
-2) Inclusive range
+2. Inclusive range
 
 ```
 nums = [1..5]   # => [1,2,3,4,5]
 years = [2018..2022]
 ```
 
-3) Simple comprehension
+3. Simple comprehension
 
 ```
 ev = [i*2 for i in 1..5]  # => [2,4,6,8,10]
@@ -66,7 +67,7 @@ ev = [i*2 for i in 1..5]  # => [2,4,6,8,10]
 
 Comprehensions evaluate the expression for each integer in the inclusive `start..end` range.
 
-4) Nested arrays / array-of-pairs
+4. Nested arrays / array-of-pairs
 
 ```
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
@@ -96,9 +97,10 @@ If coercion is not possible some conversions fall back to numeric `to_f64()` or 
 
 ## Nulls and null_fill strategies
 
-varaiX accepts `null` and `None` as missing values. For chart data, missing `y` values are represented in the AST and handled by the renderer according to `null_fill`.
+VizLang accepts `null` and `None` as missing values. For chart data, missing `y` values are represented in the AST and handled by the renderer according to `null_fill`.
 
 Supported strategies (set with `null_fill:`):
+
 - `zero` — replace nulls with `0` (default)
 - `mean` / `average` — fill with mean of non-null values
 - `prev` / `previous` — repeat previous non-null value (or `0` if none)
@@ -114,6 +116,7 @@ data: myData
 ```
 
 Notes:
+
 - `skip` may change X-axis labeling and spacing because points are removed from the dataset passed to the renderer.
 
 ## Colors / palettes
@@ -136,19 +139,20 @@ colors: palette
 ```
 
 Behavior in renderer:
+
 - If `colors:` is provided (non-empty), the renderer uses the palette in preference to the default palette.
 - Color strings are used directly as CSS color values (`fill`/`stroke` attributes): named colors (`red`), hex (`#rrggbb`), `rgb()` / `rgba()` / `hsl()` are supported by the browser.
 - Chart mapping:
-  - `line` — path stroke uses `palette[0]` (if present); dot markers cycle through the palette per point.
-  - `bar` — bars cycle through the palette per bar.
-  - `scatter` — points cycle through the palette per point.
-  - `pie` — slices and legend entries use palette entries per slice (fallback to default slice colors if the palette is shorter).
+    - `line` — path stroke uses `palette[0]` (if present); dot markers cycle through the palette per point.
+    - `bar` — bars cycle through the palette per bar.
+    - `scatter` — points cycle through the palette per point.
+    - `pie` — slices and legend entries use palette entries per slice (fallback to default slice colors if the palette is shorter).
 
 Recommendation: provide at least as many colors as there are data points for bar/pie/scatter for predictable coloring, or provide 1 color for a single-series style line chart.
 
 ## Data formats
 
-1) Block-style data (original)
+1. Block-style data (original)
 
 ```
 data:
@@ -157,14 +161,14 @@ Feb, 20
 Mar, 15
 ```
 
-2) Inline array data (preferred for compact examples)
+2. Inline array data (preferred for compact examples)
 
 ```
 myData = [["Q1", 340], ["Q2", 520]]
 data: myData
 ```
 
-3) `data:` can accept an inline array literal directly:
+3. `data:` can accept an inline array literal directly:
 
 ```
 data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
@@ -172,15 +176,15 @@ data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
 
 ## Keys
 
-| Key | Required | Purpose |
-|---|---:|---|
-| `chart` | Yes | `line`, `bar`, `scatter`, `pie` |
-| `title` | No | Chart title |
-| `x` | No | X-axis label |
-| `y` | No | Y-axis label |
-| `data` | Yes | Start block or inline data |
-| `null` / `null_fill` | No | Null-filling strategy |
-| `colors` / `color` | No | Palette for chart colors |
+| Key                  | Required | Purpose                         |
+| -------------------- | -------: | ------------------------------- |
+| `chart`              |      Yes | `line`, `bar`, `scatter`, `pie` |
+| `title`              |       No | Chart title                     |
+| `x`                  |       No | X-axis label                    |
+| `y`                  |       No | Y-axis label                    |
+| `data`               |      Yes | Start block or inline data      |
+| `null` / `null_fill` |       No | Null-filling strategy           |
+| `colors` / `color`   |       No | Palette for chart colors        |
 
 Unknown keys are ignored.
 
@@ -189,7 +193,7 @@ Unknown keys are ignored.
 1. Strip comments (`//`, `/* */`, `#`) while preserving newlines.
 2. Split into lines and iterate with 1-based line numbers.
 3. Recognize assignments `NAME = EXPR` or `[type] NAME = EXPR`.
-   - RHS may be expression, array literal, range, or comprehension.
+    - RHS may be expression, array literal, range, or comprehension.
 4. Recognize `key: value` pairs. For `data:` with empty value, enter data block. For `data: <array>` or `data: varName`, expand into data rows.
 5. In data block, parse `x, y` rows until another key or EOF.
 6. After parsing, validate required keys and build AST; renderer will apply `null_fill` and colors.
@@ -199,7 +203,7 @@ Unknown keys are ignored.
 Errors include line number, message and offending source line. Example:
 
 ```
-varaiX Error [line 5]: Invalid y-value "abc" — expected a number.
+VizLang Error [line 5]: Invalid y-value "abc" — expected a number.
   → Feb, abc
 ```
 

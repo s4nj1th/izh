@@ -1,27 +1,74 @@
 # Chart Types
 
-varaiX currently supports four core chart types.
+VizLang currently supports four core chart types. Each one uses the same file format, but the data shape and visual emphasis are different.
 
 ## Bar Chart
-Best for comparing discrete categories.
+
+Use a bar chart when you want to compare categories.
+
 ```vizl
 chart: bar
 ```
 
+Example:
+
+```vizl
+chart: bar
+title: Quarterly Sales
+data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
+```
+
 ## Line Chart
-Ideal for showing trends over time.
+
+Use a line chart to show change over time or a continuous trend.
+
 ```vizl
 chart: line
 ```
 
+Example:
+
+```vizl
+chart: line
+title: Monthly Revenue
+data: [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22]]
+```
+
 ## Scatter Plot
-Used to visualize relationships between two numerical variables.
+
+Use scatter plots to compare paired values and look for relationships or clusters.
+
 ```vizl
 chart: scatter
 ```
 
+Example:
+
+```vizl
+chart: scatter
+title: Height vs Weight
+data: [[155, 52], [160, 58], [165, 62], [170, 68], [175, 74]]
+```
+
 ## Pie Chart
-Perfect for showing proportions of a whole.
+
+Use a pie chart when you want to show how a whole is divided into parts.
+
 ```vizl
 chart: pie
 ```
+
+Example:
+
+```vizl
+chart: pie
+title: Server Operating Systems
+data: [["Linux", 72], ["Windows", 10], ["macOS", 8], ["Other", 6]]
+```
+
+## Choosing a chart
+
+- Use `bar` for comparisons.
+- Use `line` for trends.
+- Use `scatter` for relationships.
+- Use `pie` for parts of a whole, but keep the number of slices small.

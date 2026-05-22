@@ -1,43 +1,43 @@
 {
-  "name": "varaix",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
-    "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
-    "build": "npm run build:wasm:release && next build",
-    "build:ci": "next build",
-    "vercel-build": "npm run build:ci",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@mdx-js/loader": "^3.1.1",
-    "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "^16.2.4",
-    "@types/mdx": "^2.0.13",
-    "lucide-react": "^0.474.0",
-    "next": "^16.2.4",
-    "next-themes": "^0.4.6",
-    "prismjs": "^1.30.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-icons": "^5.4.0",
-    "react-simple-code-editor": "^0.14.1",
-    "remark-gfm": "^4.0.1",
-    "varaix": "file:./pkg"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.0",
-    "@types/node": "^20.17.16",
-    "@types/prismjs": "^1.26.6",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "eslint": "^9.19.0",
-    "eslint-config-next": "^15.2.0",
-    "postcss": "^8.5.1",
-    "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.3"
-  }
+    "name": "vizlang",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && cp frontend/pkg/vizlang_bg.wasm frontend/public/vizlang_bg.wasm",
+        "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && cp frontend/pkg/vizlang_bg.wasm frontend/public/vizlang_bg.wasm",
+        "build": "npm run build:wasm:release && next build",
+        "build:ci": "next build",
+        "vercel-build": "npm run build:ci",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@mdx-js/loader": "^3.1.1",
+        "@mdx-js/react": "^3.1.1",
+        "@next/mdx": "^16.2.4",
+        "@types/mdx": "^2.0.13",
+        "lucide-react": "^0.474.0",
+        "next": "^16.2.4",
+        "next-themes": "^0.4.6",
+        "prismjs": "^1.30.0",
+        "react": "19.0.0",
+        "react-dom": "19.0.0",
+        "react-icons": "^5.4.0",
+        "react-simple-code-editor": "^0.14.1",
+        "remark-gfm": "^4.0.1",
+        "vizlang": "file:./pkg"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.0.0",
+        "@types/node": "^20.17.16",
+        "@types/prismjs": "^1.26.6",
+        "@types/react": "^19.0.8",
+        "@types/react-dom": "^19.0.3",
+        "eslint": "^9.19.0",
+        "eslint-config-next": "^15.2.0",
+        "postcss": "^8.5.1",
+        "tailwindcss": "^4.0.0",
+        "typescript": "^5.7.3"
+    }
 }

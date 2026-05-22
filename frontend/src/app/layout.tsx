@@ -4,29 +4,37 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "varaiX",
-  description: "varaiX is a minimal chart description language that renders to clean SVGs instantly. Deterministic, LLM-friendly, and blazing fast.",
-  icons: {
-    icon: [
-      { url: "/favicon-light.svg", media: "(prefers-color-scheme: light)" },
-      { url: "/favicon-dark.svg", media: "(prefers-color-scheme: dark)" },
-    ],
-  },
+    title: "VizLang",
+    description:
+        "VizLang is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
+    icons: {
+        icon: [
+            {
+                url: "/favicon-light.svg",
+                media: "(prefers-color-scheme: light)",
+            },
+            { url: "/favicon-dark.svg", media: "(prefers-color-scheme: dark)" },
+        ],
+    },
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-bg-main text-text-primary min-h-screen flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navbar />
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <body className="bg-bg-main text-text-primary min-h-screen flex flex-col">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                >
+                    <Navbar />
+                    {children}
+                </ThemeProvider>
+            </body>
+        </html>
+    );
 }

@@ -1,10 +1,10 @@
 # Variables & Math
 
-varaiX supports dynamic calculations using variables and basic arithmetic.
+VizLang lets you define variables before the data section so you can build values once and reuse them in the rest of the file.
 
 ## Defining Variables
 
-You can define variables using the `NAME = EXPRESSION` syntax. Optional type keywords (`int`, `float`, `string`) can be used for clarity.
+Use `NAME = EXPRESSION` for assignments. You can add an optional type prefix when the value should be treated as a specific scalar type.
 
 ```vizl
 int base = 100
@@ -12,24 +12,52 @@ float multiplier = 1.25
 string label_prefix = "Year "
 ```
 
+Typed values are useful when you want the file to communicate intent clearly, especially in generated documents.
+
 ## Mathematical Operations
 
-Supports standard operators and parentheses for grouping:
+VizLang supports standard arithmetic and string concatenation:
 
 - `+` (Addition / String Concatenation)
 - `-` (Subtraction)
 - `*` (Multiplication)
 - `/` (Division)
 
-### Example
+Parentheses work as expected and can be used to keep longer expressions readable.
+
+## Example
 
 ```vizl
 chart: line
 int start_val = 500
 float growth = 1.1
+string label = "Revenue"
+
+title: label
 
 data:
 "Base", start_val
 "Growth 1", start_val * growth
 "Growth 2", start_val * growth * growth
+```
+
+## Practical use
+
+Variables are especially useful when:
+
+- several rows share the same base value
+- chart titles or labels are generated from parts
+- you want to keep repeated math out of the data block
+
+```vizl
+chart: bar
+year = 2026
+offset = 4
+title: "Targets for " + year
+
+data:
+"Q1", 100 + offset
+"Q2", 125 + offset
+"Q3", 140 + offset
+"Q4", 160 + offset
 ```

@@ -2,15 +2,15 @@
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="frontend/public/favicon-dark.svg">
         <source media="(prefers-color-scheme: light)" srcset="frontend/public/favicon-light.svg">
-        <img src="frontend/public/favicon-light.svg" width="384" alt="varaiX" />
+        <img src="frontend/public/favicon-light.svg" width="384" alt="VizLang" />
     </picture>
-    <h1>varaiX</h1>
+    <h1>VizLang</h1>
     <p>A minimal, deterministic, LLM-friendly chart description language that renders to SVG.</p>
 </div>
 
-## What is varaiX?
+## What is VizLang?
 
-varaiX (`.vizl`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
+VizLang (`.vizl`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
 
 ## Quick Example (array style)
 
@@ -51,6 +51,7 @@ data:
 ## Null fill strategies
 
 Set `null_fill:` to one of:
+
 - `zero` — replace nulls with 0 (default)
 - `mean` / `average` — replace with mean of non-null values
 - `prev` / `previous` — replace with previous non-null value (or 0 if none)
@@ -65,10 +66,6 @@ myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
 data: myData
 ```
 
-## Usage (Rust API)
-
-```rust
-use varaix::{parser, renderer};
 let source = r#"
 chart: line
 x: month
@@ -79,11 +76,6 @@ data: myData
 "#;
 let ast = parser::parse(source).unwrap();
 let svg = renderer::render(&ast);
-```
-
-## CLI
-
-Build the wasm or CLI and run the parser/renderer locally. Example (CLI):
 
 ```bash
 cargo run -- examples/line.vizl > out.svg
@@ -96,7 +88,7 @@ If you want to run the Next.js frontend locally and use the Wasm bindings:
 1. Build the wasm package from the Rust crate (requires `wasm-pack`):
 
 ```bash
-cd /path/to/varaix/frontend
+cd /path/to/vizlang/frontend
 npm run build:wasm:release
 ```
 
@@ -112,6 +104,7 @@ npm run dev
 ## Examples
 
 See the `examples/` directory for many examples:
+
 - array-of-pairs, block-style data
 - null-handling (zero/mean/prev/next/skip)
 - typed arrays and ranges
@@ -119,7 +112,7 @@ See the `examples/` directory for many examples:
 ## Project structure
 
 ```
-varaix/
+vizlang/
 ├── Cargo.toml
 ├── README.md
 ├── SPEC.md

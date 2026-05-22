@@ -1,0 +1,60 @@
+# Nulls
+
+VizLang supports missing values directly. This is useful when your data has gaps, unknown points, or values that should be imputed before rendering.
+
+## Supported values
+
+Use `null` or `None` in arrays and chart data.
+
+```vizl
+myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
+```
+
+## `null_fill`
+
+Set `null_fill:` to control how missing y-values are handled.
+
+- `zero` replaces missing values with `0`
+- `mean` or `average` replaces missing values with the mean of the available values
+- `prev` or `previous` repeats the previous value
+- `next` or `forward` uses the next available value
+- `skip` removes the point entirely
+
+## Examples
+
+Fill with zero:
+
+```vizl
+chart: line
+title: Missing values filled with zero
+
+null_fill: zero
+data: [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
+```
+
+Fill with mean:
+
+```vizl
+chart: line
+title: Missing values filled with mean
+
+null_fill: mean
+data: [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 40]]
+```
+
+Skip missing points:
+
+```vizl
+chart: line
+title: Missing values skipped
+
+null_fill: skip
+data: [["Jan", 100], ["Feb", null], ["Mar", 120], ["Apr", null], ["May", 130]]
+```
+
+## Choosing a strategy
+
+- use `zero` when missing values should behave like empty readings
+- use `mean` when you want a simple imputation strategy
+- use `prev` or `next` for step-like data
+- use `skip` when missing values should not appear in the chart
