@@ -12,12 +12,9 @@ export default function Navbar() {
     useEffect(() => setMounted(true), []);
 
     return (
-        <nav className="h-14 flex items-center justify-between px-6 border-b border-panel-border bg-bg-main/80 backdrop-blur-md sticky top-0 z-50">
-            <Link
-                href="/"
-                className="flex items-center gap-2 text-lg font-bold hover:text-accent transition-all"
-            >
-                <div className="relative w-6 h-6">
+        <nav className="navbar">
+            <Link href="/" className="navbar-logo">
+                <div className="navbar-logo-image">
                     <Image
                         src="/favicon-light.svg"
                         alt="Logo"
@@ -38,25 +35,19 @@ export default function Navbar() {
                 VaraiX
             </Link>
 
-            <div className="flex items-center gap-2 text-sm font-medium text-text-secondary">
-                <Link
-                    href="/editor"
-                    className="px-3 py-1 hover:text-text-primary transition-colors"
-                >
+            <div className="navbar-links">
+                <Link href="/editor" className="navbar-link">
                     Editor
                 </Link>
-                <Link
-                    href="/docs/introduction"
-                    className="px-3 py-1 hover:text-text-primary transition-colors"
-                >
+                <Link href="/docs/introduction" className="navbar-link">
                     Docs
                 </Link>
-                <div className="w-px h-4 bg-panel-border mx-1" />
+                <div className="navbar-divider" />
                 <button
                     onClick={() =>
                         setTheme(theme === "dark" ? "light" : "dark")
                     }
-                    className="p-2 hover:text-text-primary transition-all"
+                    className="navbar-button"
                 >
                     {mounted &&
                         (theme === "dark" ? (
@@ -69,7 +60,7 @@ export default function Navbar() {
                     href="https://github.com/s4nj1th/varaix"
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 hover:text-text-primary transition-all"
+                    className="navbar-button"
                 >
                     <FaGithub size={18} />
                 </a>

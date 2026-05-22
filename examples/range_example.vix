@@ -7,6 +7,6 @@ years = [2018..2022]
 int[] counts = [10, 20, 30, 25, 35]
 
 // Build pairs manually (fixed-size array-of-pairs)
-myData = [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
+myData = combine(years, counts)
 
 data: myData

@@ -17,19 +17,17 @@ export default function DocsLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex-1 flex overflow-hidden">
+        <div className="docs-layout">
             {/* Sidebar */}
-            <aside className="w-64 border-r border-panel-border bg-panel-bg hidden md:flex flex-col">
-                <div className="p-6">
-                    <div className="text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-4">
-                        Documentation
-                    </div>
-                    <nav className="space-y-1">
+            <aside className="docs-sidebar">
+                <div className="docs-sidebar-header">
+                    <div className="docs-sidebar-title">Documentation</div>
+                    <nav className="docs-sidebar-nav">
                         {sidebarItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="block px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                                className="docs-sidebar-link"
                             >
                                 {item.title}
                             </Link>
@@ -39,10 +37,8 @@ export default function DocsLayout({
             </aside>
 
             {/* Content */}
-            <main className="flex-1 overflow-auto bg-bg-main">
-                <div className="max-w-3xl mx-auto px-6 py-12 md:py-20">
-                    {children}
-                </div>
+            <main className="docs-main">
+                <div className="docs-content">{children}</div>
             </main>
         </div>
     );

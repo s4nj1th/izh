@@ -1,21 +1,23 @@
 # Introduction
 
-VaraiX is a small chart description language for people who want to describe a chart without building a full charting app. A `.vix` file is readable by humans, predictable for tools, and compact enough to generate from an LLM or a script.
+VaraiX is a focused, line-oriented chart description language intended for authors and automation pipelines that need compact, deterministic SVG charts. A single `.vix` file describes exactly one chart; the parser and renderer aim to ensure the same input always produces the same SVG output.
 
-The language is designed around a simple idea: write a few lines of text, render one chart, and get the same SVG every time.
+The language is intentionally small and opinionated: it provides the primitives most often required for simple charts (titles, axes labels, series data, palettes, and null-handling policies) while keeping parsing semantics predictable and fast.
 
-## Why VaraiX?
+## Philosophy and goals
 
-VaraiX is useful when you want:
+- Concise: keep chart specs short and readable by humans.
+- Deterministic: identical input → identical output across platforms and runs.
+- LLM-friendly: the line-oriented, key/value layout is easy to synthesize and validate.
+- Portable: output SVG works in browsers, static sites, slides, and PDFs.
 
-- **Deterministic output** so a chart definition always renders the same way.
-- **Low ceremony** so the file stays short and easy to read.
-- **LLM-friendly syntax** so generated chart specs are easy to validate and edit.
-- **SVG output** that works in browsers, docs, slides, and static sites.
+## File anatomy (what a `.vix` looks like)
 
-It fits especially well when you already know the shape of the chart and want a compact format instead of a large charting API.
+- Top-level key/value pairs: `chart: <type>`, `title: ...`, `x: ...`, `y: ...`.
+- Assignments: `NAME = EXPRESSION` for variables, typed or untyped.
+- `data:` either starts a block of CSV-like rows or accepts an inline array variable/literal.
 
-## Quick Start
+Minimal example (inline array):
 
 ```vizl
 chart: line
@@ -25,20 +27,56 @@ myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22]]
 data: myData
 ```
 
-That file defines one chart, gives it a title, and passes an inline array of pairs as the dataset.
+Block-style data example (alternate form):
 
-## Common uses
+```vizl
+chart: bar
+title: Quarterly Revenue
 
-- quick charts generated from scripts or AI output
-- lightweight documentation examples
-- data previews and internal dashboards
-- SVG assets for blogs, reports, and slides
+x: quarter
+y: revenue
 
-## What to read next
+data:
+"Q1", 120
+"Q2", 150
+"Q3", 170
+"Q4", 200
+```
 
-- [Basic Syntax](/docs/syntax) for the line-based structure of a `.vix` file.
-- [Variables & Math](/docs/variables) for calculations and typed values.
-- [Arrays](/docs/arrays) for ranges, comprehensions, and typed arrays.
-- [Nulls](/docs/nulls) for missing-value handling.
-- [Colors](/docs/colors) for palettes and series coloring.
-- [Recipes](/docs/recipes) for end-to-end examples you can copy and adapt.
+## Key concepts (quick reference)
+
+- Arrays: fixed-size, evaluated at parse time. Support list literals, inclusive ranges (`[1..5]`), and simple comprehensions.
+- Typed arrays and scalars: `int`, `float`, `string` annotations enable coercion and clearer intent.
+- Nulls: `null` or `None` are supported; use `null_fill:` to control behavior (`zero`, `mean`, `prev`, `next`, `skip`).
+- Colors: `colors:` accepts an inline palette or a palette variable; the renderer uses palettes to color series/slices.
+
+## Using VaraiX with automation and LLMs
+
+VaraiX is intentionally small to make programmatic generation easier. If you generate `.vix` files from code or LLMs:
+
+- Validate the presence of required keys: `chart` and `data` (or a data variable).
+- Prefer inline arrays for compactness and portability.
+- Use `null_fill` explicitly if null-handling matters for your chart.
+
+Example snippet you might generate from a script:
+
+```vizl
+chart: scatter
+title: Sample Points
+
+myPoints = [[1, 2], [2, null], [3, 4]]
+null_fill: prev
+data: myPoints
+```
+
+## Troubleshooting & tips
+
+- If a chart looks wrong, verify your `data:` structure: bar/pie expect categorical X values or ordinal indices; line charts accept numeric or categorical X with proper spacing.
+- When using `skip` for `null_fill`, be mindful that x-axis labeling and spacing may change because points are removed.
+- For predictable colors supply a palette with at least as many colors as data points for pie/bar charts.
+
+## Where to read more
+
+The full, versioned documentation with detailed examples and recipes is published at https://varaix.vercel.app/docs — this is the canonical reference. The site contains expanded pages on syntax, arrays, variables, null strategies, charts, colors, and ready-to-use recipes.
+
+If you want to run the frontend locally, see the project `README.md` for development steps; the docs site is the best place for language reference and examples.

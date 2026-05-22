@@ -19,43 +19,36 @@ const FEATURES = [
 
 export default function Home() {
     return (
-        <div className="flex-1 flex flex-col items-center justify-center px-6 max-w-4xl mx-auto text-center space-y-12 py-20">
-            <div className="space-y-4">
-                <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+        <div className="home-container">
+            <div className="home-hero">
+                <h1 className="home-title">
                     Simple charts. <br />
-                    <span className="text-text-secondary">Zero friction.</span>
+                    <span className="home-title-secondary">Zero friction.</span>
                 </h1>
-                <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
+                <p className="home-description">
                     VaraiX is a compact chart description language that renders
                     deterministic SVGs in the browser. The docs cover syntax,
                     variables, arrays, null handling, and colors.
                 </p>
             </div>
 
-            <div className="flex gap-4">
+            <div className="home-button-group">
                 <Link
                     href="/docs/introduction"
-                    className="px-8 py-3 border border-panel-border hover:bg-black/5 rounded-xl font-bold transition-all flex items-center gap-4 group"
+                    className="home-button-secondary group"
                 >
                     Documentation <FaBook size={18} />
                 </Link>
-                <Link
-                    href="/editor"
-                    className="px-8 py-3 bg-accent hover:bg-accent-hover text-white rounded-xl font-bold transition-all flex items-center gap-4 group"
-                >
+                <Link href="/editor" className="home-button-primary group">
                     Open Editor <Arrow />
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full pt-12 border-t border-panel-border">
+            <div className="home-features">
                 {FEATURES.map((f) => (
-                    <div key={f.title} className="space-y-2 text-center">
-                        <h3 className="font-bold text-md uppercase tracking-wider">
-                            {f.title}
-                        </h3>
-                        <p className="text-xs text-text-secondary leading-relaxed">
-                            {f.desc}
-                        </p>
+                    <div key={f.title} className="home-feature-item">
+                        <h3 className="home-feature-title">{f.title}</h3>
+                        <p className="home-feature-desc">{f.desc}</p>
                     </div>
                 ))}
             </div>

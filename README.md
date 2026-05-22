@@ -12,6 +12,8 @@
 
 VaraiX (`.vix`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
 
+Full documentation for the language (detailed specification, examples, and recipes) is published at: https://varaix.vercel.app/docs — please consult the online docs for the authoritative, versioned reference and extended examples.
+
 ## Quick Example (array style)
 
 ```vizl
@@ -115,10 +117,11 @@ See the `examples/` directory for many examples:
 varaix/
 ├── Cargo.toml
 ├── README.md
-├── SPEC.md
 ├── examples/
 └── src/
 ```
+
+Note: the human-readable spec previously available in `SPEC.md` has been replaced by the consolidated online documentation at the URL above. Use the online docs for the most up-to-date guidance and examples.
 
 ## License
 

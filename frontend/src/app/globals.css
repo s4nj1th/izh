@@ -62,7 +62,7 @@
 
 @layer base {
     body {
-        @apply bg-bg-main text-text-primary h-screen overflow-hidden font-sans transition-colors duration-300;
+        @apply bg-bg-main text-text-primary h-screen overflow-hidden font-sans;
     }
 
     #root {
@@ -96,6 +96,362 @@ pre[class*="language-"] {
 pre[class*="language-"] {
     margin: 0;
     overflow: auto;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.3);
+}
+
+@layer components {
+    /* Navbar Styles */
+    .navbar {
+        @apply h-14 flex items-center justify-between px-6 border-b border-panel-border bg-bg-main/80 backdrop-blur-md sticky top-0 z-50;
+    }
+
+    .navbar-logo {
+        @apply flex items-center gap-2 text-lg font-bold hover:text-accent;
+    }
+
+    .navbar-logo-image {
+        @apply relative w-6 h-6;
+    }
+
+    .navbar-links {
+        @apply flex items-center gap-2 text-sm font-medium text-text-secondary;
+    }
+
+    .navbar-link {
+        @apply px-3 py-1 hover:text-text-primary;
+    }
+
+    .navbar-divider {
+        @apply w-px h-4 bg-panel-border mx-1;
+    }
+
+    .navbar-button {
+        @apply p-2 hover:text-text-primary;
+    }
+
+    /* Editor Container Styles */
+    .editor-container {
+        @apply flex-1 flex flex-col md:flex-row overflow-hidden bg-bg-main relative select-none;
+    }
+
+    .editor-left-panel {
+        @apply flex flex-col w-full md:border-r border-panel-border bg-panel-bg h-[55vh] md:h-full;
+    }
+
+    .editor-left-panel-responsive {
+        @apply md:[width:var(--editor-width)];
+    }
+
+    .editor-right-panel {
+        @apply flex flex-col w-full bg-bg-main h-[45vh] md:h-full;
+    }
+
+    .editor-right-panel-responsive {
+        @apply md:[width:calc(100%-var(--editor-width))];
+    }
+
+    .editor-header {
+        @apply h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20;
+    }
+
+    .editor-header-left {
+        @apply flex items-center gap-3;
+    }
+
+    .editor-header-right {
+        @apply flex items-center gap-1;
+    }
+
+    .editor-file-icon {
+        @apply text-text-secondary;
+    }
+
+    .editor-filename-group {
+        @apply flex items-center gap-1;
+    }
+
+    .editor-filename-input {
+        @apply bg-transparent border-b border-panel-border/50 text-[12px] font-mono outline-none w-32 focus:border-accent;
+    }
+
+    .editor-filename-ext {
+        @apply text-[10px] font-mono text-text-secondary;
+    }
+
+    .editor-select {
+        @apply bg-transparent border-none text-[10px] font-bold uppercase tracking-widest text-text-secondary outline-none cursor-pointer hover:text-accent;
+    }
+
+    /* Examples dropdown (custom) */
+    .example-dropdown {
+        @apply relative inline-block;
+    }
+
+    .example-dropdown-btn {
+        @apply bg-transparent border-none text-[10px] font-bold uppercase tracking-widest text-text-secondary px-2 py-1 rounded-md cursor-pointer flex items-center gap-2;
+    }
+
+    .example-dropdown-list {
+        @apply absolute right-0 mt-2 w-56 bg-panel-bg border border-panel-border rounded-md shadow-md z-50;
+    }
+
+    .example-dropdown-item {
+        @apply block w-full text-left px-3 py-2 text-sm text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer;
+    }
+
+    .editor-select-option {
+        @apply bg-bg-main;
+    }
+
+    .editor-input-wrapper {
+        @apply flex-1 flex overflow-hidden relative;
+    }
+
+    .editor-input {
+        @apply flex-1 bg-transparent font-mono text-sm leading-[18px];
+    }
+
+    .editor-download-button {
+        @apply absolute bottom-4 right-6 p-2 rounded-full bg-accent text-white shadow-lg opacity-0 group-hover:opacity-100;
+    }
+
+    .editor-resizer {
+        @apply hidden md:flex w-1 cursor-col-resize hover:bg-accent active:bg-accent items-center justify-center z-10;
+    }
+
+    .editor-resizer-bg-active {
+        @apply bg-accent;
+    }
+
+    .editor-resizer-bg-inactive {
+        @apply bg-transparent;
+    }
+
+    .editor-resizer-handle {
+        @apply w-1 h-8 bg-panel-border;
+    }
+
+    /* Preview Panel Styles */
+    .preview-header {
+        @apply h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20 text-[10px] font-bold text-text-secondary uppercase tracking-widest;
+    }
+
+    .preview-header-left {
+        @apply flex items-center gap-2;
+    }
+
+    .preview-header-right {
+        @apply flex items-center gap-2;
+    }
+
+    .preview-icon {
+        @apply text-accent;
+    }
+
+    .preview-button {
+        @apply p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded disabled:opacity-30;
+    }
+
+    .preview-button-check {
+        @apply text-green-500;
+    }
+
+    .preview-content {
+        @apply flex-1 p-8 flex items-center justify-center relative overflow-auto bg-white;
+    }
+
+    .preview-error {
+        @apply bg-red-500/5 p-6 rounded-2xl border border-red-500/10 max-w-md;
+    }
+
+    .preview-error-icon {
+        @apply text-red-500/50 mb-4 mx-auto;
+    }
+
+    .preview-error-text {
+        @apply text-xs font-mono text-red-500 whitespace-pre-wrap;
+    }
+
+    .preview-svg-output {
+        @apply w-full h-full flex items-center justify-center p-4;
+    }
+
+    .preview-loading {
+        @apply flex flex-col items-center gap-3 text-text-secondary/20;
+    }
+
+    .preview-loading-text {
+        @apply text-[10px] font-bold uppercase tracking-widest;
+    }
+
+    /* Code Editor Styles */
+    .code-editor-layer {
+        @apply font-mono text-xs leading-[18px];
+    }
+
+    .code-editor-textarea {
+        @apply outline-none resize-none selection:bg-accent/20;
+    }
+
+    /* Home Page Styles */
+    .home-container {
+        @apply flex-1 flex flex-col items-center justify-center px-6 max-w-4xl mx-auto text-center space-y-12 py-20;
+    }
+
+    .home-hero {
+        @apply space-y-4;
+    }
+
+    .home-title {
+        @apply text-5xl md:text-7xl font-bold tracking-tight;
+    }
+
+    .home-title-secondary {
+        @apply text-text-secondary;
+    }
+
+    .home-description {
+        @apply text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed;
+    }
+
+    .home-button-group {
+        @apply flex gap-4;
+    }
+
+    .home-button-secondary {
+        @apply px-8 py-3 border border-panel-border hover:bg-black/5 rounded-xl font-bold flex items-center gap-4;
+    }
+
+    .home-button-primary {
+        @apply px-8 py-3 bg-accent hover:bg-accent-hover text-white rounded-xl font-bold flex items-center gap-4;
+    }
+
+    .home-features {
+        @apply grid grid-cols-1 md:grid-cols-3 gap-8 w-full pt-12 border-t border-panel-border;
+    }
+
+    .home-feature-item {
+        @apply space-y-2 text-center;
+    }
+
+    .home-feature-title {
+        @apply font-bold text-base uppercase tracking-wider;
+    }
+
+    .home-feature-desc {
+        @apply text-xs text-text-secondary leading-relaxed;
+    }
+
+    /* MDX Components Styles */
+    .mdx-h1 {
+        @apply text-3xl font-bold mb-6 text-text-primary;
+    }
+
+    .mdx-h2 {
+        @apply text-xl font-bold mt-10 mb-4 text-text-primary;
+    }
+
+    .mdx-h3 {
+        @apply text-lg font-bold mt-8 mb-2 text-text-primary;
+    }
+
+    .mdx-paragraph {
+        @apply mb-4 text-text-secondary leading-relaxed;
+    }
+
+    .mdx-unordered-list {
+        @apply mb-6 ml-6 list-disc space-y-2 text-text-secondary leading-relaxed;
+    }
+
+    .mdx-ordered-list {
+        @apply mb-6 ml-6 list-decimal space-y-2 text-text-secondary leading-relaxed;
+    }
+
+    .mdx-list-item {
+        @apply pl-1;
+    }
+
+    .mdx-inline-code {
+        @apply bg-panel-border/30 px-1.5 py-0.5 rounded-md text-text-primary font-mono text-[0.9em];
+    }
+
+    .mdx-code-block {
+        @apply text-text-primary bg-panel-bg border border-panel-border p-4 rounded-xl mb-6 overflow-x-auto font-mono text-sm shadow-sm;
+    }
+
+    .mdx-table-wrapper {
+        @apply overflow-x-auto mb-8 border border-panel-border rounded-xl;
+    }
+
+    .mdx-table {
+        @apply w-full text-left border-collapse;
+    }
+
+    .mdx-table-head {
+        @apply bg-panel-bg border-b border-panel-border;
+    }
+
+    .mdx-table-header {
+        @apply px-4 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary;
+    }
+
+    .mdx-table-data {
+        @apply px-4 py-3 text-sm border-t border-panel-border text-text-secondary;
+    }
+
+    .mdx-blockquote {
+        @apply border-l-4 border-accent pl-4 italic text-text-secondary my-6;
+    }
+
+    /* Docs Layout Styles */
+    .docs-layout {
+        @apply flex-1 flex overflow-hidden;
+    }
+
+    .docs-sidebar {
+        @apply w-64 border-r border-panel-border bg-panel-bg hidden md:flex flex-col;
+    }
+
+    .docs-sidebar-header {
+        @apply p-6;
+    }
+
+    .docs-sidebar-title {
+        @apply text-[10px] font-bold text-text-secondary uppercase tracking-widest mb-4;
+    }
+
+    .docs-sidebar-nav {
+        @apply space-y-1;
+    }
+
+    .docs-sidebar-link {
+        @apply block px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5;
+    }
+
+    .docs-main {
+        @apply flex-1 overflow-auto bg-bg-main;
+    }
+
+    .docs-content {
+        @apply max-w-3xl mx-auto px-6 py-12 md:py-20;
+    }
 }
 
 code[class*="language-"] {
@@ -214,48 +570,4 @@ pre.varaix-code-editor-layer {
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(128, 128, 128, 0.3);
-}
-
-@keyframes float {
-    0%,
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-20px) rotate(5deg);
-    }
-}
-
-@keyframes float-slow {
-    0%,
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-15px) rotate(-3deg);
-    }
-}
-
-@keyframes pulse-subtle {
-    0%,
-    100% {
-        opacity: 0.1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.2;
-        transform: scale(1.05);
-    }
-}
-
-.animate-float {
-    animation: float 10s ease-in-out infinite;
-}
-
-.animate-float-slow {
-    animation: float-slow 15s ease-in-out infinite;
-}
-
-.animate-pulse-subtle {
-    animation: pulse-subtle 8s ease-in-out infinite;
 }

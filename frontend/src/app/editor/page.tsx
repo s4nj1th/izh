@@ -32,6 +32,11 @@ export default function Editor() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const lineNumbersRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [selectedExample, setSelectedExample] = useState<string>(
+        Object.keys(EXAMPLES)[0],
+    );
+    const [examplesOpen, setExamplesOpen] = useState(false);
+    const examplesRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         init({ module_or_path: "/varaix_bg.wasm" })
@@ -102,6 +107,20 @@ export default function Editor() {
         return () => ta.removeEventListener("scroll", handler);
     }, []);
 
+    // Close examples dropdown when clicking outside
+    useEffect(() => {
+        const onClick = (e: MouseEvent) => {
+            if (
+                examplesRef.current &&
+                !examplesRef.current.contains(e.target as Node)
+            ) {
+                setExamplesOpen(false);
+            }
+        };
+        document.addEventListener("click", onClick);
+        return () => document.removeEventListener("click", onClick);
+    }, []);
+
     const download = (content: string, ext: string) => {
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
@@ -116,63 +135,94 @@ export default function Editor() {
         <div
             ref={containerRef}
             style={{ "--editor-width": `${leftWidth}%` } as React.CSSProperties}
-            className="flex-1 flex flex-col md:flex-row overflow-hidden bg-bg-main relative select-none"
+            className="editor-container"
         >
-            <div className="flex flex-col w-full md:[width:var(--editor-width)] md:border-r border-panel-border bg-panel-bg h-[55vh] md:h-full transition-[width] duration-0">
-                <div className="h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20">
-                    <div className="flex items-center gap-3">
-                        <FaFileCode size={14} className="text-text-secondary" />
-                        <div className="flex items-center gap-1">
+            <div className="editor-left-panel editor-left-panel-responsive">
+                <div className="editor-header">
+                    <div className="editor-header-left">
+                        <FaFileCode size={14} className="editor-file-icon" />
+                        <div className="editor-filename-group">
                             <input
                                 type="text"
                                 value={fileName}
                                 onChange={(e) => setFileName(e.target.value)}
-                                className="bg-transparent border-b border-panel-border/50 text-[12px] font-mono outline-none w-32 focus:border-accent transition-colors"
+                                className="editor-filename-input"
                             />
-                            <span className="text-[10px] font-mono text-text-secondary">
-                                .vix
-                            </span>
+                            <span className="editor-filename-ext">.vix</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <select
-                            className="bg-transparent border-none text-[10px] font-bold uppercase tracking-widest text-text-secondary outline-none cursor-pointer hover:text-accent transition-colors"
-                            onChange={(e) => {
-                                const val = e.target
-                                    .value as keyof typeof EXAMPLES;
-                                setCode(EXAMPLES[val]);
-                                setFileName(`${val}-chart`);
-                            }}
-                        >
-                            {Object.keys(EXAMPLES).map((k) => (
-                                <option
-                                    key={k}
-                                    value={k}
-                                    className="bg-bg-main"
+                    <div className="editor-header-right">
+                        <div ref={examplesRef} className="example-dropdown">
+                            <button
+                                type="button"
+                                className="example-dropdown-btn"
+                                onClick={() => setExamplesOpen((s) => !s)}
+                                aria-haspopup="listbox"
+                                aria-expanded={examplesOpen}
+                            >
+                                Examples
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                 >
-                                    {k}
-                                </option>
-                            ))}
-                        </select>
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </button>
+
+                            {examplesOpen && (
+                                <div
+                                    className="example-dropdown-list"
+                                    role="listbox"
+                                >
+                                    {Object.keys(EXAMPLES).map((k) => (
+                                        <div
+                                            key={k}
+                                            role="option"
+                                            tabIndex={0}
+                                            className="example-dropdown-item"
+                                            onClick={() => {
+                                                setSelectedExample(k);
+                                                setCode(
+                                                    EXAMPLES[
+                                                        k as keyof typeof EXAMPLES
+                                                    ],
+                                                );
+                                                setFileName(`${k}-chart`);
+                                                setExamplesOpen(false);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (
+                                                    e.key === "Enter" ||
+                                                    e.key === " "
+                                                ) {
+                                                    setSelectedExample(k);
+                                                    setCode(
+                                                        EXAMPLES[
+                                                            k as keyof typeof EXAMPLES
+                                                        ],
+                                                    );
+                                                    setFileName(`${k}-chart`);
+                                                    setExamplesOpen(false);
+                                                }
+                                            }}
+                                        >
+                                            {k}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex-1 flex overflow-hidden relative group">
-                    {/* <div
-                        ref={lineNumbersRef}
-                        className="w-12 bg-black/5 text-right pr-3 py-4 font-mono text-xs text-text-secondary opacity-50 select-none overflow-y-auto overflow-x-hidden"
-                    >
-                        {code.split("\n").map((_, i) => (
-                            <div
-                                key={i}
-                                className="h-[18px] leading-[18px] text-[10px]"
-                            >
-                                {i + 1}
-                            </div>
-                        ))}
-                        <div aria-hidden="true" className="h-[18px]" />
-                    </div> */}
-
+                <div className="editor-input-wrapper group">
                     <EditorInput
                         value={code}
                         onValueChange={(val) => setCode(val)}
@@ -185,21 +235,14 @@ export default function Editor() {
                         }
                         padding={16}
                         textareaId="varaix-editor"
-                        style={{
-                            fontFamily:
-                                'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace',
-                            fontSize: 12,
-                            lineHeight: "18px",
-                            whiteSpace: "pre",
-                        }}
-                        preClassName="varaix-code-editor-layer font-mono text-xs leading-[18px]"
-                        textareaClassName="varaix-code-editor-layer font-mono text-xs leading-[18px] outline-none resize-none selection:bg-accent/20"
-                        className="flex-1 bg-transparent"
+                        preClassName="code-editor-layer"
+                        textareaClassName="code-editor-layer code-editor-textarea"
+                        className="editor-input"
                     />
 
                     <button
                         onClick={() => download(code, "vizl")}
-                        className="absolute bottom-4 right-6 p-2 rounded-full bg-accent text-white shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="editor-download-button"
                         title="Download VizL"
                     >
                         <FaDownload size={14} />
@@ -209,18 +252,18 @@ export default function Editor() {
 
             <div
                 onMouseDown={startResizing}
-                className={`hidden md:flex w-1 cursor-col-resize hover:bg-accent active:bg-accent transition-colors items-center justify-center z-10 ${isResizing ? "bg-accent" : "bg-transparent"}`}
+                className={`editor-resizer ${isResizing ? "editor-resizer-bg-active" : "editor-resizer-bg-inactive"}`}
             >
-                <div className="w-1 h-8 bg-panel-border" />
+                <div className="editor-resizer-handle" />
             </div>
 
-            <div className="flex flex-col w-full md:[width:calc(100%-var(--editor-width))] bg-bg-main h-[45vh] md:h-full">
-                <div className="h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20 text-[10px] font-bold text-text-secondary uppercase tracking-widest">
-                    <div className="flex items-center gap-2">
-                        <FaEye size={12} className="text-accent" />
+            <div className="editor-right-panel editor-right-panel-responsive">
+                <div className="preview-header">
+                    <div className="preview-header-left">
+                        <FaEye size={12} className="preview-icon" />
                         Preview
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="preview-header-right">
                         <button
                             onClick={() => {
                                 navigator.clipboard.writeText(svgOutput);
@@ -228,11 +271,14 @@ export default function Editor() {
                                 setTimeout(() => setCopied(false), 2000);
                             }}
                             disabled={!svgOutput}
-                            className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all disabled:opacity-30"
+                            className="preview-button"
                             title="Copy SVG"
                         >
                             {copied ? (
-                                <FaCheck size={14} className="text-green-500" />
+                                <FaCheck
+                                    size={14}
+                                    className="preview-button-check"
+                                />
                             ) : (
                                 <FaClipboard size={14} />
                             )}
@@ -252,7 +298,7 @@ export default function Editor() {
                                 );
                             }}
                             disabled={!svgOutput}
-                            className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all disabled:opacity-30"
+                            className="preview-button"
                             title="Open SVG in new tab"
                         >
                             <FaExternalLinkAlt size={14} />
@@ -261,7 +307,7 @@ export default function Editor() {
                         <button
                             onClick={() => download(svgOutput, "svg")}
                             disabled={!svgOutput}
-                            className="p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all disabled:opacity-30"
+                            className="preview-button"
                             title="Download SVG"
                         >
                             <FaDownload size={14} />
@@ -269,24 +315,22 @@ export default function Editor() {
                     </div>
                 </div>
 
-                <div className="flex-1 p-8 flex items-center justify-center relative overflow-auto bg-white">
+                <div className="preview-content">
                     {error ? (
-                        <div className="bg-red-500/5 p-6 rounded-2xl border border-red-500/10 max-w-md animate-in fade-in zoom-in duration-300">
+                        <div className="preview-error">
                             <FaExclamationCircle
                                 size={32}
-                                className="text-red-500/50 mb-4 mx-auto"
+                                className="preview-error-icon"
                             />
-                            <pre className="text-xs font-mono text-red-500 whitespace-pre-wrap">
-                                {error}
-                            </pre>
+                            <pre className="preview-error-text">{error}</pre>
                         </div>
                     ) : svgOutput ? (
                         <div
-                            className="w-full h-full flex items-center justify-center transition-all duration-700 animate-in fade-in zoom-in-95 p-4"
+                            className="preview-svg-output"
                             dangerouslySetInnerHTML={{ __html: svgOutput }}
                         />
                     ) : (
-                        <div className="flex flex-col items-center gap-3 text-text-secondary/20">
+                        <div className="preview-loading">
                             {!isWasmLoaded ? (
                                 <FaCircleNotch
                                     size={40}
@@ -295,7 +339,7 @@ export default function Editor() {
                             ) : (
                                 <FaTerminal size={40} />
                             )}
-                            <span className="text-[10px] font-bold uppercase tracking-widest">
+                            <span className="preview-loading-text">
                                 {!isWasmLoaded
                                     ? "Initializing Engine..."
                                     : "Waiting for code..."}
