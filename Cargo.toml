@@ -1,17 +1,17 @@
 [package]
-name = "vizlang"
+name = "varaix"
 version = "0.0.1"
 edition = "2024"
 description = "A minimal, deterministic, chart description language that renders to SVG."
 authors = ["Sanjith Muralikrishnan <sanjith.develops@gmail.com>"]
 
 [lib]
-name = "vizlang"
+name = "varaix"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
-name = "vizlang-cli"
+name = "varaix-cli"
 path = "src/main.rs"
 
 [dependencies]

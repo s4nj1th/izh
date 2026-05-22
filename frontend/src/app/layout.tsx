@@ -4,9 +4,9 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-    title: "VizLang",
+    title: "VaraiX",
     description:
-        "VizLang is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
+        "VaraiX is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
     icons: {
         icon: [
             {

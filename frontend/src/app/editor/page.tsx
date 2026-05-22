@@ -12,12 +12,12 @@ import {
     FaExternalLinkAlt,
     FaEye,
 } from "react-icons/fa";
-import init, { parse_and_render } from "vizlang";
+import init, { parse_and_render } from "varaix";
 import { EXAMPLES } from "@/data/examples";
 import EditorInput from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-clike";
-import "../../lib/prism-vizlang";
+import "@/lib/prism-varaix";
 
 export default function Editor() {
     const [code, setCode] = useState(EXAMPLES.line);
@@ -34,7 +34,7 @@ export default function Editor() {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        init({ module_or_path: "/vizlang_bg.wasm" })
+        init({ module_or_path: "/varaix_bg.wasm" })
             .then(() => setIsWasmLoaded(true))
             .catch((err) => {
                 console.error(err);
@@ -88,7 +88,7 @@ export default function Editor() {
 
     useEffect(() => {
         const ta = document.getElementById(
-            "vizlang-editor",
+            "varaix-editor",
         ) as HTMLTextAreaElement | null;
         if (!ta) return;
         textareaRef.current = ta;
@@ -130,7 +130,7 @@ export default function Editor() {
                                 className="bg-transparent border-b border-panel-border/50 text-[12px] font-mono outline-none w-32 focus:border-accent transition-colors"
                             />
                             <span className="text-[10px] font-mono text-text-secondary">
-                                .vizl
+                                .vix
                             </span>
                         </div>
                     </div>
@@ -179,12 +179,12 @@ export default function Editor() {
                         highlight={(code) =>
                             Prism.highlight(
                                 code,
-                                Prism.languages.vizlang,
-                                "vizlang",
+                                Prism.languages.varaix,
+                                "varaix",
                             )
                         }
                         padding={16}
-                        textareaId="vizlang-editor"
+                        textareaId="varaix-editor"
                         style={{
                             fontFamily:
                                 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace',
@@ -192,8 +192,8 @@ export default function Editor() {
                             lineHeight: "18px",
                             whiteSpace: "pre",
                         }}
-                        preClassName="vizlang-code-editor-layer font-mono text-xs leading-[18px]"
-                        textareaClassName="vizlang-code-editor-layer font-mono text-xs leading-[18px] outline-none resize-none selection:bg-accent/20"
+                        preClassName="varaix-code-editor-layer font-mono text-xs leading-[18px]"
+                        textareaClassName="varaix-code-editor-layer font-mono text-xs leading-[18px] outline-none resize-none selection:bg-accent/20"
                         className="flex-1 bg-transparent"
                     />
 

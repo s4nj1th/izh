@@ -1,6 +1,6 @@
 import Prism from "prismjs";
 
-Prism.languages.vizlang = {
+Prism.languages.varaix = {
     comment: [
         {
             pattern: /\/\/.*(?:\n|$)/,

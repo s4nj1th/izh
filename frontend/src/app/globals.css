@@ -182,19 +182,19 @@ code[class*="language-"] ::selection {
     opacity: 0.7;
 }
 
-/* VizLang editor with line wrapping enabled. Line numbers count only actual newlines. */
-.vizlang-code-editor-layer {
+/* VaraiX editor with line wrapping enabled. Line numbers count only actual newlines. */
+.varaix-code-editor-layer {
     white-space: pre-wrap !important;
     word-break: break-word !important;
     overflow-wrap: break-word !important;
 }
 
-textarea.vizlang-code-editor-layer {
+textarea.varaix-code-editor-layer {
     overflow-x: auto !important;
     overflow-y: auto !important;
 }
 
-pre.vizlang-code-editor-layer {
+pre.varaix-code-editor-layer {
     overflow: hidden !important;
 }
 

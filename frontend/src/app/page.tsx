@@ -26,7 +26,7 @@ export default function Home() {
                     <span className="text-text-secondary">Zero friction.</span>
                 </h1>
                 <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
-                    VizLang is a compact chart description language that renders
+                    VaraiX is a compact chart description language that renders
                     deterministic SVGs in the browser. The docs cover syntax,
                     variables, arrays, null handling, and colors.
                 </p>

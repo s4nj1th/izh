@@ -1,6 +1,6 @@
 # Basic Syntax
 
-VizLang is a concise, line-oriented chart description language. Files are typically a short sequence of property lines, optional variable/array assignments, and a `data:` section (either inline or block style).
+VaraiX is a concise, line-oriented chart description language. Files are typically a short sequence of property lines, optional variable/array assignments, and a `data:` section (either inline or block style).
 
 ## File shape (concrete)
 
@@ -40,7 +40,7 @@ Unknown property keys are ignored by the renderer but may be used by tooling.
 
 ## Data shapes and formats
 
-VizLang accepts two styles for data:
+VaraiX accepts two styles for data:
 
 - Block-style rows (preferred for multi-line human-edited data):
 
@@ -105,7 +105,7 @@ myData = [["A", base], ["B", base * growth]]
 
 ## Function calls and helpers
 
-VizLang provides small helper functions evaluated at parse time. One example is `combine(arr1, arr2)` which pairs two arrays into an array-of-pairs. See the Arrays docs for details.
+VaraiX provides small helper functions evaluated at parse time. One example is `combine(arr1, arr2)` which pairs two arrays into an array-of-pairs. See the Arrays docs for details.
 
 ## Parsing edge cases and tips
 

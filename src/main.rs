@@ -1,11 +1,11 @@
 use std::env;
 use std::fs;
 use std::process;
-use vizlang::{parser, renderer};
+use varaix::{parser, renderer};
 
 fn print_usage() {
-    eprintln!("Usage:   cargo run -- <file.vizl>");
-    eprintln!("Example: cargo run -- examples/line.vizl");
+    eprintln!("Usage:   cargo run -- <file.vix>");
+    eprintln!("Example: cargo run -- examples/line.vix");
 }
 
 fn main() {

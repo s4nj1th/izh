@@ -35,7 +35,7 @@ export default function Navbar() {
                         priority
                     />
                 </div>
-                VizLang
+                VaraiX
             </Link>
 
             <div className="flex items-center gap-2 text-sm font-medium text-text-secondary">
@@ -66,7 +66,7 @@ export default function Navbar() {
                         ))}
                 </button>
                 <a
-                    href="https://github.com/s4nj1th/vizlang"
+                    href="https://github.com/s4nj1th/varaix"
                     target="_blank"
                     rel="noreferrer"
                     className="p-2 hover:text-text-primary transition-all"
