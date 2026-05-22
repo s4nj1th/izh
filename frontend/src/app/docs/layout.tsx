@@ -8,6 +8,7 @@ const sidebarItems = [
     { title: "Arrays", href: "/docs/arrays" },
     { title: "Nulls", href: "/docs/nulls" },
     { title: "Colors", href: "/docs/colors" },
+    { title: "Recipes", href: "/docs/recipes" },
 ];
 
 export default function DocsLayout({

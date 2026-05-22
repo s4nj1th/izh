@@ -14,6 +14,8 @@ string label_prefix = "Year "
 
 Typed values are useful when you want the file to communicate intent clearly, especially in generated documents.
 
+You do not need type prefixes for every value. Use them when the extra clarity helps, not as noise.
+
 ## Mathematical Operations
 
 VizLang supports standard arithmetic and string concatenation:
@@ -24,6 +26,14 @@ VizLang supports standard arithmetic and string concatenation:
 - `/` (Division)
 
 Parentheses work as expected and can be used to keep longer expressions readable.
+
+```vizl
+revenue = (base + bonus) * 1.1
+```
+
+```vizl
+title = "Revenue " + year
+```
 
 ## Example
 
@@ -41,6 +51,23 @@ data:
 "Growth 2", start_val * growth * growth
 ```
 
+## Another example
+
+```vizl
+chart: pie
+year = 2026
+title: "Budget " + year
+
+marketing = 300
+dev = 500
+ops = 200
+
+data:
+"Marketing", marketing
+"Development", dev
+"Operations", ops
+```
+
 ## Practical use
 
 Variables are especially useful when:
@@ -48,6 +75,7 @@ Variables are especially useful when:
 - several rows share the same base value
 - chart titles or labels are generated from parts
 - you want to keep repeated math out of the data block
+- you are converting the same formula into multiple rows
 
 ```vizl
 chart: bar
@@ -61,3 +89,9 @@ data:
 "Q3", 140 + offset
 "Q4", 160 + offset
 ```
+
+## Tips
+
+- keep the assignment section near the top of the file
+- name intermediate values clearly when the math gets longer
+- reuse variables in chart titles, labels, and data rows to keep the file compact

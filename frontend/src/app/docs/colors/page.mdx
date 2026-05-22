@@ -17,12 +17,16 @@ palette = ["#111111", "#222222", "#333333"]
 colors: palette
 ```
 
+You can also use a short palette for a single-series chart or a longer one when the data has many categories.
+
 ## What the renderer does
 
 - `line` uses the first color for the line stroke.
 - `bar` cycles through the palette per bar.
 - `scatter` cycles through the palette per point.
 - `pie` uses the palette per slice and falls back to the default palette when needed.
+
+If you provide only one color, the chart will still render, and the renderer will reuse that color where appropriate.
 
 ## Examples
 
@@ -33,6 +37,24 @@ chart: line
 colors: ["#4a90d9"]
 myData = [["A", 10], ["B", 20], ["C", 15]]
 data: myData
+```
+
+Mixed palette example:
+
+```vizl
+chart: bar
+title: Mixed Palette
+colors: ["#0f172a", "#2563eb", "#14b8a6", "#f97316"]
+data: [["Alpha", 18], ["Beta", 24], ["Gamma", 30], ["Delta", 12]]
+```
+
+Muted palette example:
+
+```vizl
+chart: scatter
+title: Muted Scatter
+colors: ["#6b7280", "#94a3b8", "#cbd5e1"]
+data: [[1, 2], [2, 3], [3, 5], [4, 8], [5, 13]]
 ```
 
 Palette for a pie chart:
@@ -50,3 +72,4 @@ data: myData
 - Mix named colors, hex values, and `rgb()` or `hsl()` values freely.
 - Provide at least as many colors as categories if you want stable categorical coloring.
 - The renderer passes color strings directly into SVG attributes, so browser color parsing rules apply.
+- Keep palettes purposeful. A small palette with a clear contrast pattern is usually better than a large random one.

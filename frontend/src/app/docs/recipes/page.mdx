@@ -1,0 +1,142 @@
+# Recipes
+
+This page collects complete VizLang examples you can copy and adapt. Each recipe combines several language features so you can see how they fit together in a real file.
+
+## 1. Simple line chart
+
+Use this when you want a clean time-series chart with minimal setup.
+
+```vizl
+chart: line
+title: Monthly Revenue
+x: month
+y: revenue ($k)
+
+data: [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22], ["May", 28]]
+```
+
+## 2. Bar chart with a variable
+
+Variables keep repeated values out of the data block.
+
+```vizl
+chart: bar
+title: Quarterly Sales
+
+base = 100
+growth = 25
+
+data:
+"Q1", base
+"Q2", base + growth
+"Q3", base + growth * 2
+"Q4", base + growth * 3
+```
+
+## 3. Scatter plot with typed arrays
+
+Typed arrays are helpful when your source data is generated elsewhere and you want the types to stay obvious.
+
+```vizl
+chart: scatter
+title: Height vs Weight
+x: height (cm)
+y: weight (kg)
+
+int[] heights = [155, 160, 165, 170, 175, 180]
+int[] weights = [52, 58, 62, 68, 74, 80]
+
+data: [[155, 52], [160, 58], [165, 62], [170, 68], [175, 74], [180, 80]]
+```
+
+## 4. Pie chart with a palette
+
+Use a palette when you want the slices to match a specific visual style.
+
+```vizl
+chart: pie
+title: Server Operating Systems
+
+colors: ["#4a90d9", "#f06292", "#81c784", "#ffb74d"]
+
+data: [["Linux", 72], ["Windows", 15], ["macOS", 8], ["Other", 5]]
+```
+
+## 5. Missing values filled with a mean
+
+This is useful when a chart should stay visually continuous even when some rows are incomplete.
+
+```vizl
+chart: line
+title: Traffic With Gaps Filled
+
+null_fill: mean
+
+data: [["Mon", 100], ["Tue", null], ["Wed", 120], ["Thu", null], ["Fri", 150]]
+```
+
+## 6. Missing values skipped
+
+Use `skip` when you want the gaps removed completely.
+
+```vizl
+chart: line
+title: Events With Skips
+
+null_fill: skip
+
+data: [["Week 1", 4], ["Week 2", null], ["Week 3", 7], ["Week 4", null], ["Week 5", 9]]
+```
+
+## 7. Generated range data
+
+Ranges are a good fit when the X axis is regular and predictable.
+
+```vizl
+chart: bar
+title: Yearly Counts
+
+years = [2018..2022]
+counts = [10, 20, 30, 25, 35]
+
+data: [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
+```
+
+## 8. Comprehension-based data
+
+Comprehensions work well when the values follow a simple formula.
+
+```vizl
+chart: line
+title: Doubling Sequence
+
+values = [i * 2 for i in 1..6]
+
+data: [[1, 2], [2, 4], [3, 6], [4, 8], [5, 10], [6, 12]]
+```
+
+## 9. Mixed comments and annotations
+
+Use comments to keep files readable when they get longer.
+
+```vizl
+chart: bar
+title: Annotated Budget
+
+// Base assumptions
+total = 1000
+marketing = total * 0.3
+dev = total * 0.5
+ops = total * 0.2
+
+data:
+"Marketing", marketing
+"Development", dev
+"Operations", ops
+```
+
+## When to use these recipes
+
+- copy a recipe when you want a known-good starting point
+- mix recipes when you need a chart with variables, arrays, and null handling together
+- use the editor examples when you want to experiment interactively

@@ -21,6 +21,12 @@ years = [2018..2022]  # => [2018, 2019, 2020, 2021, 2022]
 
 Use ranges to generate labels, counts, or year spans without writing each element manually.
 
+Another range example:
+
+```vizl
+months = [1..12]
+```
+
 ## Simple comprehensions
 
 Comprehensions evaluate an expression for each value in a range.
@@ -31,9 +37,25 @@ evens = [i * 2 for i in 1..5]  # => [2,4,6,8,10]
 
 This is a good fit for synthetic data, derived values, and compact examples.
 
+You can use the result to build short generated tables:
+
+```vizl
+offsets = [i + 10 for i in 1..5]
+```
+
 ## Nested arrays (array-of-pairs)
 
 Arrays can contain arrays. The most common use is a table of x/y pairs.
+
+Other useful shapes:
+
+```vizl
+labels = [["Q1", "north"], ["Q2", "south"]]
+```
+
+```vizl
+matrix = [[1, 2], [3, 4], [5, 6]]
+```
 
 ```vizl
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
@@ -52,6 +74,8 @@ string[] names = ["A", "B", "C"]
 
 The parser coerces elements at parse time, which keeps the result deterministic and easy to reason about.
 
+Typed arrays are especially useful when you want the file to document the intended element type at a glance.
+
 ## Example
 
 ```vizl
@@ -63,9 +87,20 @@ counts = [10, 20, 30, 25, 35]
 data: [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
 ```
 
+## Compact pattern
+
+```vizl
+chart: line
+title: Generated Values
+
+values = [i * 3 for i in 1..8]
+data: [[1, 3], [2, 6], [3, 9], [4, 12], [5, 15], [6, 18], [7, 21], [8, 24]]
+```
+
 ## When to use arrays
 
 - use lists for short fixed values
 - use ranges for inclusive sequences
 - use comprehensions for generated values
 - use nested arrays for chart data
+- use typed arrays when you want explicit scalar types

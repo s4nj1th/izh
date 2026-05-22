@@ -16,7 +16,6 @@ import init, { parse_and_render } from "vizlang";
 import { EXAMPLES } from "@/data/examples";
 import EditorInput from "react-simple-code-editor";
 import Prism from "prismjs";
-import "prismjs/themes/prism.css";
 import "prismjs/components/prism-clike";
 import "../../lib/prism-vizlang";
 
@@ -116,12 +115,10 @@ export default function Editor() {
     return (
         <div
             ref={containerRef}
-            className="flex-1 flex overflow-hidden bg-bg-main relative select-none"
+            style={{ "--editor-width": `${leftWidth}%` } as React.CSSProperties}
+            className="flex-1 flex flex-col md:flex-row overflow-hidden bg-bg-main relative select-none"
         >
-            <div
-                style={{ width: `${leftWidth}%` }}
-                className="flex flex-col border-r border-panel-border bg-panel-bg h-full transition-[width] duration-0"
-            >
+            <div className="flex flex-col w-full md:[width:var(--editor-width)] md:border-r border-panel-border bg-panel-bg h-[55vh] md:h-full transition-[width] duration-0">
                 <div className="h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20">
                     <div className="flex items-center gap-3">
                         <FaFileCode size={14} className="text-text-secondary" />
@@ -163,13 +160,17 @@ export default function Editor() {
                 <div className="flex-1 flex overflow-hidden relative group">
                     <div
                         ref={lineNumbersRef}
-                        className="w-12 bg-black/5 text-right pr-3 pt-4 pb-4 font-mono text-xs text-text-secondary opacity-50 select-none overflow-hidden"
+                        className="w-12 bg-black/5 text-right pr-3 py-4 font-mono text-xs text-text-secondary opacity-50 select-none overflow-y-auto overflow-x-hidden"
                     >
                         {code.split("\n").map((_, i) => (
-                            <div key={i} className="h-5 leading-5 text-[10px]">
+                            <div
+                                key={i}
+                                className="h-[18px] leading-[18px] text-[10px]"
+                            >
                                 {i + 1}
                             </div>
                         ))}
+                        <div aria-hidden="true" className="h-[18px]" />
                     </div>
 
                     <EditorInput
@@ -188,9 +189,12 @@ export default function Editor() {
                             fontFamily:
                                 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace',
                             fontSize: 12,
+                            lineHeight: "18px",
                             whiteSpace: "pre",
                         }}
-                        className="flex-1 bg-transparent p-4 font-mono text-xs leading-5 outline-none resize-none overflow-auto selection:bg-accent/20 whitespace-pre"
+                        preClassName="font-mono text-xs leading-[18px]"
+                        textareaClassName="font-mono text-xs leading-[18px] outline-none resize-none overflow-auto selection:bg-accent/20 whitespace-pre"
+                        className="flex-1 bg-transparent"
                     />
 
                     <button
@@ -205,15 +209,12 @@ export default function Editor() {
 
             <div
                 onMouseDown={startResizing}
-                className={`w-1 cursor-col-resize hover:bg-accent active:bg-accent transition-colors flex items-center justify-center z-10 ${isResizing ? "bg-accent" : "bg-transparent"}`}
+                className={`hidden md:flex w-1 cursor-col-resize hover:bg-accent active:bg-accent transition-colors items-center justify-center z-10 ${isResizing ? "bg-accent" : "bg-transparent"}`}
             >
                 <div className="w-1 h-8 bg-panel-border" />
             </div>
 
-            <div
-                style={{ width: `${100 - leftWidth}%` }}
-                className="flex flex-col bg-bg-main h-full"
-            >
+            <div className="flex flex-col w-full md:[width:calc(100%-var(--editor-width))] bg-bg-main h-[45vh] md:h-full">
                 <div className="h-10 flex items-center justify-between px-4 border-b border-panel-border bg-black/5 dark:bg-black/20 text-[10px] font-bold text-text-secondary uppercase tracking-widest">
                     <div className="flex items-center gap-2">
                         <FaEye size={12} className="text-accent" />
@@ -268,7 +269,7 @@ export default function Editor() {
                     </div>
                 </div>
 
-                <div className="flex-1 p-8 flex items-center justify-center relative overflow-auto">
+                <div className="flex-1 p-8 flex items-center justify-center relative overflow-auto bg-white">
                     {error ? (
                         <div className="bg-red-500/5 p-6 rounded-2xl border border-red-500/10 max-w-md animate-in fade-in zoom-in duration-300">
                             <FaExclamationCircle
@@ -281,7 +282,7 @@ export default function Editor() {
                         </div>
                     ) : svgOutput ? (
                         <div
-                            className="w-full h-full flex items-center justify-center transition-all duration-700 animate-in fade-in zoom-in-95 bg-white rounded-xl shadow-2xl p-4"
+                            className="w-full h-full flex items-center justify-center transition-all duration-700 animate-in fade-in zoom-in-95 p-4"
                             dangerouslySetInnerHTML={{ __html: svgOutput }}
                         />
                     ) : (

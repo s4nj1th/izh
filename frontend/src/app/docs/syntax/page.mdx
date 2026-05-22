@@ -43,6 +43,31 @@ data:
 
 Use a data block when the rows are easier to read than a nested array.
 
+Examples that work well with block data:
+
+```vizl
+chart: bar
+title: Weekly Orders
+
+data:
+"Mon", 12
+"Tue", 18
+"Wed", 15
+"Thu", 21
+"Fri", 25
+```
+
+```vizl
+chart: line
+title: Sensor Readings
+
+data:
+"08:00", 18.2
+"09:00", 18.6
+"10:00", 19.1
+"11:00", 20.0
+```
+
 ## Inline data
 
 You can also provide data directly as an inline array or a variable that contains one.
@@ -58,6 +83,8 @@ data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
 
 Inline data is useful for short examples, generated output, and charts that need to stay compact.
 
+It is also the best option when you want the entire chart definition to fit in a small code sample or documentation snippet.
+
 ## Comments
 
 VizLang supports three comment styles:
@@ -69,6 +96,20 @@ VizLang supports three comment styles:
 ```
 
 Comments are ignored by the renderer and can be used freely for notes or section breaks.
+
+Good comment uses include:
+
+```vizl
+// data arrives from an external API
+// this section uses a fallback for null values
+```
+
+```vizl
+/*
+Multi-line notes are useful when you want
+to explain a longer example.
+*/
+```
 
 ## Example
 
@@ -82,3 +123,12 @@ y: revenue
 // Inline array-of-pairs keeps the file short.
 data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
 ```
+
+## Reference checklist
+
+- `chart:` picks the chart type.
+- `title:` adds a heading.
+- `x:` and `y:` label the axes.
+- `data:` begins a row block or accepts an inline array.
+- `colors:` sets the palette.
+- `null_fill:` controls missing-value handling.

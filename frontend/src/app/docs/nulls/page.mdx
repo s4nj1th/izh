@@ -7,6 +7,12 @@ VizLang supports missing values directly. This is useful when your data has gaps
 Use `null` or `None` in arrays and chart data.
 
 ```vizl
+data: [["A", 10], ["B", None], ["C", 14]]
+```
+
+Null values are treated as missing data rather than string literals, so they can be handled by fill strategies.
+
+```vizl
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
 ```
 
@@ -20,6 +26,8 @@ Set `null_fill:` to control how missing y-values are handled.
 - `next` or `forward` uses the next available value
 - `skip` removes the point entirely
 
+Use the strategy that best matches your story. A chart that represents measurements usually benefits from a different fill strategy than a chart that represents counts or categories.
+
 ## Examples
 
 Fill with zero:
@@ -30,6 +38,26 @@ title: Missing values filled with zero
 
 null_fill: zero
 data: [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
+```
+
+Previous-value fill:
+
+```vizl
+chart: line
+title: Missing values filled from previous
+
+null_fill: prev
+data: [["Jan", 5], ["Feb", null], ["Mar", 15], ["Apr", null], ["May", 25]]
+```
+
+Next-value fill:
+
+```vizl
+chart: line
+title: Missing values filled from next
+
+null_fill: next
+data: [["Jan", null], ["Feb", 8], ["Mar", null], ["Apr", 20]]
 ```
 
 Fill with mean:
@@ -51,6 +79,14 @@ title: Missing values skipped
 null_fill: skip
 data: [["Jan", 100], ["Feb", null], ["Mar", 120], ["Apr", null], ["May", 130]]
 ```
+
+## Practical guidance
+
+- use `zero` for missing readings that should not interrupt a trend
+- use `mean` when the nearby values are a good approximation
+- use `prev` for carry-forward data such as states or balances
+- use `next` when the chart should anticipate the next known value
+- use `skip` when the missing point should disappear entirely
 
 ## Choosing a strategy
 

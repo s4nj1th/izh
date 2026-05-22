@@ -43,6 +43,113 @@
     }
 }
 
+/* Prism theme inspired by VS Code Dark+ */
+code[class*="language-"],
+pre[class*="language-"] {
+    color: var(--text-primary);
+    background: transparent;
+    text-shadow: none;
+    font-family: monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
+}
+
+pre[class*="language-"] {
+    margin: 0;
+    overflow: auto;
+}
+
+code[class*="language-"] {
+    padding: 0;
+}
+
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background: #264f78;
+}
+
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #264f78;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6a9955;
+}
+
+.token.punctuation {
+    color: #d4d4d4;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #d4d4d4;
+}
+
+.token.keyword {
+    color: #569cd6;
+}
+
+.token.string,
+.token.char {
+    color: #ce9178;
+}
+
+.token.number,
+.token.boolean,
+.token.constant,
+.token.symbol {
+    color: #b5cea8;
+}
+
+.token.function,
+.token.builtin {
+    color: #dcdcaa;
+}
+
+.token.class-name,
+.token.selector,
+.token.attr-name {
+    color: #4ec9b0;
+}
+
+.token.variable,
+.token.property {
+    color: #9cdcfe;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
