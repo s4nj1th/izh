@@ -8,6 +8,7 @@ const sidebarItems = [
     { title: "Variables & Math", href: "/docs/variables" },
     { title: "Chart Types", href: "/docs/charts" },
     { title: "Arrays", href: "/docs/arrays" },
+    { title: "File Handling", href: "/docs/file-handling" },
     { title: "Nulls", href: "/docs/nulls" },
     { title: "Colors", href: "/docs/colors" },
     { title: "Recipes", href: "/docs/recipes" },

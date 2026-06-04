@@ -1,6 +1,8 @@
 use crate::types::{ChartType, DataPoint, VizAST, XValue};
 use std::collections::HashMap;
+use std::fs;
 use std::fmt;
+use std::path::Path;
 
 #[derive(Debug, Clone)]
 pub struct VaraiXError {
@@ -239,14 +241,16 @@ struct ExprParser<'a> {
     tokens: Vec<Token>,
     pos: usize,
     vars: &'a HashMap<String, Value>,
+    base_dir: &'a Path,
 }
 
 impl<'a> ExprParser<'a> {
-    fn new(tokens: Vec<Token>, vars: &'a HashMap<String, Value>) -> Self {
+    fn new(tokens: Vec<Token>, vars: &'a HashMap<String, Value>, base_dir: &'a Path) -> Self {
         Self {
             tokens,
             pos: 0,
             vars,
+            base_dir,
         }
     }
 
@@ -393,6 +397,17 @@ impl<'a> ExprParser<'a> {
                                 _ => Err("combine expects two array arguments".to_string()),
                             }
                         }
+                        "csv" => {
+                            if args.len() != 1 {
+                                return Err(format!("csv expects 1 argument, got {}", args.len()));
+                            }
+                            match &args[0] {
+                                Value::String(path) => {
+                                    load_csv_file(path, self.base_dir).map_err(|e| e.message)
+                                }
+                                _ => Err("csv expects a string file path".to_string()),
+                            }
+                        }
                         _ => Err(format!("Unknown function: {}", s)),
                     }
                 } else if s.to_lowercase() == "null" || s == "None" {
@@ -417,13 +432,81 @@ impl<'a> ExprParser<'a> {
 }
 
 fn evaluate(expr: &str, vars: &HashMap<String, Value>) -> Result<Value, String> {
+    evaluate_with_base_dir(expr, vars, Path::new("."))
+}
+
+fn evaluate_with_base_dir(
+    expr: &str,
+    vars: &HashMap<String, Value>,
+    base_dir: &Path,
+) -> Result<Value, String> {
     let tokens = Tokenizer::new(expr).tokenize()?;
-    let mut parser = ExprParser::new(tokens, vars);
+    let mut parser = ExprParser::new(tokens, vars, base_dir);
     let val = parser.parse_expression()?;
     if parser.peek() != &Token::EOF {
         return Err("Unexpected tokens after expression".to_string());
     }
     Ok(val)
+}
+
+fn parse_csv_scalar(cell: &str) -> Value {
+    let trimmed = cell.trim();
+    if trimmed.is_empty() {
+        return Value::Null;
+    }
+    if trimmed.eq_ignore_ascii_case("null") || trimmed == "None" {
+        return Value::Null;
+    }
+    if let Ok(n) = trimmed.parse::<f64>() {
+        if n.fract() == 0.0 {
+            return Value::Int(n as i64);
+        }
+        return Value::Float(n);
+    }
+    Value::String(trimmed.to_string())
+}
+
+fn load_csv_file(path: &str, base_dir: &Path) -> Result<Value, VaraiXError> {
+    let resolved_path = {
+        let candidate = Path::new(path);
+        if candidate.is_absolute() {
+            candidate.to_path_buf()
+        } else {
+            base_dir.join(candidate)
+        }
+    };
+
+    let csv_text = fs::read_to_string(&resolved_path).map_err(|err| VaraiXError {
+        line_number: 0,
+        message: format!(
+            "Unable to read CSV file \"{}\": {}",
+            resolved_path.display(),
+            err
+        ),
+        source_line: String::new(),
+    })?;
+
+    let mut reader = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .from_reader(csv_text.as_bytes());
+
+    let mut rows: Vec<Value> = Vec::new();
+    for result in reader.records() {
+        let record = result.map_err(|err| VaraiXError {
+            line_number: 0,
+            message: format!(
+                "Unable to parse CSV file \"{}\": {}",
+                resolved_path.display(),
+                err
+            ),
+            source_line: String::new(),
+        })?;
+
+        let row = record.iter().map(parse_csv_scalar).collect::<Vec<Value>>();
+        rows.push(Value::Array(row));
+    }
+
+    Ok(Value::Array(rows))
 }
 
 fn parse_general_array(
@@ -758,6 +841,10 @@ fn parse_array_literal(
 }
 
 pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
+    parse_with_base_dir(source, Path::new("."))
+}
+
+pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, VaraiXError> {
     let source = strip_comments_preserve_lines(source);
 
     let mut chart_type = None;
@@ -1075,6 +1162,36 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
                     } else {
                         in_data_block = true;
                     }
+                } else if let Ok(Value::Array(items)) = evaluate_with_base_dir(&value, &vars, base_dir) {
+                    for item in items {
+                        if let Value::Array(inner) = item {
+                            if inner.len() >= 2 {
+                                let raw_x_val = &inner[0];
+                                let raw_y_val = &inner[1];
+                                let parsed_x = match raw_x_val {
+                                    Value::String(s) => XValue::String(s.clone()),
+                                    Value::Int(i) => XValue::Number(*i as f64),
+                                    Value::Float(f) => XValue::Number(*f),
+                                    Value::Null => XValue::String("null".to_string()),
+                                    _ => XValue::String("[array]".to_string()),
+                                };
+                                let parsed_y = match raw_y_val {
+                                    Value::Null => None,
+                                    Value::Int(i) => Some(*i as f64),
+                                    Value::Float(f) => Some(*f),
+                                    Value::String(s) => match evaluate(s, &vars) {
+                                        Ok(v) => Some(v.to_f64()),
+                                        Err(_) => None,
+                                    },
+                                    _ => None,
+                                };
+                                data_points.push(DataPoint {
+                                    x: parsed_x,
+                                    y: parsed_y,
+                                });
+                            }
+                        }
+                    }
                 } else {
                     in_data_block = true;
                 }
@@ -1108,4 +1225,31 @@ pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
         colors,
         histogram_bins,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn parses_csv_file_as_data() {
+        let temp_root = std::env::temp_dir().join(format!("varaix-csv-test-{}", std::process::id()));
+        fs::create_dir_all(&temp_root).unwrap();
+
+        let csv_path = temp_root.join("sample.csv");
+        fs::write(&csv_path, "Jan,12\nFeb,19\nMar,15\n").unwrap();
+
+        let source = "chart: line\ndata: csv(\"sample.csv\")\n";
+        let ast = parse_with_base_dir(source, &temp_root).unwrap();
+
+        assert_eq!(ast.data.len(), 3);
+        assert_eq!(ast.data[0].x.to_string(), "Jan");
+        assert_eq!(ast.data[0].y, Some(12.0));
+        assert_eq!(ast.data[2].x.to_string(), "Mar");
+        assert_eq!(ast.data[2].y, Some(15.0));
+
+        let _ = fs::remove_file(csv_path);
+        let _ = fs::remove_dir_all(temp_root);
+    }
 }

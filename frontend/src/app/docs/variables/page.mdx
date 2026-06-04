@@ -6,13 +6,13 @@ Variables are evaluated at parse time and can be used in chart properties and da
 
 Basic assignment:
 
-```vizl
+```vix
 name = EXPRESSION
 ```
 
 Optional typed forms (coerce/declare intent):
 
-```vizl
+```vix
 int count = 10
 float ratio = 1.25
 string label = "Q1"
@@ -29,7 +29,7 @@ Typed scalar and array declarations coerce elements at parse time and produce cl
 
 Examples:
 
-```vizl
+```vix
 revenue = (base + bonus) * 1.1
 title = "Revenue " + year
 ```
@@ -38,7 +38,7 @@ title = "Revenue " + year
 
 Variables may be referenced directly in `data:` rows and in property values. The parser substitutes their evaluated value.
 
-```vizl
+```vix
 base = 100
 increment = 25
 data:
@@ -50,7 +50,7 @@ data:
 
 Arrays can be assigned to variables and used to build inline data. Use `combine()` to pair two arrays into an array-of-pairs:
 
-```vizl
+```vix
 xs = [1, 2, 3]
 ys = [10, 20, 30]
 data: combine(xs, ys)  # => [[1, 10], [2, 20], [3, 30]]
@@ -68,7 +68,7 @@ If arrays differ in length, `combine()` will produce pairs up to the longer arra
 
 1. Generate labels and values programmatically:
 
-```vizl
+```vix
 chart: bar
 months = ["Jan", "Feb", "Mar"]
 values = [10, 20, 30]
@@ -77,14 +77,14 @@ data: combine(months, values)
 
 2. Build a title from parts:
 
-```vizl
+```vix
 year = 2026
 title: "Forecast " + year
 ```
 
 3. Typed arrays for clear intent:
 
-```vizl
+```vix
 int[] years = [2018..2022]
 float[] readings = [1.2, 1.5, 2.0]
 ```

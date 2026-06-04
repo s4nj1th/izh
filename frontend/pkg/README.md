@@ -14,7 +14,7 @@ VaraiX (`.vix`) is a compact, line-oriented DSL for describing charts. Write a f
 
 ## Quick Example (array style)
 
-```vizl
+```vix
 chart: line
 title: Monthly Revenue
 
@@ -28,7 +28,7 @@ data: myData
 
 You can still use the original block-style data form:
 
-```vizl
+```vix
 chart: bar
 x: quarter
 y: revenue
@@ -60,7 +60,7 @@ Set `null_fill:` to one of:
 
 Example:
 
-```vizl
+```vix
 null_fill: mean
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
 data: myData

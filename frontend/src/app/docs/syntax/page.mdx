@@ -6,7 +6,7 @@ VaraiX is a concise, line-oriented chart description language. Files are typical
 
 A common, minimal file looks like this:
 
-```vizl
+```vix
 chart: bar
 title: My Awesome Chart
 x: Category
@@ -44,7 +44,7 @@ VaraiX accepts two styles for data:
 
 - Block-style rows (preferred for multi-line human-edited data):
 
-```vizl
+```vix
 data:
 "Jan", 100
 "Feb", 150
@@ -53,7 +53,7 @@ data:
 
 - Inline array-of-pairs (compact, copy/paste friendly):
 
-```vizl
+```vix
 data: [["Jan", 10], ["Feb", null], ["Mar", 20]]
 ```
 
@@ -70,7 +70,7 @@ Notes:
 
 Example with quotes and commas:
 
-```vizl
+```vix
 data:
 "New York, NY", 120
 "Los Angeles", 95
@@ -80,7 +80,7 @@ data:
 
 Supported comment styles:
 
-```vizl
+```vix
 // single-line comment
 /* multi-line block comment */
 # legacy single-line
@@ -96,7 +96,7 @@ Block comments preserve line counts so that error messages keep correct line num
 
 Expression examples (see `variables` page for more):
 
-```vizl
+```vix
 base = 100
 growth = 1.2
 title: "Revenue " + 2026
@@ -105,7 +105,13 @@ myData = [["A", base], ["B", base * growth]]
 
 ## Function calls and helpers
 
-VaraiX provides small helper functions evaluated at parse time. One example is `combine(arr1, arr2)` which pairs two arrays into an array-of-pairs. See the Arrays docs for details.
+VaraiX provides small helper functions evaluated at parse time.
+
+- `combine(arr1, arr2)` pairs two arrays into an array-of-pairs.
+
+For file-backed data, see the File Handling page.
+
+See the Arrays docs for details on array shapes and chart data.
 
 ## Parsing edge cases and tips
 
@@ -115,7 +121,7 @@ VaraiX provides small helper functions evaluated at parse time. One example is `
 
 ## Quick checklist (copyable)
 
-```vizl
+```vix
 chart: line
 title: My Chart
 myVar = 10

@@ -6,13 +6,13 @@ VaraiX supports color palettes to control the appearance of charts. A palette is
 
 Inline palette:
 
-```vizl
+```vix
 colors: ["red", "#ff0000", "rgb(0,128,255)"]
 ```
 
 Named palette variable:
 
-```vizl
+```vix
 palette = ["#111111", "#222222", "#333333"]
 colors: palette
 ```
@@ -32,7 +32,7 @@ If you provide only one color, the chart will still render, and the renderer wil
 
 Single color for a simple line:
 
-```vizl
+```vix
 chart: line
 colors: ["#4a90d9"]
 myData = [["A", 10], ["B", 20], ["C", 15]]
@@ -41,7 +41,7 @@ data: myData
 
 Mixed palette example:
 
-```vizl
+```vix
 chart: bar
 title: Mixed Palette
 colors: ["#0f172a", "#2563eb", "#14b8a6", "#f97316"]
@@ -50,7 +50,7 @@ data: [["Alpha", 18], ["Beta", 24], ["Gamma", 30], ["Delta", 12]]
 
 Muted palette example:
 
-```vizl
+```vix
 chart: scatter
 title: Muted Scatter
 colors: ["#6b7280", "#94a3b8", "#cbd5e1"]
@@ -59,7 +59,7 @@ data: [[1, 2], [2, 3], [3, 5], [4, 8], [5, 13]]
 
 Palette for a pie chart:
 
-```vizl
+```vix
 chart: pie
 colors: ["#4a90d9", "#f06292", "grey", "#a1887f"]
 myData = [["Linux", 72], ["Windows", 15], ["MacOS", 8], ["Other", 5]]

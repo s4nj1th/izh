@@ -6,13 +6,13 @@ VaraiX supports missing values directly. This is useful when your data has gaps,
 
 Use `null` or `None` in arrays and chart data.
 
-```vizl
+```vix
 data: [["A", 10], ["B", None], ["C", 14]]
 ```
 
 Null values are treated as missing data rather than string literals, so they can be handled by fill strategies.
 
-```vizl
+```vix
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
 ```
 
@@ -32,7 +32,7 @@ Use the strategy that best matches your story. A chart that represents measureme
 
 Fill with zero:
 
-```vizl
+```vix
 chart: line
 title: Missing values filled with zero
 
@@ -42,7 +42,7 @@ data: [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 25]]
 
 Previous-value fill:
 
-```vizl
+```vix
 chart: line
 title: Missing values filled from previous
 
@@ -52,7 +52,7 @@ data: [["Jan", 5], ["Feb", null], ["Mar", 15], ["Apr", null], ["May", 25]]
 
 Next-value fill:
 
-```vizl
+```vix
 chart: line
 title: Missing values filled from next
 
@@ -62,7 +62,7 @@ data: [["Jan", null], ["Feb", 8], ["Mar", null], ["Apr", 20]]
 
 Fill with mean:
 
-```vizl
+```vix
 chart: line
 title: Missing values filled with mean
 
@@ -72,7 +72,7 @@ data: [["Jan", 10], ["Feb", null], ["Mar", 20], ["Apr", 40]]
 
 Skip missing points:
 
-```vizl
+```vix
 chart: line
 title: Missing values skipped
 

@@ -6,7 +6,7 @@ VaraiX currently supports the following core chart types. The same top-level fil
 
 Purpose: compare categorical values. Each data row should be `[category, value]` where `category` is a string and `value` is numeric.
 
-```vizl
+```vix
 chart: bar
 title: Quarterly Sales
 data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
@@ -14,7 +14,7 @@ data: [["Q1", 120], ["Q2", 150], ["Q3", 170], ["Q4", 200]]
 
 When using block data, the same shape applies:
 
-```vizl
+```vix
 data:
 "Q1", 120
 "Q2", 150
@@ -24,7 +24,7 @@ data:
 
 Purpose: show trends over an ordered X axis (time or numeric). `x` can be a string label or numeric value; `y` must be numeric. Line charts connect points in X-order.
 
-```vizl
+```vix
 chart: line
 title: Monthly Revenue
 data: [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22]]
@@ -36,7 +36,7 @@ If your X values are numeric (dates converted to numbers, epoch seconds, etc.), 
 
 Purpose: compare two numeric variables. For scatter plots, both elements of each pair should be numeric: `[x, y]`.
 
-```vizl
+```vix
 chart: scatter
 title: Height vs Weight
 data: [[155, 52], [160, 58], [165, 62], [170, 68]]
@@ -48,7 +48,7 @@ Tip: Use `int[]`/`float[]` arrays and `combine()` for pairing two separate numer
 
 Purpose: show parts of a whole. Each pair is `[label, value]` where `label` is a string and `value` is numeric and non-negative.
 
-```vizl
+```vix
 chart: pie
 title: Server Operating Systems
 data: [["Linux", 72], ["Windows", 10], ["macOS", 8], ["Other", 6]]
@@ -69,7 +69,7 @@ Notes on pie charts:
 
 1. Using `combine()` to prepare scatter data from two arrays:
 
-```vizl
+```vix
 int[] xs = [1, 2, 3, 4]
 int[] ys = [10, 20, 30, 40]
 data: combine(xs, ys)
@@ -77,7 +77,7 @@ data: combine(xs, ys)
 
 2. Typing arrays to document intent and coerce values:
 
-```vizl
+```vix
 string[] months = ["Jan", "Feb"]
 int[] values = [10, 20]
 data: combine(months, values)

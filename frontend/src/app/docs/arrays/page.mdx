@@ -6,7 +6,7 @@ VaraiX supports fixed-size arrays that are evaluated at parse time. They are use
 
 Use explicit lists when the values are short and already known.
 
-```vizl
+```vix
 values = [1, 2, 3, 4]
 labels = ["Jan", "Feb", "Mar"]
 ```
@@ -15,7 +15,7 @@ labels = ["Jan", "Feb", "Mar"]
 
 Ranges create inclusive integer sequences.
 
-```vizl
+```vix
 years = [2018..2022]  # => [2018, 2019, 2020, 2021, 2022]
 ```
 
@@ -23,7 +23,7 @@ Use ranges to generate labels, counts, or year spans without writing each elemen
 
 Another range example:
 
-```vizl
+```vix
 months = [1..12]
 ```
 
@@ -31,7 +31,7 @@ months = [1..12]
 
 Comprehensions evaluate an expression for each value in a range.
 
-```vizl
+```vix
 evens = [i * 2 for i in 1..5]  # => [2,4,6,8,10]
 ```
 
@@ -39,7 +39,7 @@ This is a good fit for synthetic data, derived values, and compact examples.
 
 You can use the result to build short generated tables:
 
-```vizl
+```vix
 offsets = [i + 10 for i in 1..5]
 ```
 
@@ -47,17 +47,19 @@ offsets = [i + 10 for i in 1..5]
 
 Arrays can contain arrays. The most common use is a table of x/y pairs.
 
+If your data comes from a file, see the File Handling page.
+
 Other useful shapes:
 
-```vizl
+```vix
 labels = [["Q1", "north"], ["Q2", "south"]]
 ```
 
-```vizl
+```vix
 matrix = [[1, 2], [3, 4], [5, 6]]
 ```
 
-```vizl
+```vix
 myData = [["Jan", 10], ["Feb", null], ["Mar", 20]]
 data: myData
 ```
@@ -66,7 +68,7 @@ data: myData
 
 You can declare typed arrays when you want the element type to be explicit.
 
-```vizl
+```vix
 int[] years = [2018..2022]
 float[] measurements = [1.0, 2.5, 3.75]
 string[] names = ["A", "B", "C"]
@@ -78,7 +80,7 @@ Typed arrays are especially useful when you want the file to document the intend
 
 ## Example
 
-```vizl
+```vix
 chart: bar
 title: Yearly Counts
 
@@ -89,7 +91,7 @@ data: [[2018, 10], [2019, 20], [2020, 30], [2021, 25], [2022, 35]]
 
 ## Compact pattern
 
-```vizl
+```vix
 chart: line
 title: Generated Values
 
@@ -109,7 +111,7 @@ data: [[1, 3], [2, 6], [3, 9], [4, 12], [5, 15], [6, 18], [7, 21], [8, 24]]
 
 The `combine()` function pairs elements from two arrays into a new array of pairs. This is useful when you have separate arrays for x and y values that you want to merge into chart data.
 
-```vizl
+```vix
 xs = [1, 2, 3, 4, 5]
 ys = [10, 20, 30, 40, 50]
 
@@ -121,7 +123,7 @@ pairs = combine(xs, ys)
 
 Suppose you have temperature readings and humidity measurements for the same time periods:
 
-```vizl
+```vix
 chart: scatter
 title: Temperature vs Humidity
 
@@ -136,7 +138,7 @@ data: combine(temps, humidity)
 
 If the arrays have different lengths, `combine()` creates pairs up to the longest array length. For example:
 
-```vizl
+```vix
 a = [1, 2, 3]
 b = [10, 20]
 
