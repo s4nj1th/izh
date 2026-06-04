@@ -121,8 +121,6 @@ varaix/
 └── src/
 ```
 
-Note: the human-readable spec previously available in `SPEC.md` has been replaced by the consolidated online documentation at the URL above. Use the online docs for the most up-to-date guidance and examples.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
