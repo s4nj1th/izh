@@ -38,17 +38,11 @@ The raw comparison file is saved in [benchmarks/results/comparison.json](../../.
 
 ### Per-chart comparison
 
-| Chart | Language | Tokens | Bytes | Lines |
-| --- | --- | --- | --- | --- |
-| Line | VaraiX | 98 | 240 | 8 |
-| Line | Matplotlib | 135 | 391 | 13 |
-| Line | Chart.js | 189 | 551 | 24 |
-| Scatter | VaraiX | 101 | 229 | 8 |
-| Scatter | Matplotlib | 135 | 366 | 13 |
-| Scatter | Chart.js | 274 | 696 | 35 |
-| Pie | VaraiX | 42 | 131 | 6 |
-| Pie | Matplotlib | 83 | 280 | 11 |
-| Pie | Chart.js | 145 | 468 | 22 |
+| Chart | VaraiX | Matplotlib | Chart.js |
+| --- | --- | --- | --- |
+| Line | 98 tokens, 240 bytes, 8 lines | 135 tokens, 391 bytes, 13 lines | 189 tokens, 551 bytes, 24 lines |
+| Scatter | 101 tokens, 229 bytes, 8 lines | 135 tokens, 366 bytes, 13 lines | 274 tokens, 696 bytes, 35 lines |
+| Pie | 42 tokens, 131 bytes, 6 lines | 83 tokens, 280 bytes, 11 lines | 145 tokens, 468 bytes, 22 lines |
 
 ## Validation checklist
 
@@ -79,41 +73,3 @@ The current measured output is stored in [benchmarks/results/latest.json](../../
 | line | 280 | 42 | 10 | 0.1719 | 0.0859 | 4133 |
 | scatter | 271 | 44 | 10 | 0.1477 | 0.0754 | 3975 |
 | pie | 166 | 22 | 7 | 0.0611 | 0.0387 | 1626 |
-
-## Benchmark categories
-
-These are the production-grade validation categories this repository should cover:
-
-| Category | What it measures | Why it matters |
-| --- | --- | --- |
-| Source size and token count | How much source is needed to express the same chart | Shows compactness and LLM efficiency |
-| Parse throughput | How fast a chart file is parsed | Matters for CI and batch generation |
-| Render throughput | How fast SVG is produced | Core runtime cost |
-| Cold start time | Time to first render in a fresh process | Important for CLI and browser startup |
-| Warm run time | Repeated render latency after startup | Useful for bulk generation |
-| Memory usage | Peak memory during parse and render | Matters for server and CI workloads |
-| Output determinism | Whether repeated runs produce identical output | Critical for reproducible builds |
-| Null handling behavior | How missing data is handled | Shows the value of `null_fill` |
-| Error quality | Whether failures are clear and actionable | Helps debugging and automation |
-| Security and sandbox behavior | How malformed or malicious input is handled | Reduces risk in shared systems |
-| CI stability | Whether results are reproducible in automation | Prevents flaky benchmark claims |
-
-## Production-grade benchmark categories
-
-These are the real benchmark categories to add next if you want a fuller validation suite:
-
-- source size and token count
-- parse throughput
-- render throughput
-- cold start time
-- warm run time
-- memory usage
-- output determinism
-- null handling behavior
-- error quality
-- security and sandbox behavior
-- CI stability
-
-## Notes
-
-The current harness validates the VaraiX parser and renderer directly. Equivalent Matplotlib and Chart.js runners can be added later if you want a full three-way runtime comparison.

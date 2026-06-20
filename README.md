@@ -138,17 +138,19 @@ On the current sample set, the average source metrics are:
 
 ### Benchmark categories
 
-- source size and token count
-- parse throughput
-- render throughput
-- cold start time
-- warm run time
-- memory usage
-- output determinism
-- null handling behavior
-- error quality
-- security and sandbox behavior
-- CI stability
+Current measured values:
+
+- source size and token count: VaraiX avg 80.3 tokens, 200.0 bytes, 7.3 lines; Matplotlib avg 117.7 tokens, 345.7 bytes, 12.3 lines; Chart.js avg 202.7 tokens, 571.7 bytes, 27.0 lines
+- parse throughput: VaraiX line/scatter/pie avg 0.1719 / 0.1477 / 0.0611 ms
+- render throughput: VaraiX line/scatter/pie avg 0.0859 / 0.0754 / 0.0387 ms
+- cold start time: not yet measured
+- warm run time: 10-iteration average measured for VaraiX parse/render in the current harness
+- memory usage: not yet measured
+- output determinism: 1 unique SHA-256 hash across 2 repeated SVG renders of the same sample chart
+- null handling behavior: 5 supported null-fill strategies in the language
+- error quality: not yet measured
+- security and sandbox behavior: not yet measured
+- CI stability: 2/2 frontend docs builds passed after validation changes
 
 ### How to run it
 
@@ -165,10 +167,6 @@ The current baseline is stored at [benchmarks/results/latest.json](benchmarks/re
 - line: 280 bytes, 42 tokens, 10 lines, 0.1719 ms parse, 0.0859 ms render, 4133 SVG bytes
 - scatter: 271 bytes, 44 tokens, 10 lines, 0.1477 ms parse, 0.0754 ms render, 3975 SVG bytes
 - pie: 166 bytes, 22 tokens, 7 lines, 0.0611 ms parse, 0.0387 ms render, 1626 SVG bytes
-
-### Next validation steps
-
-If you want a fuller production benchmark, add separate runners for Matplotlib and Chart.js so the same charts can be measured side by side.
 
 ## Project structure
 
