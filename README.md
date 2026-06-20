@@ -126,31 +126,21 @@ VaraiX is a better fit than Python Matplotlib or JavaScript Chart.js when the go
 - repeated runs can be compared over time to catch regressions
 - equivalent chart source comparison shows VaraiX uses fewer tokens, bytes, and lines than matching Matplotlib and Chart.js examples
 
-### Real comparison data
+## Source Size Comparison
 
-The measured source comparison is stored in [benchmarks/results/comparison.json](benchmarks/results/comparison.json).
+| Library      | Avg. Tokens | Avg. Bytes | Avg. Lines |
+|--------------|------------:|-----------:|-----------:|
+| VaraiX       | 80.3        | 200.0      | 7.3        |
+| Matplotlib   | 117.7       | 345.7      | 12.3       |
+| Chart.js     | 202.7       | 571.7      | 27.0       |
 
-On the current sample set, the average source metrics are:
+## Current Measured Baseline
 
-- VaraiX: 80.3 tokens, 200.0 bytes, 7.3 lines
-- Matplotlib: 117.7 tokens, 345.7 bytes, 12.3 lines
-- Chart.js: 202.7 tokens, 571.7 bytes, 27.0 lines
-
-### Benchmark categories
-
-Current measured values:
-
-- source size and token count: VaraiX avg 80.3 tokens, 200.0 bytes, 7.3 lines; Matplotlib avg 117.7 tokens, 345.7 bytes, 12.3 lines; Chart.js avg 202.7 tokens, 571.7 bytes, 27.0 lines
-- parse throughput: VaraiX line/scatter/pie avg 0.1719 / 0.1477 / 0.0611 ms
-- render throughput: VaraiX line/scatter/pie avg 0.0859 / 0.0754 / 0.0387 ms
-- cold start time: not yet measured
-- warm run time: 10-iteration average measured for VaraiX parse/render in the current harness
-- memory usage: not yet measured
-- output determinism: 1 unique SHA-256 hash across 2 repeated SVG renders of the same sample chart
-- null handling behavior: 5 supported null-fill strategies in the language
-- error quality: not yet measured
-- security and sandbox behavior: not yet measured
-- CI stability: 2/2 frontend docs builds passed after validation changes
+| Chart Type | Source Size (Bytes) | Tokens | Lines | Parse Time (ms) | Render Time (ms) | SVG Size (Bytes) |
+|------------|--------------------:|--------:|-------:|----------------:|-----------------:|-----------------:|
+| Line       | 280                 | 42      | 10     | 0.1719          | 0.0859           | 4133             |
+| Scatter    | 271                 | 44      | 10     | 0.1477          | 0.0754           | 3975             |
+| Pie        | 166                 | 22      | 7      | 0.0611          | 0.0387           | 1626             |
 
 ### How to run it
 
@@ -162,11 +152,7 @@ cargo run --bin varaix-benchmark -- 10
 
 The current baseline is stored at [benchmarks/results/latest.json](benchmarks/results/latest.json).
 
-### Current measured baseline
 
-- line: 280 bytes, 42 tokens, 10 lines, 0.1719 ms parse, 0.0859 ms render, 4133 SVG bytes
-- scatter: 271 bytes, 44 tokens, 10 lines, 0.1477 ms parse, 0.0754 ms render, 3975 SVG bytes
-- pie: 166 bytes, 22 tokens, 7 lines, 0.0611 ms parse, 0.0387 ms render, 1626 SVG bytes
 
 ## Project structure
 
