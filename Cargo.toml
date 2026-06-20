@@ -14,6 +14,10 @@ crate-type = ["cdylib", "rlib"]
 name = "varaix-cli"
 path = "src/main.rs"
 
+[[bin]]
+name = "varaix-benchmark"
+path = "src/bin/benchmark.rs"
+
 [dependencies]
 csv = "1"
 wasm-bindgen = "0.2"

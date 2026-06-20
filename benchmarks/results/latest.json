@@ -1,0 +1,32 @@
+{
+  "iterations": 10,
+  "cases": [
+    {
+      "name": "line",
+      "source_bytes": 280,
+      "source_tokens": 42,
+      "source_lines": 10,
+      "parse_ms_avg": 0.1719,
+      "render_ms_avg": 0.0859,
+      "svg_bytes": 4133
+    },
+    {
+      "name": "scatter",
+      "source_bytes": 271,
+      "source_tokens": 44,
+      "source_lines": 10,
+      "parse_ms_avg": 0.1477,
+      "render_ms_avg": 0.0754,
+      "svg_bytes": 3975
+    },
+    {
+      "name": "pie",
+      "source_bytes": 166,
+      "source_tokens": 22,
+      "source_lines": 7,
+      "parse_ms_avg": 0.0611,
+      "render_ms_avg": 0.0387,
+      "svg_bytes": 1626
+    }
+  ]
+}

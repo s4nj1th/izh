@@ -1,0 +1,34 @@
+{
+  "description": "Equivalent chart source comparison across VaraiX, Matplotlib, and Chart.js",
+  "charts": [
+    {
+      "name": "line",
+      "samples": [
+        { "language": "VaraiX", "tokens": 98, "bytes": 240, "lines": 8 },
+        { "language": "Matplotlib", "tokens": 135, "bytes": 391, "lines": 13 },
+        { "language": "Chart.js", "tokens": 189, "bytes": 551, "lines": 24 }
+      ]
+    },
+    {
+      "name": "scatter",
+      "samples": [
+        { "language": "VaraiX", "tokens": 101, "bytes": 229, "lines": 8 },
+        { "language": "Matplotlib", "tokens": 135, "bytes": 366, "lines": 13 },
+        { "language": "Chart.js", "tokens": 274, "bytes": 696, "lines": 35 }
+      ]
+    },
+    {
+      "name": "pie",
+      "samples": [
+        { "language": "VaraiX", "tokens": 42, "bytes": 131, "lines": 6 },
+        { "language": "Matplotlib", "tokens": 83, "bytes": 280, "lines": 11 },
+        { "language": "Chart.js", "tokens": 145, "bytes": 468, "lines": 22 }
+      ]
+    }
+  ],
+  "averages": {
+    "VaraiX": { "tokens": 80.3, "bytes": 200.0, "lines": 7.3 },
+    "Matplotlib": { "tokens": 117.7, "bytes": 345.7, "lines": 12.3 },
+    "Chart.js": { "tokens": 202.7, "bytes": 571.7, "lines": 27.0 }
+  }
+}

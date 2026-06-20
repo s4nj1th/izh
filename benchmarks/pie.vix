@@ -1,0 +1,7 @@
+// Benchmark case: pie chart
+chart: pie
+title: Server Operating Systems
+
+osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
+
+data: osShares

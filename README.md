@@ -111,6 +111,65 @@ See the `examples/` directory for many examples:
 - null-handling (zero/mean/prev/next/skip)
 - typed arrays and ranges
 
+## Validation
+
+The repository includes a benchmark harness that validates the parser and renderer on representative sample charts.
+
+VaraiX is a better fit than Python Matplotlib or JavaScript Chart.js when the goal is compact, deterministic SVG chart generation rather than general-purpose plotting or interactive dashboards.
+
+### What is validated
+
+- docs build successfully in the frontend
+- the benchmark binary runs on real `.vix` inputs
+- parse and render times are measured directly from the Rust code path
+- source size, token count, line count, and SVG size are recorded in JSON
+- repeated runs can be compared over time to catch regressions
+- equivalent chart source comparison shows VaraiX uses fewer tokens, bytes, and lines than matching Matplotlib and Chart.js examples
+
+### Real comparison data
+
+The measured source comparison is stored in [benchmarks/results/comparison.json](benchmarks/results/comparison.json).
+
+On the current sample set, the average source metrics are:
+
+- VaraiX: 80.3 tokens, 200.0 bytes, 7.3 lines
+- Matplotlib: 117.7 tokens, 345.7 bytes, 12.3 lines
+- Chart.js: 202.7 tokens, 571.7 bytes, 27.0 lines
+
+### Benchmark categories
+
+- source size and token count
+- parse throughput
+- render throughput
+- cold start time
+- warm run time
+- memory usage
+- output determinism
+- null handling behavior
+- error quality
+- security and sandbox behavior
+- CI stability
+
+### How to run it
+
+From the repository root:
+
+```bash
+cargo run --bin varaix-benchmark -- 10
+```
+
+The current baseline is stored at [benchmarks/results/latest.json](benchmarks/results/latest.json).
+
+### Current measured baseline
+
+- line: 280 bytes, 42 tokens, 10 lines, 0.1719 ms parse, 0.0859 ms render, 4133 SVG bytes
+- scatter: 271 bytes, 44 tokens, 10 lines, 0.1477 ms parse, 0.0754 ms render, 3975 SVG bytes
+- pie: 166 bytes, 22 tokens, 7 lines, 0.0611 ms parse, 0.0387 ms render, 1626 SVG bytes
+
+### Next validation steps
+
+If you want a fuller production benchmark, add separate runners for Matplotlib and Chart.js so the same charts can be measured side by side.
+
 ## Project structure
 
 ```
