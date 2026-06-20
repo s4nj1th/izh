@@ -4,6 +4,7 @@ import DocsNavigation from "@/components/DocsNavigation";
 
 const sidebarItems = [
     { title: "Introduction", href: "/docs/introduction" },
+    { title: "Why Varaix", href: "/docs/why-varaix" },
     { title: "Basic Syntax", href: "/docs/syntax" },
     { title: "Variables & Math", href: "/docs/variables" },
     { title: "Chart Types", href: "/docs/charts" },
