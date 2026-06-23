@@ -8,18 +8,13 @@ export function parse_and_render(source) {
     let deferred3_0;
     let deferred3_1;
     try {
-        const ptr0 = passStringToWasm0(
-            source,
-            wasm.__wbindgen_malloc,
-            wasm.__wbindgen_realloc,
-        );
+        const ptr0 = passStringToWasm0(source, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.parse_and_render(ptr0, len0);
         var ptr2 = ret[0];
         var len2 = ret[1];
         if (ret[3]) {
-            ptr2 = 0;
-            len2 = 0;
+            ptr2 = 0; len2 = 0;
             throw takeFromExternrefTable0(ret[2]);
         }
         deferred3_0 = ptr2;
@@ -32,12 +27,12 @@ export function parse_and_render(source) {
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
-        __wbindgen_cast_0000000000000001: function (arg0, arg1) {
+        __wbindgen_cast_0000000000000001: function(arg0, arg1) {
             // Cast intrinsic for `Ref(String) -> Externref`.
             const ret = getStringFromWasm0(arg0, arg1);
             return ret;
         },
-        __wbindgen_init_externref_table: function () {
+        __wbindgen_init_externref_table: function() {
             const table = wasm.__wbindgen_externrefs;
             const offset = table.grow(4);
             table.set(0, undefined);
@@ -59,10 +54,7 @@ function getStringFromWasm0(ptr, len) {
 
 let cachedUint8ArrayMemory0 = null;
 function getUint8ArrayMemory0() {
-    if (
-        cachedUint8ArrayMemory0 === null ||
-        cachedUint8ArrayMemory0.byteLength === 0
-    ) {
+    if (cachedUint8ArrayMemory0 === null || cachedUint8ArrayMemory0.byteLength === 0) {
         cachedUint8ArrayMemory0 = new Uint8Array(wasm.memory.buffer);
     }
     return cachedUint8ArrayMemory0;
@@ -72,9 +64,7 @@ function passStringToWasm0(arg, malloc, realloc) {
     if (realloc === undefined) {
         const buf = cachedTextEncoder.encode(arg);
         const ptr = malloc(buf.length, 1) >>> 0;
-        getUint8ArrayMemory0()
-            .subarray(ptr, ptr + buf.length)
-            .set(buf);
+        getUint8ArrayMemory0().subarray(ptr, ptr + buf.length).set(buf);
         WASM_VECTOR_LEN = buf.length;
         return ptr;
     }
@@ -88,14 +78,14 @@ function passStringToWasm0(arg, malloc, realloc) {
 
     for (; offset < len; offset++) {
         const code = arg.charCodeAt(offset);
-        if (code > 0x7f) break;
+        if (code > 0x7F) break;
         mem[ptr + offset] = code;
     }
     if (offset !== len) {
         if (offset !== 0) {
             arg = arg.slice(offset);
         }
-        ptr = realloc(ptr, len, (len = offset + arg.length * 3), 1) >>> 0;
+        ptr = realloc(ptr, len, len = offset + arg.length * 3, 1) >>> 0;
         const view = getUint8ArrayMemory0().subarray(ptr + offset, ptr + len);
         const ret = cachedTextEncoder.encodeInto(arg, view);
 
@@ -113,37 +103,29 @@ function takeFromExternrefTable0(idx) {
     return value;
 }
 
-let cachedTextDecoder = new TextDecoder("utf-8", {
-    ignoreBOM: true,
-    fatal: true,
-});
+let cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
 cachedTextDecoder.decode();
 const MAX_SAFARI_DECODE_BYTES = 2146435072;
 let numBytesDecoded = 0;
 function decodeText(ptr, len) {
     numBytesDecoded += len;
     if (numBytesDecoded >= MAX_SAFARI_DECODE_BYTES) {
-        cachedTextDecoder = new TextDecoder("utf-8", {
-            ignoreBOM: true,
-            fatal: true,
-        });
+        cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
         cachedTextDecoder.decode();
         numBytesDecoded = len;
     }
-    return cachedTextDecoder.decode(
-        getUint8ArrayMemory0().subarray(ptr, ptr + len),
-    );
+    return cachedTextDecoder.decode(getUint8ArrayMemory0().subarray(ptr, ptr + len));
 }
 
 const cachedTextEncoder = new TextEncoder();
 
-if (!("encodeInto" in cachedTextEncoder)) {
+if (!('encodeInto' in cachedTextEncoder)) {
     cachedTextEncoder.encodeInto = function (arg, view) {
         const buf = cachedTextEncoder.encode(arg);
         view.set(buf);
         return {
             read: arg.length,
-            written: buf.length,
+            written: buf.length
         };
     };
 }
@@ -161,25 +143,17 @@ function __wbg_finalize_init(instance, module) {
 }
 
 async function __wbg_load(module, imports) {
-    if (typeof Response === "function" && module instanceof Response) {
-        if (typeof WebAssembly.instantiateStreaming === "function") {
+    if (typeof Response === 'function' && module instanceof Response) {
+        if (typeof WebAssembly.instantiateStreaming === 'function') {
             try {
                 return await WebAssembly.instantiateStreaming(module, imports);
             } catch (e) {
-                const validResponse =
-                    module.ok && expectedResponseType(module.type);
+                const validResponse = module.ok && expectedResponseType(module.type);
 
-                if (
-                    validResponse &&
-                    module.headers.get("Content-Type") !== "application/wasm"
-                ) {
-                    console.warn(
-                        "`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
-                        e,
-                    );
-                } else {
-                    throw e;
-                }
+                if (validResponse && module.headers.get('Content-Type') !== 'application/wasm') {
+                    console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+
+                } else { throw e; }
             }
         }
 
@@ -197,10 +171,7 @@ async function __wbg_load(module, imports) {
 
     function expectedResponseType(type) {
         switch (type) {
-            case "basic":
-            case "cors":
-            case "default":
-                return true;
+            case 'basic': case 'cors': case 'default': return true;
         }
         return false;
     }
@@ -209,13 +180,12 @@ async function __wbg_load(module, imports) {
 function initSync(module) {
     if (wasm !== undefined) return wasm;
 
+
     if (module !== undefined) {
         if (Object.getPrototypeOf(module) === Object.prototype) {
-            ({ module } = module);
+            ({module} = module)
         } else {
-            console.warn(
-                "using deprecated parameters for `initSync()`; pass a single object instead",
-            );
+            console.warn('using deprecated parameters for `initSync()`; pass a single object instead')
         }
     }
 
@@ -230,33 +200,25 @@ function initSync(module) {
 async function __wbg_init(module_or_path) {
     if (wasm !== undefined) return wasm;
 
+
     if (module_or_path !== undefined) {
         if (Object.getPrototypeOf(module_or_path) === Object.prototype) {
-            ({ module_or_path } = module_or_path);
+            ({module_or_path} = module_or_path)
         } else {
-            console.warn(
-                "using deprecated parameters for the initialization function; pass a single object instead",
-            );
+            console.warn('using deprecated parameters for the initialization function; pass a single object instead')
         }
     }
 
     if (module_or_path === undefined) {
-        module_or_path = new URL("izh_bg.wasm", import.meta.url);
+        module_or_path = new URL('izh_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
-    if (
-        typeof module_or_path === "string" ||
-        (typeof Request === "function" && module_or_path instanceof Request) ||
-        (typeof URL === "function" && module_or_path instanceof URL)
-    ) {
+    if (typeof module_or_path === 'string' || (typeof Request === 'function' && module_or_path instanceof Request) || (typeof URL === 'function' && module_or_path instanceof URL)) {
         module_or_path = fetch(module_or_path);
     }
 
-    const { instance, module } = await __wbg_load(
-        await module_or_path,
-        imports,
-    );
+    const { instance, module } = await __wbg_load(await module_or_path, imports);
 
     return __wbg_finalize_init(instance, module);
 }

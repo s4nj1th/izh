@@ -1,19 +1,19 @@
 {
-    "name": "izh",
-    "type": "module",
-    "collaborators": [
-        "Sanjith Muralikrishnan <sanjith.develops@gmail.com>"
-    ],
-    "description": "A minimal, deterministic, chart description language that renders to SVG.",
-    "version": "0.0.1",
-    "files": [
-        "izh_bg.wasm",
-        "izh.js",
-        "izh.d.ts"
-    ],
-    "main": "izh.js",
-    "types": "izh.d.ts",
-    "sideEffects": [
-        "./snippets/*"
-    ]
+  "name": "izh",
+  "type": "module",
+  "collaborators": [
+    "Sanjith Muralikrishnan <sanjith.develops@gmail.com>"
+  ],
+  "description": "A minimal, deterministic, chart description language that renders to SVG.",
+  "version": "0.0.1",
+  "files": [
+    "izh_bg.wasm",
+    "izh.js",
+    "izh.d.ts"
+  ],
+  "main": "izh.js",
+  "types": "izh.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
 }
