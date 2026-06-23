@@ -3,8 +3,8 @@ chart: bar
 title: Yearly Counts from Range
 
 // Generate an integer range (inclusive)
-years = [2018..2022]
-int[] counts = [10, 20, 30, 25, 35]
+years = [2018..2025]
+int[] counts = [10, 20, 30, 25, 35, 28, 30, 45]
 
 // Build pairs manually (fixed-size array-of-pairs)
 myData = combine(years, counts)
