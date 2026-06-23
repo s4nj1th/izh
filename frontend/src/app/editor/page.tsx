@@ -12,12 +12,12 @@ import {
     FaExternalLinkAlt,
     FaEye,
 } from "react-icons/fa";
-import init, { parse_and_render } from "varaix";
+import init, { parse_and_render } from "izh";
 import { EXAMPLES } from "@/data/examples";
 import EditorInput from "react-simple-code-editor";
 import Prism from "prismjs";
 import "prismjs/components/prism-clike";
-import "@/lib/prism-varaix";
+import "@/lib/prism-izh";
 
 export default function Editor() {
     const [code, setCode] = useState(EXAMPLES.line);
@@ -39,7 +39,7 @@ export default function Editor() {
     const examplesRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        init({ module_or_path: "/varaix_bg.wasm" })
+        init({ module_or_path: "/izh_bg.wasm" })
             .then(() => setIsWasmLoaded(true))
             .catch((err) => {
                 console.error(err);
@@ -93,7 +93,7 @@ export default function Editor() {
 
     useEffect(() => {
         const ta = document.getElementById(
-            "varaix-editor",
+            "izh-editor",
         ) as HTMLTextAreaElement | null;
         if (!ta) return;
         textareaRef.current = ta;
@@ -148,7 +148,7 @@ export default function Editor() {
                                 onChange={(e) => setFileName(e.target.value)}
                                 className="editor-filename-input"
                             />
-                            <span className="editor-filename-ext">.vix</span>
+                            <span className="editor-filename-ext">.izh</span>
                         </div>
                     </div>
                     <div className="editor-header-right">
@@ -227,14 +227,10 @@ export default function Editor() {
                         value={code}
                         onValueChange={(val) => setCode(val)}
                         highlight={(code) =>
-                            Prism.highlight(
-                                code,
-                                Prism.languages.varaix,
-                                "varaix",
-                            )
+                            Prism.highlight(code, Prism.languages.izh, "izh")
                         }
                         padding={16}
-                        textareaId="varaix-editor"
+                        textareaId="izh-editor"
                         preClassName="code-editor-layer"
                         textareaClassName="code-editor-layer code-editor-textarea"
                         className="editor-input"

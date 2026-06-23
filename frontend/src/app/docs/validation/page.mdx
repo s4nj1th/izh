@@ -1,10 +1,10 @@
 # Validation
 
-This page documents what has been validated in the repository, how to reproduce the benchmark evidence, and why VaraiX is a stronger fit than a general-purpose Python or JavaScript charting stack for compact, deterministic SVG chart generation.
+This page documents what has been validated in the repository, how to reproduce the benchmark evidence, and why Izh is a stronger fit than a general-purpose Python or JavaScript charting stack for compact, deterministic SVG chart generation.
 
-## Why VaraiX is better for this use case
+## Why Izh is better for this use case
 
-VaraiX is better than Python Matplotlib or JavaScript Chart.js when the goal is not statistical analysis or highly interactive dashboards, but instead compact chart definitions that are easy to generate, diff, validate, and render deterministically.
+Izh is better than Python Matplotlib or JavaScript Chart.js when the goal is not statistical analysis or highly interactive dashboards, but instead compact chart definitions that are easy to generate, diff, validate, and render deterministically.
 
 That means it is a better fit when you care about:
 
@@ -18,13 +18,13 @@ That means it is a better fit when you care about:
 ## What has been validated
 
 - The docs site builds successfully with the new comparison and validation pages.
-- The benchmark harness runs against real `.vix` inputs and measures parse and render time.
+- The benchmark harness runs against real `.izh` inputs and measures parse and render time.
 - The results are saved in version control as a JSON snapshot for repeatability.
 - The `Why Varaix` page stays focused on the language and positioning instead of benchmark data.
 
 ## Real comparison data
 
-The repository now includes a measured source comparison for equivalent charts in VaraiX, Matplotlib, and Chart.js. This is the strongest real data showing why VaraiX is better for compact chart specs: it uses fewer tokens, fewer bytes, and fewer lines on every sample chart.
+The repository now includes a measured source comparison for equivalent charts in Izh, Matplotlib, and Chart.js. This is the strongest real data showing why Izh is better for compact chart specs: it uses fewer tokens, fewer bytes, and fewer lines on every sample chart.
 
 The raw comparison file is saved in [benchmarks/results/comparison.json](../../../../../../benchmarks/results/comparison.json).
 
@@ -32,13 +32,13 @@ The raw comparison file is saved in [benchmarks/results/comparison.json](../../.
 
 | Language | Avg tokens | Avg bytes | Avg lines |
 | --- | --- | --- | --- |
-| VaraiX | 80.3 | 200.0 | 7.3 |
+| Izh | 80.3 | 200.0 | 7.3 |
 | Matplotlib | 117.7 | 345.7 | 12.3 |
 | Chart.js | 202.7 | 571.7 | 27.0 |
 
 ### Per-chart comparison
 
-| Chart | VaraiX | Matplotlib | Chart.js |
+| Chart | Izh | Matplotlib | Chart.js |
 | --- | --- | --- | --- |
 | Line | 98 tokens, 240 bytes, 8 lines | 135 tokens, 391 bytes, 13 lines | 189 tokens, 551 bytes, 24 lines |
 | Scatter | 101 tokens, 229 bytes, 8 lines | 135 tokens, 366 bytes, 13 lines | 274 tokens, 696 bytes, 35 lines |
@@ -61,7 +61,7 @@ The raw comparison file is saved in [benchmarks/results/comparison.json](../../.
 Run this from the repository root:
 
 ```bash
-cargo run --bin varaix-benchmark -- 10
+cargo run --bin izh-benchmark -- 10
 ```
 
 The current measured output is stored in [benchmarks/results/latest.json](../../../../../../benchmarks/results/latest.json).

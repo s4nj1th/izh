@@ -1,11 +1,11 @@
 {
-    "name": "varaix",
+    "name": "izh",
     "version": "0.0.1",
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && rm -f frontend/pkg/.gitignore && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
-        "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && rm -f frontend/pkg/.gitignore && cp frontend/pkg/varaix_bg.wasm frontend/public/varaix_bg.wasm",
+        "build:wasm": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --target web --out-dir frontend/pkg && rm -f frontend/pkg/.gitignore && cp frontend/pkg/izh_bg.wasm frontend/public/izh_bg.wasm",
+        "build:wasm:release": "export PATH=\"$HOME/.cargo/bin:$PATH\" && cd .. && wasm-pack build --release --target web --out-dir frontend/pkg && rm -f frontend/pkg/.gitignore && cp frontend/pkg/izh_bg.wasm frontend/public/izh_bg.wasm",
         "build": "npm run build:wasm:release && next build",
         "build:ci": "next build",
         "vercel-build": "if [ -n \"$VERCEL\" ]; then next build; else npm run build:wasm:release && next build; fi",
@@ -26,7 +26,7 @@
         "react-icons": "^5.4.0",
         "react-simple-code-editor": "^0.14.1",
         "remark-gfm": "^4.0.1",
-        "varaix": "file:./pkg"
+        "izh": "file:./pkg"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4.0.0",

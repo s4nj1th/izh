@@ -1,12 +1,12 @@
+use izh::{parser, renderer};
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::process;
-use varaix::{parser, renderer};
 
 fn print_usage() {
-    eprintln!("Usage:   cargo run -- <file.vix>");
-    eprintln!("Example: cargo run -- examples/line.vix");
+    eprintln!("Usage:   cargo run -- <file.izh>");
+    eprintln!("Example: cargo run -- examples/line.izh");
 }
 
 fn main() {
@@ -28,7 +28,9 @@ fn main() {
         }
     };
 
-    let base_dir = Path::new(file_path).parent().unwrap_or_else(|| Path::new("."));
+    let base_dir = Path::new(file_path)
+        .parent()
+        .unwrap_or_else(|| Path::new("."));
 
     match parser::parse_with_base_dir(&source_text, base_dir) {
         Ok(ast) => {

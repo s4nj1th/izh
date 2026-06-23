@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process;
 use std::time::Instant;
 
-use varaix::{parser, renderer};
+use izh::{parser, renderer};
 
 struct BenchmarkCase {
     name: &'static str,
@@ -25,22 +25,24 @@ fn default_cases() -> Vec<BenchmarkCase> {
     vec![
         BenchmarkCase {
             name: "line",
-            path: "benchmarks/line.vix",
+            path: "benchmarks/line.izh",
         },
         BenchmarkCase {
             name: "scatter",
-            path: "benchmarks/scatter.vix",
+            path: "benchmarks/scatter.izh",
         },
         BenchmarkCase {
             name: "pie",
-            path: "benchmarks/pie.vix",
+            path: "benchmarks/pie.izh",
         },
     ]
 }
 
 fn count_tokens(source: &str) -> usize {
     source
-        .split(|c: char| c.is_whitespace() || matches!(c, ',' | ':' | '=' | '[' | ']' | '(' | ')' | '"'))
+        .split(|c: char| {
+            c.is_whitespace() || matches!(c, ',' | ':' | '=' | '[' | ']' | '(' | ')' | '"')
+        })
         .filter(|part| !part.is_empty())
         .count()
 }
@@ -48,7 +50,10 @@ fn count_tokens(source: &str) -> usize {
 fn load_source(path: &Path) -> Result<(String, PathBuf), String> {
     let source = fs::read_to_string(path)
         .map_err(|_| format!("Could not read benchmark case: {}", path.display()))?;
-    let base_dir = path.parent().unwrap_or_else(|| Path::new(".")).to_path_buf();
+    let base_dir = path
+        .parent()
+        .unwrap_or_else(|| Path::new("."))
+        .to_path_buf();
     Ok((source, base_dir))
 }
 
@@ -66,8 +71,7 @@ fn run_case(case: &BenchmarkCase, iterations: usize) -> Result<BenchmarkResult, 
 
     for _ in 0..iterations {
         let parse_start = Instant::now();
-        let ast = parser::parse_with_base_dir(&source, &base_dir)
-            .map_err(|err| err.to_string())?;
+        let ast = parser::parse_with_base_dir(&source, &base_dir).map_err(|err| err.to_string())?;
         parse_total += parse_start.elapsed().as_secs_f64() * 1000.0;
 
         let render_start = Instant::now();

@@ -32,7 +32,7 @@ export default function Navbar() {
                         priority
                     />
                 </div>
-                VaraiX
+                Izh
             </Link>
 
             <div className="navbar-links">
@@ -57,7 +57,7 @@ export default function Navbar() {
                         ))}
                 </button>
                 <a
-                    href="https://github.com/s4nj1th/varaix"
+                    href="https://github.com/s4nj1th/izh"
                     target="_blank"
                     rel="noreferrer"
                     className="navbar-button"

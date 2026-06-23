@@ -1,6 +1,6 @@
 # Introduction
 
-VaraiX is a focused, line-oriented chart description language intended for authors and automation pipelines that need compact, deterministic SVG charts. A single `.vix` file describes exactly one chart; the parser and renderer aim to ensure the same input always produces the same SVG output.
+Izh is a focused, line-oriented chart description language intended for authors and automation pipelines that need compact, deterministic SVG charts. A single `.izh` file describes exactly one chart; the parser and renderer aim to ensure the same input always produces the same SVG output.
 
 The language is intentionally small and opinionated: it provides the primitives most often required for simple charts (titles, axes labels, series data, palettes, and null-handling policies) while keeping parsing semantics predictable and fast.
 
@@ -11,7 +11,7 @@ The language is intentionally small and opinionated: it provides the primitives 
 - LLM-friendly: the line-oriented, key/value layout is easy to synthesize and validate.
 - Portable: output SVG works in browsers, static sites, slides, and PDFs.
 
-## File anatomy (what a `.vix` looks like)
+## File anatomy (what a `.izh` looks like)
 
 - Top-level key/value pairs: `chart: <type>`, `title: ...`, `x: ...`, `y: ...`.
 - Assignments: `NAME = EXPRESSION` for variables, typed or untyped.
@@ -50,9 +50,9 @@ data:
 - Nulls: `null` or `None` are supported; use `null_fill:` to control behavior (`zero`, `mean`, `prev`, `next`, `skip`).
 - Colors: `colors:` accepts an inline palette or a palette variable; the renderer uses palettes to color series/slices.
 
-## Using VaraiX with automation and LLMs
+## Using Izh with automation and LLMs
 
-VaraiX is intentionally small to make programmatic generation easier. If you generate `.vix` files from code or LLMs:
+Izh is intentionally small to make programmatic generation easier. If you generate `.izh` files from code or LLMs:
 
 - Validate the presence of required keys: `chart` and `data` (or a data variable).
 - Prefer inline arrays for compactness and portability.
@@ -77,6 +77,6 @@ data: myPoints
 
 ## Where to read more
 
-The full, versioned documentation with detailed examples and recipes is published at https://varaix.vercel.app/docs — this is the canonical reference. The site contains expanded pages on syntax, arrays, variables, null strategies, charts, colors, and ready-to-use recipes.
+The full, versioned documentation with detailed examples and recipes is published at https://izh.vercel.app/docs — this is the canonical reference. The site contains expanded pages on syntax, arrays, variables, null strategies, charts, colors, and ready-to-use recipes.
 
 If you want to run the frontend locally, see the project `README.md` for development steps; the docs site is the best place for language reference and examples.

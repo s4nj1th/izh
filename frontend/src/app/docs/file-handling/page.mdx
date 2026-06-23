@@ -1,6 +1,6 @@
 # File Handling
 
-VaraiX can load CSV files into arrays with the `csv()` helper. The helper returns an array of rows, so you can pass its result directly to `data:` or assign it to a variable first.
+Izh can load CSV files into arrays with the `csv()` helper. The helper returns an array of rows, so you can pass its result directly to `data:` or assign it to a variable first.
 
 ## Basic usage
 
@@ -20,7 +20,7 @@ data: rows
 
 ## Path resolution
 
-When you run VaraiX from the CLI, relative CSV paths are resolved from the location of the `.vix` file. That makes it easy to keep a chart and its data file in the same folder.
+When you run Izh from the CLI, relative CSV paths are resolved from the location of the `.izh` file. That makes it easy to keep a chart and its data file in the same folder.
 
 Absolute paths also work if you want to point at a file elsewhere on disk.
 
@@ -40,5 +40,5 @@ The browser-based editor cannot read local files, so CSV loading is only availab
 Use `csv()` when:
 
 - your data already lives in a CSV file
-- you want to keep the `.vix` file small
+- you want to keep the `.izh` file small
 - you want to reuse the same dataset across multiple charts

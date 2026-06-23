@@ -5,9 +5,9 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-    title: "VaraiX",
+    title: "Izh",
     description:
-        "VaraiX is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
+        "Izh is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
     icons: {
         icon: [
             {

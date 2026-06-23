@@ -31,10 +31,9 @@ export default function Home() {
                         </span>
                     </h1>
                     <p className="home-description">
-                        VaraiX is a compact chart description language that
-                        renders deterministic SVGs in the browser. The docs
-                        cover syntax, variables, arrays, null handling, and
-                        colors.
+                        Izh is a compact chart description language that renders
+                        deterministic SVGs in the browser. The docs cover
+                        syntax, variables, arrays, null handling, and colors.
                     </p>
                 </div>
 

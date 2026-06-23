@@ -1,22 +1,22 @@
 use crate::types::{ChartType, DataPoint, VizAST, XValue};
 use std::collections::HashMap;
-use std::fs;
 use std::fmt;
+use std::fs;
 use std::path::Path;
 
 #[derive(Debug, Clone)]
-pub struct VaraiXError {
+pub struct IzhError {
     pub line_number: usize,
     pub message: String,
     pub source_line: String,
 }
 
-impl fmt::Display for VaraiXError {
+impl fmt::Display for IzhError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let prefix = if self.line_number > 0 {
-            format!("VaraiX Error [line {}]", self.line_number)
+            format!("Izh Error [line {}]", self.line_number)
         } else {
-            "VaraiX Error".to_string()
+            "Izh Error".to_string()
         };
 
         if self.source_line.trim().is_empty() {
@@ -33,7 +33,7 @@ impl fmt::Display for VaraiXError {
     }
 }
 
-impl std::error::Error for VaraiXError {}
+impl std::error::Error for IzhError {}
 
 #[derive(Debug, PartialEq, Clone)]
 enum Token {
@@ -353,7 +353,7 @@ impl<'a> ExprParser<'a> {
                 if self.peek() == &Token::LParen {
                     self.consume(); // consume the '('
                     let mut args = Vec::new();
-                    
+
                     // Parse arguments separated by commas
                     if self.peek() != &Token::RParen {
                         loop {
@@ -367,16 +367,19 @@ impl<'a> ExprParser<'a> {
                             }
                         }
                     }
-                    
+
                     if self.consume() != &Token::RParen {
                         return Err("Expected ')' after function arguments".to_string());
                     }
-                    
+
                     // Handle function calls
                     match s.to_lowercase().as_str() {
                         "combine" => {
                             if args.len() != 2 {
-                                return Err(format!("combine expects 2 arguments, got {}", args.len()));
+                                return Err(format!(
+                                    "combine expects 2 arguments, got {}",
+                                    args.len()
+                                ));
                             }
                             match (&args[0], &args[1]) {
                                 (Value::Array(arr1), Value::Array(arr2)) => {
@@ -466,7 +469,7 @@ fn parse_csv_scalar(cell: &str) -> Value {
     Value::String(trimmed.to_string())
 }
 
-fn load_csv_file(path: &str, base_dir: &Path) -> Result<Value, VaraiXError> {
+fn load_csv_file(path: &str, base_dir: &Path) -> Result<Value, IzhError> {
     let resolved_path = {
         let candidate = Path::new(path);
         if candidate.is_absolute() {
@@ -476,7 +479,7 @@ fn load_csv_file(path: &str, base_dir: &Path) -> Result<Value, VaraiXError> {
         }
     };
 
-    let csv_text = fs::read_to_string(&resolved_path).map_err(|err| VaraiXError {
+    let csv_text = fs::read_to_string(&resolved_path).map_err(|err| IzhError {
         line_number: 0,
         message: format!(
             "Unable to read CSV file \"{}\": {}",
@@ -492,7 +495,7 @@ fn load_csv_file(path: &str, base_dir: &Path) -> Result<Value, VaraiXError> {
 
     let mut rows: Vec<Value> = Vec::new();
     for result in reader.records() {
-        let record = result.map_err(|err| VaraiXError {
+        let record = result.map_err(|err| IzhError {
             line_number: 0,
             message: format!(
                 "Unable to parse CSV file \"{}\": {}",
@@ -514,10 +517,10 @@ fn parse_general_array(
     vars: &HashMap<String, Value>,
     line_number: usize,
     source_line: &str,
-) -> Result<Value, VaraiXError> {
+) -> Result<Value, IzhError> {
     let s = raw.trim();
     if !s.starts_with('[') {
-        return Err(VaraiXError {
+        return Err(IzhError {
             line_number,
             message: "Array must start with '['".to_string(),
             source_line: source_line.to_string(),
@@ -541,12 +544,12 @@ fn parse_general_array(
                 if let Some(dd) = range_part.find("..") {
                     let start_s = range_part[..dd].trim();
                     let end_s = range_part[dd + 2..].trim();
-                    let start_val = evaluate(start_s, vars).map_err(|e| VaraiXError {
+                    let start_val = evaluate(start_s, vars).map_err(|e| IzhError {
                         line_number,
                         message: format!("Invalid start expression in range: {}", e),
                         source_line: source_line.to_string(),
                     })?;
-                    let end_val = evaluate(end_s, vars).map_err(|e| VaraiXError {
+                    let end_val = evaluate(end_s, vars).map_err(|e| IzhError {
                         line_number,
                         message: format!("Invalid end expression in range: {}", e),
                         source_line: source_line.to_string(),
@@ -555,7 +558,7 @@ fn parse_general_array(
                         Value::Int(i) => i,
                         Value::Float(f) => f as i64,
                         _ => {
-                            return Err(VaraiXError {
+                            return Err(IzhError {
                                 line_number,
                                 message: "Range bounds must be numeric".to_string(),
                                 source_line: source_line.to_string(),
@@ -566,7 +569,7 @@ fn parse_general_array(
                         Value::Int(i) => i,
                         Value::Float(f) => f as i64,
                         _ => {
-                            return Err(VaraiXError {
+                            return Err(IzhError {
                                 line_number,
                                 message: "Range bounds must be numeric".to_string(),
                                 source_line: source_line.to_string(),
@@ -580,7 +583,7 @@ fn parse_general_array(
                         match evaluate(expr_part, &local_vars) {
                             Ok(v) => results.push(v),
                             Err(e) => {
-                                return Err(VaraiXError {
+                                return Err(IzhError {
                                     line_number,
                                     message: format!("Invalid expression in comprehension: {}", e),
                                     source_line: source_line.to_string(),
@@ -598,12 +601,12 @@ fn parse_general_array(
         if let Some(dd) = inner.find("..") {
             let start_s = inner[..dd].trim();
             let end_s = inner[dd + 2..].trim();
-            let start_val = evaluate(start_s, vars).map_err(|e| VaraiXError {
+            let start_val = evaluate(start_s, vars).map_err(|e| IzhError {
                 line_number,
                 message: format!("Invalid start expression in range: {}", e),
                 source_line: source_line.to_string(),
             })?;
-            let end_val = evaluate(end_s, vars).map_err(|e| VaraiXError {
+            let end_val = evaluate(end_s, vars).map_err(|e| IzhError {
                 line_number,
                 message: format!("Invalid end expression in range: {}", e),
                 source_line: source_line.to_string(),
@@ -612,7 +615,7 @@ fn parse_general_array(
                 Value::Int(i) => i,
                 Value::Float(f) => f as i64,
                 _ => {
-                    return Err(VaraiXError {
+                    return Err(IzhError {
                         line_number,
                         message: "Range bounds must be numeric".to_string(),
                         source_line: source_line.to_string(),
@@ -623,7 +626,7 @@ fn parse_general_array(
                 Value::Int(i) => i,
                 Value::Float(f) => f as i64,
                 _ => {
-                    return Err(VaraiXError {
+                    return Err(IzhError {
                         line_number,
                         message: "Range bounds must be numeric".to_string(),
                         source_line: source_line.to_string(),
@@ -726,10 +729,10 @@ fn parse_array_literal(
     vars: &HashMap<String, Value>,
     line_number: usize,
     source_line: &str,
-) -> Result<Vec<DataPoint>, VaraiXError> {
+) -> Result<Vec<DataPoint>, IzhError> {
     let s = raw.trim();
     if !s.starts_with('[') {
-        return Err(VaraiXError {
+        return Err(IzhError {
             line_number,
             message: "Array literal must start with '['".to_string(),
             source_line: source_line.to_string(),
@@ -766,7 +769,7 @@ fn parse_array_literal(
                 }
                 let parts: Vec<&str> = item.split(',').map(|p| p.trim()).collect();
                 if parts.len() < 2 {
-                    return Err(VaraiXError {
+                    return Err(IzhError {
                         line_number,
                         message: "Array item must have two elements [x, y]".to_string(),
                         source_line: source_line.to_string(),
@@ -840,11 +843,11 @@ fn parse_array_literal(
     Ok(items)
 }
 
-pub fn parse(source: &str) -> Result<VizAST, VaraiXError> {
+pub fn parse(source: &str) -> Result<VizAST, IzhError> {
     parse_with_base_dir(source, Path::new("."))
 }
 
-pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, VaraiXError> {
+pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, IzhError> {
     let source = strip_comments_preserve_lines(source);
 
     let mut chart_type = None;
@@ -873,7 +876,7 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
         }
 
         if in_data_block {
-            let comma_index = trimmed_line.find(',').ok_or_else(|| VaraiXError {
+            let comma_index = trimmed_line.find(',').ok_or_else(|| IzhError {
                 line_number,
                 message: "Expected a data row in the format \"x, y\" but found no comma"
                     .to_string(),
@@ -884,14 +887,14 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
             let raw_y = trimmed_line[comma_index + 1..].trim();
 
             if raw_x.is_empty() {
-                return Err(VaraiXError {
+                return Err(IzhError {
                     line_number,
                     message: "x-value is empty in data row".to_string(),
                     source_line: raw_line.to_string(),
                 });
             }
 
-            let val_y = evaluate(raw_y, &vars).map_err(|e| VaraiXError {
+            let val_y = evaluate(raw_y, &vars).map_err(|e| IzhError {
                 line_number,
                 message: format!("Invalid y-value expression \"{}\": {}", raw_y, e),
                 source_line: raw_line.to_string(),
@@ -986,7 +989,7 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
                     match evaluate(raw_expr, &vars) {
                         Ok(v) => v,
                         Err(e) => {
-                            return Err(VaraiXError {
+                            return Err(IzhError {
                                 line_number,
                                 message: format!(
                                     "Invalid variable assignment \"{} = {}\": {}",
@@ -1028,7 +1031,7 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
             }
         }
 
-        let colon_index = trimmed_line.find(':').ok_or_else(|| VaraiXError {
+        let colon_index = trimmed_line.find(':').ok_or_else(|| IzhError {
             line_number,
             message: "Expected a \"key: value\" pair, an assignment \"[type] var = val\", or found no separator".to_string(),
             source_line: raw_line.to_string(),
@@ -1053,7 +1056,7 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
                     "histogram" => ChartType::Histogram,
                     "heatmap" => ChartType::Heatmap,
                     _ => {
-                        return Err(VaraiXError {
+                        return Err(IzhError {
                             line_number,
                             message: format!(
                                 "Unknown chart type \"{}\" — valid options are: line, bar, scatter, pie, histogram, heatmap",
@@ -1162,7 +1165,9 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
                     } else {
                         in_data_block = true;
                     }
-                } else if let Ok(Value::Array(items)) = evaluate_with_base_dir(&value, &vars, base_dir) {
+                } else if let Ok(Value::Array(items)) =
+                    evaluate_with_base_dir(&value, &vars, base_dir)
+                {
                     for item in items {
                         if let Value::Array(inner) = item {
                             if inner.len() >= 2 {
@@ -1200,14 +1205,14 @@ pub fn parse_with_base_dir(source: &str, base_dir: &Path) -> Result<VizAST, Vara
         }
     }
 
-    let chart_type = chart_type.ok_or_else(|| VaraiXError {
+    let chart_type = chart_type.ok_or_else(|| IzhError {
         line_number: 0,
         message: "Missing required \"chart:\" declaration".to_string(),
         source_line: "".to_string(),
     })?;
 
     if data_points.is_empty() {
-        return Err(VaraiXError {
+        return Err(IzhError {
             line_number: 0,
             message: "No data rows found — add a \"data:\" section with at least one row"
                 .to_string(),
@@ -1234,7 +1239,7 @@ mod tests {
 
     #[test]
     fn parses_csv_file_as_data() {
-        let temp_root = std::env::temp_dir().join(format!("varaix-csv-test-{}", std::process::id()));
+        let temp_root = std::env::temp_dir().join(format!("izh-csv-test-{}", std::process::id()));
         fs::create_dir_all(&temp_root).unwrap();
 
         let csv_path = temp_root.join("sample.csv");

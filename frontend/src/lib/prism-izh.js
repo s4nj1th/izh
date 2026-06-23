@@ -1,6 +1,6 @@
 import Prism from "prismjs";
 
-Prism.languages.varaix = {
+Prism.languages.izh = {
     comment: [
         {
             pattern: /\/\/.*(?:\n|$)/,

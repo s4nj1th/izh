@@ -2,17 +2,17 @@
     <picture>
         <source media="(prefers-color-scheme: dark)" srcset="frontend/public/favicon-dark.svg">
         <source media="(prefers-color-scheme: light)" srcset="frontend/public/favicon-light.svg">
-        <img src="frontend/public/favicon-light.svg" width="384" alt="VaraiX" />
+        <img src="frontend/public/favicon-light.svg" width="384" alt="Izh" />
     </picture>
-    <h1>VaraiX</h1>
+    <h1>Izh</h1>
     <p>A minimal, deterministic, LLM-friendly chart description language that renders to SVG.</p>
 </div>
 
-## What is VaraiX?
+## What is Izh?
 
-VaraiX (`.vix`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
+Izh (`.izh`) is a compact, line-oriented DSL for describing charts. Write a few lines of plain text and get a clean SVG back. The language is implemented in Rust and designed for predictable, deterministic rendering. Recent language additions include fixed-size arrays, ranges, comprehensions, typed arrays, C-style comments, and explicit null handling.
 
-Full documentation for the language (detailed specification, examples, and recipes) is published at: https://varaix.vercel.app/docs — please consult the online docs for the authoritative, versioned reference and extended examples.
+Full documentation for the language (detailed specification, examples, and recipes) is published at: https://izh.vercel.app/docs — please consult the online docs for the authoritative, versioned reference and extended examples.
 
 ## Quick Example (array style)
 
@@ -80,7 +80,7 @@ let ast = parser::parse(source).unwrap();
 let svg = renderer::render(&ast);
 
 ```bash
-cargo run -- examples/line.vix > out.svg
+cargo run -- examples/line.izh > out.svg
 ```
 
 ## Running the frontend (dev)
@@ -90,7 +90,7 @@ If you want to run the Next.js frontend locally and use the Wasm bindings:
 1. Build the wasm package from the Rust crate (requires `wasm-pack`):
 
 ```bash
-cd /path/to/varaix/frontend
+cd /path/to/izh/frontend
 npm run build:wasm:release
 ```
 
@@ -115,22 +115,22 @@ See the `examples/` directory for many examples:
 
 The repository includes a benchmark harness that validates the parser and renderer on representative sample charts.
 
-VaraiX is a better fit than Python Matplotlib or JavaScript Chart.js when the goal is compact, deterministic SVG chart generation rather than general-purpose plotting or interactive dashboards.
+Izh is a better fit than Python Matplotlib or JavaScript Chart.js when the goal is compact, deterministic SVG chart generation rather than general-purpose plotting or interactive dashboards.
 
 ### What is validated
 
 - docs build successfully in the frontend
-- the benchmark binary runs on real `.vix` inputs
+- the benchmark binary runs on real `.izh` inputs
 - parse and render times are measured directly from the Rust code path
 - source size, token count, line count, and SVG size are recorded in JSON
 - repeated runs can be compared over time to catch regressions
-- equivalent chart source comparison shows VaraiX uses fewer tokens, bytes, and lines than matching Matplotlib and Chart.js examples
+- equivalent chart source comparison shows Izh uses fewer tokens, bytes, and lines than matching Matplotlib and Chart.js examples
 
 ## Source Size Comparison
 
 | Library      | Avg. Tokens | Avg. Bytes | Avg. Lines |
 |--------------|------------:|-----------:|-----------:|
-| VaraiX       | 80.3        | 200.0      | 7.3        |
+| Izh       | 80.3        | 200.0      | 7.3        |
 | Matplotlib   | 117.7       | 345.7      | 12.3       |
 | Chart.js     | 202.7       | 571.7      | 27.0       |
 
@@ -147,7 +147,7 @@ VaraiX is a better fit than Python Matplotlib or JavaScript Chart.js when the go
 From the repository root:
 
 ```bash
-cargo run --bin varaix-benchmark -- 10
+cargo run --bin izh-benchmark -- 10
 ```
 
 The current baseline is stored at [benchmarks/results/latest.json](benchmarks/results/latest.json).
@@ -157,7 +157,7 @@ The current baseline is stored at [benchmarks/results/latest.json](benchmarks/re
 ## Project structure
 
 ```
-varaix/
+izh/
 ├── Cargo.toml
 ├── README.md
 ├── examples/

@@ -659,19 +659,19 @@ code[class*="language-"] ::selection {
     opacity: 0.7;
 }
 
-/* VaraiX editor with line wrapping enabled. Line numbers count only actual newlines. */
-.varaix-code-editor-layer {
+/* Izh editor with line wrapping enabled. Line numbers count only actual newlines. */
+.izh-code-editor-layer {
     white-space: pre-wrap !important;
     word-break: break-word !important;
     overflow-wrap: break-word !important;
 }
 
-textarea.varaix-code-editor-layer {
+textarea.izh-code-editor-layer {
     overflow-x: auto !important;
     overflow-y: auto !important;
 }
 
-pre.varaix-code-editor-layer {
+pre.izh-code-editor-layer {
     overflow: hidden !important;
 }
 
