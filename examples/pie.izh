@@ -2,7 +2,8 @@
 chart: pie
 title: Server Operating Systems
 
-// Inline array-of-pairs for pie segments
-osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
-
-data: osShares
+data:
+"Linux", 72
+"Windows", 10
+"MacOS", 2
+"Other", 6

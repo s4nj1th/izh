@@ -6,10 +6,19 @@ title: Monthly Revenue
 x: month
 y: revenue ($k)
 
-// Inline array-of-pairs (fixed-size)
-myData = [["Jan", 12], ["Feb", 19], ["Mar", 15], ["Apr", 22], ["May", 28], ["Jun", 25], ["Jul", 30], ["Aug", 34], ["Sep", 31], ["Oct", 38], ["Nov", 42], ["Dec", 48]]
-
-data: myData`,
+data:
+"Jan", 12
+"Feb", 19
+"Mar", 15
+"Apr", 22
+"May", 28
+"Jun", 25
+"Jul", 30
+"Aug", 34
+"Sep", 31
+"Oct", 38
+"Nov", 42
+"Dec", 48`,
 
     bar: `// Bar chart example
 chart: bar
@@ -18,10 +27,11 @@ title: Quarterly Sales
 x: quarter
 y: units sold
 
-// Use an inline fixed-size array-of-pairs
-myData = [["Q1", 340], ["Q2", 520], ["Q3", 480], ["Q4", 610]]
-
-data: myData`,
+data:
+"Q1", 340
+"Q2", 520
+"Q3", 480
+"Q4", 610`,
 
     scatter: `// Scatter plot example
 chart: scatter
@@ -30,19 +40,29 @@ title: Height vs Weight
 x: height (cm)
 y: weight (kg)
 
-// Fixed-size array of (x,y) pairs
-myPoints = [[155, 52], [160, 58], [165, 62], [168, 65], [170, 68], [172, 70], [175, 74], [178, 78], [180, 80], [183, 85], [185, 88], [190, 92]]
-
-data: myPoints`,
+data:
+155, 52
+160, 58
+165, 62
+168, 65
+170, 68
+172, 70
+175, 74
+178, 78
+180, 80
+183, 85
+185, 88
+190, 92`,
 
     pie: `// Pie chart example
 chart: pie
 title: Server Operating Systems
 
-// Inline array-of-pairs for pie segments
-osShares = [["Linux", 72], ["Windows", 10], ["MacOS", 2], ["Other", 6]]
-
-data: osShares`,
+data:
+"Linux", 72
+"Windows", 10
+"MacOS", 2
+"Other", 6`,
 
     variables: `// Variables, Arrays and Nulls example
 chart: bar
