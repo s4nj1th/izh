@@ -10,6 +10,6 @@ string[] months = ["Jan", "Feb", "Mar"]
 int[] sales = [500, 625, 781]
 
 // Build data as an inline array-of-pairs using the arrays above (expanded manually here)
-myData = [["Jan", 500], ["Feb", 625], ["Mar", 781]]
+myData = combine(months, sales)
 
 data: myData
