@@ -1,0 +1,4 @@
+[build]
+  base = "frontend"
+  command = "npm run build:ci"
+  publish = ".next"
