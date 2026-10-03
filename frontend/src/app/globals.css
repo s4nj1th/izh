@@ -131,6 +131,18 @@
 .cta-primary,.cta-secondary { min-height: 46px; }
 @keyframes tab-in { from { transform: scaleX(.4); opacity: .4; } to { transform: scaleX(1); opacity: 1; } }
 
+/* Real Rust/WebAssembly preview used by the homepage example switcher. */
+.showcase-label>.engine-status-dot { width: 6px; height: 6px; background: #58ac7a; box-shadow: 0 0 0 3px rgba(88,172,122,.14); }
+.showcase-label>.engine-status-dot.loading { background: #d3a74f; box-shadow: 0 0 0 3px rgba(211,167,79,.14); }
+.showcase-label>.engine-status-dot.error { background: #cc655d; box-shadow: 0 0 0 3px rgba(204,101,93,.14); }
+.render-status.loading { background: #d3a74f; box-shadow: 0 0 0 3px #f8f0dd; }
+.render-status.error { background: #cc655d; box-shadow: 0 0 0 3px #f8e7e5; }
+.engine-preview { min-height: 230px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.engine-chart-image { display: block; width: 100%; max-height: 230px; object-fit: contain; animation: rise-in .3s both; }
+.engine-preview-message { max-width: 220px; color: #8499a5; text-align: center; font-size: 11px; line-height: 1.6; }
+.preview-caption { gap: 8px; }
+@media (max-width: 640px) { .engine-preview { min-height: 180px; }.engine-chart-image { max-height: 180px; } }
+
 /* Prism theme inspired by VS Code Dark+ */
 code[class*="language-"],
 pre[class*="language-"] {

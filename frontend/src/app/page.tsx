@@ -1,44 +1,53 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { FaArrowDown, FaArrowRight, FaBolt, FaCheck, FaCode, FaCopy, FaDownload, FaFileCode, FaGithub, FaLayerGroup, FaMagic } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaArrowDown, FaArrowRight, FaBolt, FaCheck, FaCode, FaCopy, FaFileCode, FaGithub, FaLayerGroup, FaMagic } from "react-icons/fa";
+import init, { parse_and_render } from "izh";
 
 const demos = {
     line: {
-        label: "Line", title: "A clearer view of growth", color: "#1b4965",
+        label: "Line",
         code: `chart: line\ntitle: Monthly growth\nx: month\ny: active users\n\ndata:\n"Jan", 18\n"Feb", 26\n"Mar", 23\n"Apr", 38\n"May", 34\n"Jun", 52`,
-        values: [18, 26, 23, 38, 34, 52],
     },
     bar: {
-        label: "Bar", title: "Compare what matters", color: "#34769b",
+        label: "Bar",
         code: `chart: bar\ntitle: Quarterly signups\nx: quarter\ny: new accounts\n\ndata:\n"Q1", 32\n"Q2", 48\n"Q3", 41\n"Q4", 68`,
-        values: [32, 48, 41, 68],
     },
     array: {
-        label: "Arrays", title: "Data stays easy to shape", color: "#5ba5ce",
+        label: "Arrays",
         code: `chart: line\ntitle: Weekly activity\nx: day\ny: sessions\n\nint[] sessions = [18, 26, 23, 38, 34, 52]\nstring[] days = ["M", "T", "W", "T", "F", "S"]\ndata: combine(days, sessions)`,
-        values: [18, 26, 23, 38, 34, 52],
     },
 };
 
 type DemoKey = keyof typeof demos;
 
-function MiniChart({ values, color }: { values: number[]; color: string }) {
-    const max = Math.max(...values) * 1.18;
-    const points = values.map((value, index) => `${28 + index * (264 / (values.length - 1))},${188 - (value / max) * 142}`).join(" ");
-    return <svg viewBox="0 0 320 220" role="img" aria-label="Sample chart preview" className="showcase-chart">
-        {[52, 96, 140, 184].map((y) => <line key={y} x1="24" x2="304" y1={y} y2={y} className="chart-grid" />)}
-        {values.map((_, i) => <text key={i} x={28 + i * (264 / (values.length - 1))} y="210" textAnchor="middle" className="chart-label">{["M", "T", "W", "T", "F", "S"][i]}</text>)}
-        <polyline points={points} fill="none" stroke={color} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" className="chart-line" />
-        {values.map((value, i) => <circle key={i} cx={28 + i * (264 / (values.length - 1))} cy={188 - (value / max) * 142} r="4.5" fill="white" stroke={color} strokeWidth="2.5" className="chart-point" />)}
-    </svg>;
-}
-
 export default function Home() {
     const [active, setActive] = useState<DemoKey>("line");
     const [copied, setCopied] = useState(false);
+    const [engineReady, setEngineReady] = useState(false);
+    const [engineError, setEngineError] = useState(false);
+    const [previewSvg, setPreviewSvg] = useState("");
     const demo = demos[active];
+
+    useEffect(() => {
+        let cancelled = false;
+        init({ module_or_path: "/izh_bg.wasm" })
+            .then(() => { if (!cancelled) setEngineReady(true); })
+            .catch(() => { if (!cancelled) setEngineError(true); });
+        return () => { cancelled = true; };
+    }, []);
+
+    useEffect(() => {
+        if (!engineReady) return;
+        try {
+            setPreviewSvg(parse_and_render(demo.code));
+            setEngineError(false);
+        } catch {
+            setPreviewSvg("");
+            setEngineError(true);
+        }
+    }, [demo.code, engineReady]);
 
     async function copyCode() {
         try { await navigator.clipboard.writeText(demo.code); setCopied(true); window.setTimeout(() => setCopied(false), 1600); } catch { setCopied(false); }
@@ -60,7 +69,7 @@ export default function Home() {
             <div className="showcase-wrap">
                 <div className="showcase-glow" />
                 <div className="showcase-card">
-                    <div className="showcase-top"><div className="window-dots"><i /><i /><i /></div><span className="showcase-label"><span /> LIVE PLAYGROUND</span><span className="wasm-mark">WASM</span></div>
+                    <div className="showcase-top"><div className="window-dots"><i /><i /><i /></div><span className="showcase-label"><span className={engineError ? "engine-status-dot error" : engineReady ? "engine-status-dot" : "engine-status-dot loading"} /> IZH WASM RENDERER</span><span className="wasm-mark">REAL SVG</span></div>
                     <div className="showcase-tabs" role="tablist" aria-label="Choose a chart example">
                         {(Object.keys(demos) as DemoKey[]).map((key) => <button key={key} type="button" role="tab" tabIndex={active === key ? 0 : -1} aria-selected={active === key} className={active === key ? "showcase-tab active" : "showcase-tab"} onClick={() => setActive(key)} onKeyDown={(event) => {
                             if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
@@ -74,9 +83,11 @@ export default function Home() {
                     </div>
                     <div className="showcase-body">
                         <div className="code-pane"><div className="pane-heading"><FaFileCode size={13} /> example.izh <button onClick={copyCode} aria-label="Copy example code">{copied ? <FaCheck size={13} /> : <FaCopy size={13} />}</button></div><pre key={active}>{demo.code.split("\n").map((line, i) => <span className={line.trim().startsWith("//") ? "code-comment" : line.includes(":") ? "code-key" : line.includes("=") ? "code-value" : ""} key={i}><b>{String(i + 1).padStart(2, "0")}</b>{line || " "}{"\n"}</span>)}</pre></div>
-                        <div className="preview-pane"><div className="pane-heading"><span className="render-status" /> SVG PREVIEW <FaDownload size={12} /></div><div className="chart-title">{demo.title}</div><MiniChart key={active} values={demo.values} color={demo.color} /><div className="preview-caption"><span>Rendered in your browser</span><span>SVG · Scales cleanly</span></div></div>
+                        <div className="preview-pane"><div className="pane-heading"><span className={engineError ? "render-status error" : engineReady ? "render-status" : "render-status loading"} /> SVG FROM THE ENGINE</div><div className="engine-preview" aria-live="polite" key={active}>
+                            {previewSvg ? <img className="engine-chart-image" src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(previewSvg)}`} alt={`${demo.label} chart rendered by Izh`} /> : <span className="engine-preview-message">{engineError ? "Preview unavailable. Open the editor to try this example." : "Loading the Izh renderer…"}</span>}
+                        </div><div className="preview-caption"><span>{previewSvg ? "Rendered by Izh in your browser" : "Powered by Rust + WebAssembly"}</span><span>SVG · Scales cleanly</span></div></div>
                     </div>
-                    <div className="showcase-foot"><span><span className="live-pulse" /> Update the source, see the chart</span><span>NO BUILD STEP REQUIRED</span></div>
+                    <div className="showcase-foot"><span><span className="live-pulse" /> Choose an example to render with Izh</span><span>RUST · WEBASSEMBLY · SVG</span></div>
                 </div>
                 <div className="float-note"><FaMagic size={14} /> Minimal syntax. Maximum signal.</div>
             </div>
