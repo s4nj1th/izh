@@ -5,9 +5,9 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-    title: "Izh",
+    title: "Izh — Charts from text",
     description:
-        "Izh is a compact chart description language for deterministic SVG output, with arrays, null handling, and color palettes.",
+        "Turn a few lines of readable chart code into crisp, deterministic SVG. Explore Izh, a compact Rust and WebAssembly chart description language.",
     icons: {
         icon: [
             {
