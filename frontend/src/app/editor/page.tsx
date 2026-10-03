@@ -237,9 +237,9 @@ export default function Editor() {
                     />
 
                     <button
-                        onClick={() => download(code, "vizl")}
+                        onClick={() => download(code, "izh")}
                         className="editor-download-button"
-                        title="Download VizL"
+                        title="Download .izh source"
                     >
                         <FaDownload size={14} />
                     </button>
