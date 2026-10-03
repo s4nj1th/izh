@@ -340,10 +340,18 @@
     gap: 5px;
     padding: 13px 17px 0;
     background: #fbfdfe;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
+
+.showcase-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .showcase-tab {
     position: relative;
+    flex: 0 0 auto;
     min-width: 54px;
     padding: 8px 13px 9px;
     border: 0;

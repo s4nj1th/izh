@@ -14,9 +14,21 @@ const demos = {
         label: "Bar",
         code: `chart: bar\ntitle: Quarterly signups\nx: quarter\ny: new accounts\n\ndata:\n"Q1", 32\n"Q2", 48\n"Q3", 41\n"Q4", 68`,
     },
+    scatter: {
+        label: "Scatter",
+        code: `chart: scatter\ntitle: Height vs weight\nx: height (cm)\ny: weight (kg)\n\ndata:\n155, 52\n160, 58\n165, 62\n170, 68\n175, 74\n180, 80`,
+    },
+    pie: {
+        label: "Pie",
+        code: `chart: pie\ntitle: Browser share\n\ndata:\n"Chrome", 48\n"Safari", 26\n"Firefox", 16\n"Other", 10`,
+    },
     array: {
         label: "Arrays",
         code: `chart: line\ntitle: Weekly activity\nx: day\ny: sessions\n\nint[] sessions = [18, 26, 23, 38, 34, 52]\nstring[] days = ["M", "T", "W", "T", "F", "S"]\ndata: combine(days, sessions)`,
+    },
+    nulls: {
+        label: "Nulls",
+        code: `chart: line\ntitle: Fill missing values\nx: day\ny: requests\n\ndata = [["Mon", 12], ["Tue", null], ["Wed", 19], ["Thu", 24]]\nnull_fill: mean\ndata: data`,
     },
 };
 
@@ -71,17 +83,22 @@ export default function Home() {
                 <div className="showcase-card">
                     <div className="showcase-top"><div className="window-dots"><i /><i /><i /></div><span className="showcase-label"><span className={engineError ? "engine-status-dot error" : engineReady ? "engine-status-dot" : "engine-status-dot loading"} /> IZH WASM RENDERER</span><span className="wasm-mark">REAL SVG</span></div>
                     <div className="showcase-tabs" role="tablist" aria-label="Choose a chart example">
-                        {(Object.keys(demos) as DemoKey[]).map((key) => <button key={key} type="button" role="tab" tabIndex={active === key ? 0 : -1} aria-selected={active === key} className={active === key ? "showcase-tab active" : "showcase-tab"} onClick={() => setActive(key)} onKeyDown={(event) => {
-                            if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-                            event.preventDefault();
+                        {(Object.keys(demos) as DemoKey[]).map((key) => <button key={key} type="button" role="tab" id={`demo-tab-${key}`} aria-controls="demo-panel" tabIndex={active === key ? 0 : -1} aria-selected={active === key} className={active === key ? "showcase-tab active" : "showcase-tab"} onClick={() => setActive(key)} onKeyDown={(event) => {
                             const keys = Object.keys(demos) as DemoKey[];
-                            const step = event.key === "ArrowRight" ? 1 : -1;
-                            const next = keys[(keys.indexOf(key) + step + keys.length) % keys.length];
+                            const currentIndex = keys.indexOf(key);
+                            let nextIndex = currentIndex;
+                            if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % keys.length;
+                            else if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + keys.length) % keys.length;
+                            else if (event.key === "Home") nextIndex = 0;
+                            else if (event.key === "End") nextIndex = keys.length - 1;
+                            else return;
+                            event.preventDefault();
+                            const next = keys[nextIndex];
                             setActive(next);
                             document.getElementById(`demo-tab-${next}`)?.focus();
-                        }} id={`demo-tab-${key}`}>{demos[key].label}</button>)}
+                        }}>{demos[key].label}</button>)}
                     </div>
-                    <div className="showcase-body">
+                    <div className="showcase-body" id="demo-panel" role="tabpanel" aria-labelledby={`demo-tab-${active}`}>
                         <div className="code-pane"><div className="pane-heading"><FaFileCode size={13} /> example.izh <button onClick={copyCode} aria-label="Copy example code">{copied ? <FaCheck size={13} /> : <FaCopy size={13} />}</button></div><pre key={active}>{demo.code.split("\n").map((line, i) => <span className={line.trim().startsWith("//") ? "code-comment" : line.includes(":") ? "code-key" : line.includes("=") ? "code-value" : ""} key={i}><b>{String(i + 1).padStart(2, "0")}</b>{line || " "}{"\n"}</span>)}</pre></div>
                         <div className="preview-pane"><div className="pane-heading"><span className={engineError ? "render-status error" : engineReady ? "render-status" : "render-status loading"} /> SVG FROM THE ENGINE</div><div className="engine-preview" aria-live="polite" key={active}>
                             {previewSvg ? <img className="engine-chart-image" src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(previewSvg)}`} alt={`${demo.label} chart rendered by Izh`} /> : <span className="engine-preview-message">{engineError ? "Preview unavailable. Open the editor to try this example." : "Loading the Izh renderer…"}</span>}
