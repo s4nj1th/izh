@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { IoCopy, IoCheckmark } from "react-icons/io5";
+import { IoCopy, IoCheckmark, IoWarning } from "react-icons/io5";
+import { useClipboard } from "@/lib/useClipboard";
 
 interface CodeBlockProps {
     children: React.ReactNode;
@@ -9,7 +9,7 @@ interface CodeBlockProps {
 }
 
 export default function CodeBlock({ children, className }: CodeBlockProps) {
-    const [copied, setCopied] = useState(false);
+    const { copy, status } = useClipboard();
 
     const extractText = (node: React.ReactNode): string => {
         if (typeof node === "string") {
@@ -25,29 +25,29 @@ export default function CodeBlock({ children, className }: CodeBlockProps) {
         return "";
     };
 
-    const handleCopy = async () => {
+    const handleCopy = () => {
         const text = extractText(children);
-        try {
-            await navigator.clipboard.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error("Failed to copy:", err);
-        }
+        void copy(text);
     };
 
     return (
         <div className="mdx-code-block-wrapper">
             <button
+                type="button"
                 onClick={handleCopy}
                 className="mdx-code-copy-btn"
-                aria-label="Copy code"
-                title={copied ? "Copied!" : "Copy code"}
+                aria-label={status === "error" ? "Copy failed" : status === "copied" ? "Code copied" : "Copy code"}
+                title={status === "error" ? "Clipboard access failed" : status === "copied" ? "Copied!" : "Copy code"}
             >
-                {copied ? (
+                {status === "copied" ? (
                     <div className="mdx-code-copy-content mdx-code-copied">
                         <IoCheckmark size={12} />
                         <span>Copied!</span>
+                    </div>
+                ) : status === "error" ? (
+                    <div className="mdx-code-copy-content mdx-code-copy-error">
+                        <IoWarning size={12} />
+                        <span>Copy failed</span>
                     </div>
                 ) : (
                     <div className="mdx-code-copy-content">
@@ -56,6 +56,9 @@ export default function CodeBlock({ children, className }: CodeBlockProps) {
                     </div>
                 )}
             </button>
+            <span className="sr-only" role="status" aria-live="polite">
+                {status === "error" ? "Could not copy code. Check clipboard permissions." : status === "copied" ? "Code copied to clipboard." : ""}
+            </span>
             <pre className={`mdx-code-block ${className || ""}`}>
                 <code>{children}</code>
             </pre>
