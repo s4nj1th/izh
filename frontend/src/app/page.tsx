@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaArrowDown, FaArrowRight, FaBolt, FaCheck, FaCode, FaCopy, FaFileCode, FaGithub, FaLayerGroup, FaMagic } from "react-icons/fa";
+import { FaArrowDown, FaArrowRight, FaBolt, FaCheck, FaCode, FaCopy, FaExclamationCircle, FaFileCode, FaGithub, FaLayerGroup, FaMagic } from "react-icons/fa";
 import init, { parse_and_render } from "izh";
+import { useClipboard } from "@/lib/useClipboard";
 
 const demos = {
     line: {
@@ -36,7 +37,7 @@ type DemoKey = keyof typeof demos;
 
 export default function Home() {
     const [active, setActive] = useState<DemoKey>("line");
-    const [copied, setCopied] = useState(false);
+    const { copy, status: clipboardStatus } = useClipboard();
     const [engineReady, setEngineReady] = useState(false);
     const [engineError, setEngineError] = useState(false);
     const [previewSvg, setPreviewSvg] = useState("");
@@ -60,10 +61,6 @@ export default function Home() {
             setEngineError(true);
         }
     }, [demo.code, engineReady]);
-
-    async function copyCode() {
-        try { await navigator.clipboard.writeText(demo.code); setCopied(true); window.setTimeout(() => setCopied(false), 1600); } catch { setCopied(false); }
-    }
 
     return <main className="home-shell">
         <section className="landing-hero">
@@ -99,7 +96,7 @@ export default function Home() {
                         }}>{demos[key].label}</button>)}
                     </div>
                     <div className="showcase-body" id="demo-panel" role="tabpanel" aria-labelledby={`demo-tab-${active}`}>
-                        <div className="code-pane"><div className="pane-heading"><FaFileCode size={13} /> example.izh <button onClick={copyCode} aria-label="Copy example code">{copied ? <FaCheck size={13} /> : <FaCopy size={13} />}</button></div><pre key={active}>{demo.code.split("\n").map((line, i) => <span className={line.trim().startsWith("//") ? "code-comment" : line.includes(":") ? "code-key" : line.includes("=") ? "code-value" : ""} key={i}><b>{String(i + 1).padStart(2, "0")}</b>{line || " "}{"\n"}</span>)}</pre></div>
+                        <div className="code-pane"><div className="pane-heading"><FaFileCode size={13} /> example.izh <button type="button" onClick={() => void copy(demo.code)} aria-label="Copy example code" title={clipboardStatus === "error" ? "Clipboard access failed" : clipboardStatus === "copied" ? "Code copied" : "Copy code"}>{clipboardStatus === "error" ? <FaExclamationCircle size={13} /> : clipboardStatus === "copied" ? <FaCheck size={13} /> : <FaCopy size={13} />}</button><span className="sr-only" role="status" aria-live="polite">{clipboardStatus === "error" ? "Could not copy code. Check clipboard permissions." : clipboardStatus === "copied" ? "Example code copied." : ""}</span></div><pre key={active}>{demo.code.split("\n").map((line, i) => <span className={line.trim().startsWith("//") ? "code-comment" : line.includes(":") ? "code-key" : line.includes("=") ? "code-value" : ""} key={i}><b>{String(i + 1).padStart(2, "0")}</b>{line || " "}{"\n"}</span>)}</pre></div>
                         <div className="preview-pane"><div className="pane-heading"><span className={engineError ? "render-status error" : engineReady ? "render-status" : "render-status loading"} /> SVG FROM THE ENGINE</div><div className="engine-preview" aria-live="polite" key={active}>
                             {previewSvg ? <img className="engine-chart-image" src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(previewSvg)}`} alt={`${demo.label} chart rendered by Izh`} /> : <span className="engine-preview-message">{engineError ? "Preview unavailable. Open the editor to try this example." : "Loading the Izh renderer…"}</span>}
                         </div><div className="preview-caption"><span>{previewSvg ? "Rendered by Izh in your browser" : "Powered by Rust + WebAssembly"}</span><span>SVG · Scales cleanly</span></div></div>

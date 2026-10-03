@@ -10,6 +10,7 @@ export default function Navbar() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
+    const activeTheme = mounted ? theme : "light";
 
     return (
         <nav className="navbar">
@@ -44,13 +45,16 @@ export default function Navbar() {
                 </Link>
                 <div className="navbar-divider" />
                 <button
+                    type="button"
+                    aria-label={activeTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+                    title={activeTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
                     onClick={() =>
-                        setTheme(theme === "dark" ? "light" : "dark")
+                        setTheme(activeTheme === "dark" ? "light" : "dark")
                     }
                     className="navbar-button"
                 >
                     {mounted &&
-                        (theme === "dark" ? (
+                        (activeTheme === "dark" ? (
                             <FaSun size={16} />
                         ) : (
                             <FaMoon size={16} />
@@ -61,6 +65,8 @@ export default function Navbar() {
                     target="_blank"
                     rel="noreferrer"
                     className="navbar-button"
+                    aria-label="Open Izh on GitHub"
+                    title="GitHub"
                 >
                     <FaGithub size={18} />
                 </a>
