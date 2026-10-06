@@ -57,7 +57,7 @@
         }
     ],
     "averages": {
-        "Izh": { "tokens": 80.3, "bytes": 200.0, "lines": 7.3 },
+        "Izh": { "tokens": 33.0, "bytes": 175.3, "lines": 17.3 },
         "Matplotlib": { "tokens": 117.7, "bytes": 345.7, "lines": 12.3 },
         "Chart.js": { "tokens": 202.7, "bytes": 571.7, "lines": 27.0 }
     }

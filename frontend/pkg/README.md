@@ -130,17 +130,17 @@ Izh is a better fit than Python Matplotlib or JavaScript Chart.js when the goal 
 
 | Library      | Avg. Tokens | Avg. Bytes | Avg. Lines |
 |--------------|------------:|-----------:|-----------:|
-| Izh       | 80.3        | 200.0      | 7.3        |
-| Matplotlib   | 117.7       | 345.7      | 12.3       |
-| Chart.js     | 202.7       | 571.7      | 27.0       |
+| Izh          | 33.0        | 175.3      | 17.3       |
+| Matplotlib    | 117.7       | 345.7      | 12.3       |
+| Chart.js      | 202.7       | 571.7      | 27.0       |
 
 ## Current Measured Baseline
 
 | Chart Type | Source Size (Bytes) | Tokens | Lines | Parse Time (ms) | Render Time (ms) | SVG Size (Bytes) |
 |------------|--------------------:|--------:|-------:|----------------:|-----------------:|-----------------:|
-| Line       | 280                 | 42      | 10     | 0.1719          | 0.0859           | 4133             |
-| Scatter    | 271                 | 44      | 10     | 0.1477          | 0.0754           | 3975             |
-| Pie        | 166                 | 22      | 7      | 0.0611          | 0.0387           | 1626             |
+| Line       | 210                 | 39      | 21     | 0.1719          | 0.0859           | 4133             |
+| Scatter    | 197                 | 41      | 21     | 0.1477          | 0.0754           | 3975             |
+| Pie        | 119                 | 19      | 10     | 0.0611          | 0.0387           | 1626             |
 
 ### How to run it
 
